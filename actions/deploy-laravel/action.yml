@@ -20,6 +20,9 @@ inputs:
   extra-commands:
     description: Additional commands to run after deploy (e.g. npm ci && npm run build)
     default: ""
+  pre-commands:
+    description: Commands to run before git pull (e.g. permission fixes)
+    default: ""
 
 runs:
   using: composite
@@ -33,6 +36,7 @@ runs:
         script: |
           set -e
           cd ${{ inputs.deploy-path }}
+          ${{ inputs.pre-commands }}
           git fetch origin ${{ inputs.branch }}
           git reset --hard origin/${{ inputs.branch }}
           composer install --no-dev --optimize-autoloader
