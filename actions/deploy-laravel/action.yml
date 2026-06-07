@@ -23,25 +23,79 @@ inputs:
   pre-commands:
     description: Commands to run before git pull (e.g. permission fixes)
     default: ""
+  connect-timeout:
+    description: SSH connect timeout in seconds
+    default: "60"
+  max-attempts:
+    description: Number of SSH connection attempts before failing
+    default: "3"
+  retry-interval:
+    description: Seconds to wait between connection retries
+    default: "15"
 
 runs:
   using: composite
   steps:
     - name: Deploy via SSH
-      uses: appleboy/ssh-action@v1
-      with:
-        host: ${{ inputs.host }}
-        username: ${{ inputs.username }}
-        key: ${{ inputs.ssh-key }}
-        script: |
-          set -e
-          cd ${{ inputs.deploy-path }}
-          ${{ inputs.pre-commands }}
-          git fetch origin ${{ inputs.branch }}
-          git reset --hard origin/${{ inputs.branch }}
-          composer install --no-dev --optimize-autoloader
-          ${{ inputs.extra-commands }}
-          php artisan migrate --force
-          php artisan config:cache
-          php artisan route:cache
-          php artisan view:cache
+      shell: bash
+      env:
+        SSH_HOST: ${{ inputs.host }}
+        SSH_USER: ${{ inputs.username }}
+        SSH_KEY: ${{ inputs.ssh-key }}
+        DEPLOY_PATH: ${{ inputs.deploy-path }}
+        BRANCH: ${{ inputs.branch }}
+        PRE_COMMANDS: ${{ inputs.pre-commands }}
+        EXTRA_COMMANDS: ${{ inputs.extra-commands }}
+        CONNECT_TIMEOUT: ${{ inputs.connect-timeout }}
+        MAX_ATTEMPTS: ${{ inputs.max-attempts }}
+        RETRY_INTERVAL: ${{ inputs.retry-interval }}
+      run: |
+        set -eo pipefail
+
+        KEY_FILE="${RUNNER_TEMP}/deploy_ssh_key"
+        printf '%s\n' "$SSH_KEY" > "$KEY_FILE"
+        chmod 600 "$KEY_FILE"
+
+        SSH_OPTS=(
+          -i "$KEY_FILE"
+          -o BatchMode=yes
+          -o StrictHostKeyChecking=accept-new
+          -o ConnectTimeout="${CONNECT_TIMEOUT}"
+          -o ServerAliveInterval=30
+          -o ServerAliveCountMax=30
+        )
+
+        run_deploy() {
+          ssh "${SSH_OPTS[@]}" "${SSH_USER}@${SSH_HOST}" bash -s <<EOF
+        set -e
+        cd ${DEPLOY_PATH}
+        ${PRE_COMMANDS}
+        git fetch origin ${BRANCH}
+        git reset --hard origin/${BRANCH}
+        composer install --no-dev --optimize-autoloader
+        ${EXTRA_COMMANDS}
+        php artisan migrate --force
+        php artisan config:cache
+        php artisan route:cache
+        php artisan view:cache
+        EOF
+        }
+
+        attempt=1
+        while [ "$attempt" -le "$MAX_ATTEMPTS" ]; do
+          echo "::group::Deploy attempt ${attempt}/${MAX_ATTEMPTS}"
+          if run_deploy; then
+            echo "Deploy succeeded on attempt ${attempt}"
+            echo "::endgroup::"
+            exit 0
+          fi
+          echo "::endgroup::"
+          if [ "$attempt" -lt "$MAX_ATTEMPTS" ]; then
+            echo "Deploy failed, retrying in ${RETRY_INTERVAL}s..."
+            sleep "$RETRY_INTERVAL"
+          fi
+          attempt=$((attempt + 1))
+        done
+
+        echo "Deploy failed after ${MAX_ATTEMPTS} attempts"
+        exit 1
