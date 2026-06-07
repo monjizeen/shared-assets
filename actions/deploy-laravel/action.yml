@@ -32,11 +32,36 @@ inputs:
   retry-interval:
     description: Seconds to wait between connection retries
     default: "15"
+  local:
+    description: Run deploy commands locally instead of over SSH (for self-hosted runners on the target server)
+    default: "false"
 
 runs:
   using: composite
   steps:
+    - name: Deploy locally
+      if: inputs.local == 'true'
+      shell: bash
+      env:
+        DEPLOY_PATH: ${{ inputs.deploy-path }}
+        BRANCH: ${{ inputs.branch }}
+        PRE_COMMANDS: ${{ inputs.pre-commands }}
+        EXTRA_COMMANDS: ${{ inputs.extra-commands }}
+      run: |
+        set -eo pipefail
+        cd "${DEPLOY_PATH}"
+        eval "${PRE_COMMANDS}"
+        git fetch origin "${BRANCH}"
+        git reset --hard "origin/${BRANCH}"
+        composer install --no-dev --optimize-autoloader
+        eval "${EXTRA_COMMANDS}"
+        php artisan migrate --force
+        php artisan config:cache
+        php artisan route:cache
+        php artisan view:cache
+
     - name: Deploy via SSH
+      if: inputs.local != 'true'
       shell: bash
       env:
         SSH_HOST: ${{ inputs.host }}
