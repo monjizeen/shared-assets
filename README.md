@@ -15,7 +15,15 @@ actions/
   laravel-test.yml        # Reusable: pint + phpstan + migrate + test (SQLite)
   laravel-test-mysql.yml  # Reusable: same as above but with MySQL service
 skills/
-  (Claude Code skills)
+  (Claude Code / Cursor skills — see skills/README.md)
+scripts/
+  init-project/
+    dns.sh          # Cloudflare A record (runs on Mac)
+    gate7.sh        # Mac orchestrator: DNS + SSH remote setup
+    remote-setup.sh # Runs on VPS via SSH
+    nginx-vhost.sh  # Per-app vhost (beats *.mnjz.in wildcard)
+    env-production.sh
+    verify.sh
 ```
 
 ## Usage

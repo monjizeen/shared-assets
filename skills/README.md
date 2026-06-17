@@ -11,6 +11,7 @@ Custom skills for workflow automation. Copy or symlink to `~/.claude/skills/` fo
 | `cleanup` | Sync main, prune branches, clean local state |
 | `cto` | Review technical decisions, architecture, code quality |
 | `ceo` | Review business decisions, unit economics, strategy |
+| `init-project` | Bootstrap new repo: GitHub, scaffold, MORA, Google OAuth, mnjz.in DNS/VPS |
 
 ## Setup
 
@@ -18,6 +19,8 @@ Custom skills for workflow automation. Copy or symlink to `~/.claude/skills/` fo
 
 ```bash
 cp -r shared-assets/skills/* ~/.claude/skills/
+# Cursor:
+cp -r shared-assets/skills/* ~/.cursor/skills/
 ```
 
 Skills become available immediately. Updates require re-copying.
@@ -39,6 +42,7 @@ Invoke skills with `/` command:
 /start-work
 /finish-work
 /cleanup
+/init-project
 /cto
 /ceo
 ```
@@ -47,6 +51,7 @@ Or trigger them naturally in conversation:
 - "start work on user authentication"
 - "finish work"
 - "cleanup"
+- "init project" or "set up a new project"
 - "should we build this" → triggers CEO review
 
 ## File Structure
@@ -65,8 +70,15 @@ skills/
 │   └── SKILL.md
 ├── ceo/
 │   └── SKILL.md
+├── init-project/
+│   ├── SKILL.md
+│   └── reference.md
 └── README.md (this file)
 ```
+
+### init-project scripts
+
+Shell helpers live in `scripts/init-project/` (DNS, nginx, env, verify). The skill references them from Gate 7.
 
 ## Updating Skills
 
