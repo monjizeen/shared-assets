@@ -63,8 +63,9 @@ Add under `domains.monjizeen-dev.repos`:
         path: {PROJECT}
         agent: {PROJECT}
         purpose: {ONE_LINE_PURPOSE}
-        inherit_hooks: [start-work, finish-work]
 ```
+
+`start-work` / `finish-work` hooks apply to all `monjizeen-dev` repos via domain-level `inherit_hooks` in `REGISTRY.yaml`. Opt out per repo with `inherit_hooks: []`.
 
 ---
 
