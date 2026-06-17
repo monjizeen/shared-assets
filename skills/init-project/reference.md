@@ -2,31 +2,38 @@
 
 ## One-time bootstrap
 
-Create `~/.cursor/secrets/monjizeen-dev.env` on **each Mac** that runs `/init-project` (chmod 600). Sync via 1Password, iCloud, or copy once.
+Gate 0 runs `scripts/init-project/bootstrap-mac.sh` automatically. On a **new Mac**, you only need:
 
 ```bash
-# Cloudflare — token scoped to Zone DNS Edit on mnjz.in
+git clone git@github.com:monjizeen-dev/shared-assets.git ~/Documents/work/projects/monjizeen-dev/shared-assets
+~/Documents/work/projects/monjizeen-dev/shared-assets/scripts/init-project/bootstrap-mac.sh
+gh auth login   # if bootstrap reports gh not authenticated
+```
+
+Bootstrap will symlink the skill, create secrets dir, pull `monjizeen-dev.env` from VPS (or build from VPS Cloudflare config), append SSH `Host vps` if missing, and validate Cloudflare API.
+
+**Requirements on new Mac:** SSH key accepted by VPS (`~/.ssh/id_ed25519` or update `~/.ssh/config`). Copy key from another Mac or `ssh-copy-id` once.
+
+### Manual secrets file (fallback only)
+
+If VPS is unreachable, create `~/.cursor/secrets/monjizeen-dev.env` on each Mac (chmod 600). Sync via 1Password/iCloud or copy from another Mac.
+
+```bash
 # https://dash.cloudflare.com/profile/api-tokens
 CLOUDFLARE_API_TOKEN=
 CLOUDFLARE_ZONE_ID=
 
-# VPS
 VPS_PUBLIC_IP=187.77.109.160
 VPS_SSH_HOST=vps
 VPS_SSH_USER=root
 VPS_SHARED_ASSETS_PATH=/srv/projects/shared-assets
 
-# Let's Encrypt (per-app *.mnjz.in certs on VPS)
 CERTBOT_EMAIL=you@example.com
 ```
 
-Add to `~/.zshrc` on each Mac:
+### Skill symlink
 
-```bash
-[ -f ~/.cursor/secrets/monjizeen-dev.env ] && source ~/.cursor/secrets/monjizeen-dev.env
-```
-
-### Skill symlink (each Mac, once)
+Handled by `bootstrap-mac.sh`. Manual equivalent:
 
 ```bash
 ln -sf ~/Documents/work/projects/monjizeen-dev/shared-assets/skills/init-project \

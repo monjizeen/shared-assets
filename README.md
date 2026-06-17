@@ -18,6 +18,7 @@ skills/
   (Claude Code / Cursor skills — see skills/README.md)
 scripts/
   init-project/
+    bootstrap-mac.sh  # New Mac: skill symlink + secrets from VPS
     dns.sh          # Cloudflare A record (runs on Mac)
     gate7.sh        # Mac orchestrator: DNS + SSH remote setup
     remote-setup.sh # Runs on VPS via SSH

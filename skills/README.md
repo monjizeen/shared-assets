@@ -78,7 +78,17 @@ skills/
 
 ### init-project scripts
 
-Shell helpers live in `scripts/init-project/` (DNS, nginx, env, verify). The skill references them from Gate 7.
+| Script | Purpose |
+|--------|---------|
+| `bootstrap-mac.sh` | New Mac setup: skill symlink, secrets from VPS, SSH config |
+| `gate7.sh` | DNS + SSH deploy |
+| `dns.sh` | Cloudflare A record |
+| `remote-setup.sh` | VPS app setup (via SSH) |
+| `nginx-vhost.sh` | Per-app nginx vhost |
+| `env-production.sh` | Production `.env` merge |
+| `verify.sh` | HTTPS + OAuth smoke test |
+
+New Mac: `git clone shared-assets` → run `bootstrap-mac.sh` → `/init-project`.
 
 ## Updating Skills
 

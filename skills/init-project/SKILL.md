@@ -51,47 +51,61 @@ Init project: {project}
 
 ---
 
-## Gate 0 — Prerequisites
+## Gate 0 — Mac bootstrap (run first, every time)
 
-Verify tools exist. If anything missing, tell user how to install, then **stop**.
-
-```bash
-command -v gh && gh auth status
-command -v git && command -v composer && command -v npm
-command -v python3   # mora sync-registry.py
-```
-
-Confirm org secrets file exists (do not read or display values):
+**Always run bootstrap before anything else.** It is idempotent — safe on a new Mac or your daily machine.
 
 ```bash
-test -f ~/.cursor/secrets/monjizeen-dev.env && echo "org secrets: ok" || echo "org secrets: MISSING"
+# From any clone of shared-assets (path auto-detected if standard)
+shared-assets/scripts/init-project/bootstrap-mac.sh
 ```
 
-Required keys in `~/.cursor/secrets/monjizeen-dev.env` (user fills once on **each Mac** that runs init):
-
-- `CLOUDFLARE_API_TOKEN`
-- `CLOUDFLARE_ZONE_ID`
-- `VPS_PUBLIC_IP`
-- `VPS_SSH_HOST` — SSH config alias (default: `vps`)
-- `VPS_SSH_USER` — SSH user (default: `root`)
-- `CERTBOT_EMAIL` — Let's Encrypt contact (for new `*.mnjz.in` app certs)
-- `VPS_SHARED_ASSETS_PATH` — optional (default: `/srv/projects/shared-assets`)
-
-Verify SSH from Mac (no VPS Cursor session needed):
+Or pass the repo path:
 
 ```bash
-set -a && source ~/.cursor/secrets/monjizeen-dev.env && set +a
-ssh -o BatchMode=yes "${VPS_SSH_USER:-root}@${VPS_SSH_HOST:-vps}" 'hostname && nginx -v'
+bootstrap-mac.sh ~/Documents/work/projects/monjizeen-dev/shared-assets
 ```
 
-Install skill symlink on **each Mac** (repo path is not auto-loaded by Cursor):
+`bootstrap-mac.sh` checks and **fixes when possible**:
+
+| Check | Auto-fix |
+|-------|----------|
+| `shared-assets` clone with skill | No — prints `git clone` command |
+| `~/.cursor/skills/init-project` symlink | Yes |
+| `~/.cursor/secrets/` directory | Yes |
+| `~/.cursor/secrets/monjizeen-dev.env` | Yes — `scp` from VPS, or build from VPS `cloudflare.ini` |
+| `~/.ssh/config` Host `vps` | Yes — appends template if missing |
+| `~/.zshrc` sources org secrets | Yes — adds line if missing |
+| `gh`, `git`, `ssh`, `curl`, `python3`, `jq` | No — prints install hint |
+| `gh auth login` | No — user runs once |
+| SSH to VPS | No — needs SSH key on this Mac |
+| Cloudflare API | Validates token; no print of secrets |
+
+If bootstrap exits **0** → continue to Gate 1.  
+If exit **1** → fix `need` items, re-run bootstrap. **Do not ask user to manually symlink or copy secrets if bootstrap can still fix them.**
+
+After bootstrap, verify (agent may run — do not print secret values):
 
 ```bash
-ln -sf ~/Documents/work/projects/monjizeen-dev/shared-assets/skills/init-project \
-  ~/.cursor/skills/init-project
+test -f ~/.cursor/secrets/monjizeen-dev.env && echo "org secrets: ok"
 ```
 
-If missing, show user [reference.md — One-time bootstrap](reference.md#one-time-bootstrap) and **wait** until they confirm file exists.
+Required keys in `~/.cursor/secrets/monjizeen-dev.env`:
+
+- `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ZONE_ID`, `VPS_PUBLIC_IP`
+- `VPS_SSH_HOST` (default `vps`), `VPS_SSH_USER` (default `root`)
+- `CERTBOT_EMAIL`, `VPS_SHARED_ASSETS_PATH` (optional)
+
+### New Mac quick start (human)
+
+```bash
+git clone git@github.com:monjizeen-dev/shared-assets.git ~/Documents/work/projects/monjizeen-dev/shared-assets
+~/Documents/work/projects/monjizeen-dev/shared-assets/scripts/init-project/bootstrap-mac.sh
+```
+
+Then in Cursor: `/init-project` (skill symlink created by bootstrap).
+
+Manual fallback only if bootstrap cannot SSH to VPS: copy `~/.cursor/secrets/monjizeen-dev.env` from another Mac. See [reference.md — One-time bootstrap](reference.md#one-time-bootstrap).
 
 ---
 
@@ -352,7 +366,7 @@ Suggest: `remember that {PROJECT} lives at https://{FQDN}` if user uses MORA mem
 - **Secrets** — never commit `.env`, never print client secret in chat after writing.
 - **Pauses** — Gate 5 always waits for human; Gate 7 optional per Gate 1.
 - **SSH** — Gate 7 never requires Cursor on VPS; Mac SSH only.
-- **Multi-Mac** — same `~/.cursor/secrets/` values + skill symlink on each machine.
+- **Bootstrap** — Gate 0 always runs `bootstrap-mac.sh` first; prefer auto-fix over manual steps.
 - **Scope** — do not modify unrelated repos. Do not init kawader unless user names it.
 - **Executor** — run commands yourself; only Gates 1 and 5 need user input unless blocked.
 
