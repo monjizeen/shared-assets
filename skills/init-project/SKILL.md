@@ -1,10 +1,11 @@
 ---
 name: init-project
 description: >
-  Step-by-step monjizeen-dev project initiation: GitHub repo, Laravel+Inertia
-  scaffold, MORA registry, Google OAuth setup, mnjz.in subdomain, VPS deploy
-  paths. Pauses for manual inputs at each gate. Use when user says init project,
-  new project, set up project, project initiation, or /init-project.
+  Step-by-step monjizeen-dev project initiation: project-type stack routing
+  (web vs Expo), GitHub repo, scaffold, shadcn-vue + Lucide design system,
+  MORA registry, Google OAuth, mnjz.in subdomain, VPS deploy. Pauses for manual
+  inputs at each gate. Use when user says init project, new project, set up
+  project, project initiation, or /init-project.
 disable-model-invocation: true
 ---
 
@@ -19,17 +20,20 @@ Bootstrap a new monjizeen-dev product end-to-end. **Work step by step.** At each
 | GitHub org | `monjizeen-dev` |
 | Local monorepo root | `~/Documents/work/projects/monjizeen-dev` |
 | Root domain | `mnjz.in` |
-| Staging FQDN | `staging-{project}.mnjz.in` → auto-deploy on push to `main` |
-| Production FQDN | `app-{project}.mnjz.in` → manual `workflow_dispatch` only |
+| Staging FQDN | `staging-{project}.mnjz.in` → auto-deploy on push to `main` (web only) |
+| Production FQDN | `app-{project}.mnjz.in` → manual `workflow_dispatch` only (web only) |
 | OAuth callbacks | `https://staging-{project}.mnjz.in/auth/google/callback`, `https://app-{project}.mnjz.in/auth/google/callback` |
 | VPS deploy paths | `/srv/projects/{project}/staging`, `/srv/projects/{project}/production` |
 | Org secrets file | `~/.cursor/secrets/monjizeen-dev.env` |
 | Staging/local secrets | `~/.cursor/secrets/{project}.env` (local dev + staging VPS) |
 | Production secrets | `~/.cursor/secrets/{project}-production.env` |
-| Scaffold template | `kawader` (Laravel 13 + Inertia + Vue 3 + Socialite) |
+| Web scaffold template | `shared-assets/templates/web-app` (Laravel + Inertia + Vue 3 + shadcn-vue + Lucide) |
+| Mobile scaffold | `shared-assets/scripts/init-project/scaffold-expo.sh` (Expo + TypeScript + Lucide) |
 | Init scripts | `shared-assets/scripts/init-project/` |
 
-Read [reference.md](reference.md) for file templates (CI, nginx, REGISTRY, agent stub).
+**Do not scaffold from `kawader`** — kawader is an existing product repo, not the org init template.
+
+Read [reference.md](reference.md) for stack routing, design system, CI, nginx, REGISTRY, agent stub.
 
 ---
 
@@ -38,15 +42,15 @@ Read [reference.md](reference.md) for file templates (CI, nginx, REGISTRY, agent
 Copy and update after each gate:
 
 ```
-Init project: {project}
+Init project: {project} ({PROJECT_TYPE})
 - [ ] Gate 0 — Prerequisites
-- [ ] Gate 1 — Project identity
+- [ ] Gate 1 — Project identity & stack
 - [ ] Gate 2 — GitHub repo
 - [ ] Gate 3 — Scaffold & first push
 - [ ] Gate 4 — MORA registry + agent
-- [ ] Gate 5 — Google OAuth (manual)
-- [ ] Gate 6 — Secrets on disk
-- [ ] Gate 7 — VPS: DNS + nginx + deploy dirs
+- [ ] Gate 5 — Google OAuth (manual, web only)
+- [ ] Gate 6 — Secrets on disk (web only)
+- [ ] Gate 7 — VPS: DNS + nginx + deploy (web only, optional)
 - [ ] Gate 8 — CI workflow
 - [ ] Gate 9 — Verify & handoff
 ```
@@ -68,67 +72,49 @@ mora/scripts/refresh-mora.sh
 # or in Cursor: /refresh-mora
 ```
 
-`bootstrap-mac.sh` checks and **fixes when possible**:
-
-| Check | Auto-fix |
-|-------|----------|
-| `shared-assets` + `mora` git pull | Yes — via `refresh-mora.sh` |
-| `~/.cursor` hooks/rules symlinks | Yes — `install-cursor-runtime.sh` |
-| `~/.cursor/skills/refresh-mora` + `init-project` | Yes |
-| `shared-assets` clone | No — prints `git clone` if bootstrap cannot find repo |
-| `~/.cursor/secrets/` directory | Yes |
-| `~/.cursor/secrets/monjizeen-dev.env` | Yes — `scp` from VPS, or build from VPS `cloudflare.ini` |
-| `~/.ssh/config` Host `vps` | Yes — appends template if missing |
-| `~/.zshrc` sources org secrets | Yes — adds line if missing |
-| `gh`, `git`, `ssh`, `curl`, `python3`, `jq` | No — prints install hint |
-| `gh auth login` | No — user runs once |
-| SSH to VPS | No — needs SSH key on this Mac |
-| Cloudflare API | Validates token; no print of secrets |
-
 If bootstrap exits **0** → continue to Gate 1.  
-If exit **1** → fix `need` items, re-run bootstrap. **Do not ask user to manually symlink or copy secrets if bootstrap can still fix them.**
+If exit **1** → fix `need` items, re-run bootstrap.
 
-After bootstrap, verify (agent may run — do not print secret values):
+After bootstrap, verify org secrets exist (do not print values):
 
 ```bash
 test -f ~/.cursor/secrets/monjizeen-dev.env && echo "org secrets: ok"
 ```
 
-Required keys in `~/.cursor/secrets/monjizeen-dev.env`:
-
-- `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ZONE_ID`, `VPS_PUBLIC_IP`
-- `VPS_SSH_HOST` (default `vps`), `VPS_SSH_USER` (default `root`)
-- `CERTBOT_EMAIL`, `VPS_SHARED_ASSETS_PATH` (optional)
-
-### New Mac quick start (human)
-
-```bash
-git clone git@github.com:monjizeen-dev/shared-assets.git ~/Documents/work/projects/monjizeen-dev/shared-assets
-~/Documents/work/projects/monjizeen-dev/shared-assets/scripts/init-project/bootstrap-mac.sh
-```
-
-Then in Cursor: `/init-project` (new project) or `/refresh-mora` (sync only).
-
-Manual fallback only if bootstrap cannot SSH to VPS: copy `~/.cursor/secrets/monjizeen-dev.env` from another Mac. See [reference.md — One-time bootstrap](reference.md#one-time-bootstrap).
+See [reference.md — One-time bootstrap](reference.md#one-time-bootstrap) for new-Mac setup.
 
 ---
 
-## Gate 1 — Project identity
+## Gate 1 — Project identity & stack
 
 **Ask the user** (required):
 
 1. **Project name** — lowercase kebab-case (e.g. `my-app`). Drives repo name, subdomain, paths.
-2. **One-line purpose** — for MORA `REGISTRY.yaml` (e.g. "Talent directory").
-3. **Auth model** — `open` (auto-create users on Google sign-in) or `closed` (only existing users/admins, like monjizeen).
-4. **Run VPS setup now?** — default `yes` if SSH preflight passes; `later` skips Gate 7 until user asks.
+2. **One-line purpose** — for MORA `REGISTRY.yaml`.
+3. **Project type** — picks stack (see [reference.md — Stack routing](reference.md#stack-routing)):
 
-Validate project name: `^[a-z][a-z0-9-]*[a-z0-9]$`, length 2–40, not reserved (`mora`, `shared-assets`).
+| Answer | When to use | Stack |
+|--------|-------------|-------|
+| `content` | Marketing sites, blogs, mostly static/CRUD content in browser | Web (`templates/web-app`) |
+| `web-app` | Interactive web product, dashboards, no native device APIs | Web (`templates/web-app`) |
+| `native-mobile` | Needs native device features (camera, push, offline, app store, biometrics) | **Expo** (`scaffold-expo.sh`) |
+
+If unsure between `content` and `web-app`, default **`web-app`**.  
+If user mentions app store, push notifications, camera, or offline-native → **`native-mobile`**.
+
+4. **Auth model** (web only) — `open` (auto-create users on Google sign-in) or `closed` (only existing users/admins, like monjizeen). Skip for `native-mobile` unless they also want a web API (init web separately).
+5. **Design system** (web only) — confirm org standard: **shadcn-vue** (Reka UI primitives) + **Lucide** (`lucide-vue-next`). Default **yes**; template ships with Button, Card, Input, Label, Separator + zinc theme tokens. User can add components later via `npx shadcn-vue@latest add <name>`.
+6. **Run VPS setup now?** (web only) — default `yes` if SSH preflight passes; `later` skips Gate 7.
+
+Validate project name: `^[a-z][a-z0-9-]*[a-z0-9]$`, length 2–40, not reserved (`mora`, `shared-assets`, `kawader`).
 
 Set for the rest of the run:
 
 - `PROJECT` = name
-- `STAGING_FQDN` = `staging-{PROJECT}.mnjz.in`
-- `PRODUCTION_FQDN` = `app-{PROJECT}.mnjz.in`
+- `PROJECT_TYPE` = `content` | `web-app` | `native-mobile`
+- `STACK` = `web` | `expo`
+- `STAGING_FQDN` = `staging-{PROJECT}.mnjz.in` (web)
+- `PRODUCTION_FQDN` = `app-{PROJECT}.mnjz.in` (web)
 - `REPO` = `monjizeen-dev/{PROJECT}`
 - `WORKSPACE` = `~/Documents/work/projects/monjizeen-dev/{PROJECT}`
 
@@ -137,8 +123,6 @@ Confirm summary with user before Gate 2.
 ---
 
 ## Gate 2 — GitHub repo
-
-Create repo (private default unless user said public):
 
 ```bash
 cd ~/Documents/work/projects/monjizeen-dev
@@ -151,61 +135,51 @@ If repo already exists, `gh repo view monjizeen-dev/${PROJECT}` and continue.
 
 ## Gate 3 — Scaffold & first push
 
-If `WORKSPACE` does not exist, scaffold from template:
+### Web (`content` or `web-app`)
+
+**Never rsync from `kawader`.** Use the org web template:
 
 ```bash
-cd ~/Documents/work/projects/monjizeen-dev
-# Copy kawader as base; strip git history and project-specific bits
-rsync -a \
-  --exclude '.git' \
-  --exclude 'database/database.sqlite' \
-  --exclude 'node_modules' \
-  --exclude 'vendor' \
-  --exclude '.DS_Store' \
-  --exclude '._*' \
-  --exclude 'Thumbs.db' \
-  --exclude 'Desktop.ini' \
-  kawader/ "${PROJECT}/"
-cd "${PROJECT}"
-rm -f database/database.sqlite
+~/Documents/work/projects/monjizeen-dev/shared-assets/scripts/init-project/scaffold-web.sh "${PROJECT}"
+cd "${WORKSPACE}"
 git init
 git branch -M main
 ```
 
+If `templates/web-app` is missing, run `build-web-app-template.sh` first (maintainer).
+
 Then customize (agent does this):
 
-1. `composer.json` / `package.json` — set `name` / description for `{PROJECT}`.
-2. `.gitignore` — ensure OS/editor junk patterns from [reference.md — gitignore](reference.md#gitignore) (`.DS_Store`, `._*`, `Thumbs.db`, etc.); merge missing lines, do not drop Laravel defaults.
-3. `.env.example` — `APP_NAME`, keep `GOOGLE_*` placeholders (see reference.md).
-4. `README.md` — replace boilerplate with project purpose + local setup.
-5. `docs/ARCHITECTURE.md` — update title and purpose; keep stack/layering sections.
-6. If auth model is `closed`, note in README that sign-in matches monjizeen pattern (implement separately).
-7. Remove kawader-specific routes/models the new project does not need **only if** user asked for minimal scaffold; default: keep OAuth + dashboard shell, delete domain models later.
+1. `README.md` — project purpose + local setup + design system note (shadcn-vue + Lucide).
+2. `docs/ARCHITECTURE.md` — title, purpose; keep stack/layering/design-system sections.
+3. If auth model is `closed`, note in README that sign-in matches monjizeen allowlist pattern.
+4. If `content`, simplify dashboard copy; stack stays the same.
 
 ```bash
-composer install
-cp .env.example .env
-php artisan key:generate
-touch database/database.sqlite
-php artisan migrate --seed   # only if default migrations apply; else migrate without seed
-npm install && npm run build
-php artisan test || true       # report failures; do not block init if template tests need tweak
+php artisan test || true
 ```
 
-Before initial commit, delete stray OS junk (rsync/dev tools may recreate these):
+### Expo (`native-mobile`)
+
+```bash
+~/Documents/work/projects/monjizeen-dev/shared-assets/scripts/init-project/scaffold-expo.sh "${PROJECT}"
+cd "${WORKSPACE}"
+git init
+git branch -M main
+npm test 2>/dev/null || true
+```
+
+Expo scaffold includes `lucide-react-native`, `constants/theme.ts`, and `docs/ARCHITECTURE.md`. No shadcn on mobile.
+
+### Initial commit (both stacks)
 
 ```bash
 find . \( -name '.DS_Store' -o -name '._*' -o -name 'Thumbs.db' -o -name 'Desktop.ini' \) -delete 2>/dev/null || true
-```
-
-Initial commit:
-
-```bash
 git add -A
 git commit -m "$(cat <<EOF
 chore: initial scaffold for ${PROJECT}
 
-Laravel + Inertia + Vue 3 + Google OAuth from org template.
+${PROJECT_TYPE} stack from org init-project template.
 EOF
 )"
 git remote add origin "git@github.com:monjizeen-dev/${PROJECT}.git" 2>/dev/null || true
@@ -216,8 +190,8 @@ git push -u origin main
 
 ## Gate 4 — MORA registry + agent
 
-1. Edit `mora/REGISTRY.yaml` — add repo under `domains.monjizeen-dev.repos` (template in reference.md).
-2. Create `mora/domains/monjizeen-dev/agents/{PROJECT}/SKILL.md` and `MEMORY.md` (templates in reference.md).
+1. Edit `mora/REGISTRY.yaml` — add repo (include `purpose`; note stack in agent memory).
+2. Create `mora/domains/monjizeen-dev/agents/{PROJECT}/SKILL.md` and `MEMORY.md` using [reference.md — Agent stub](reference.md#agent-stub) for the correct stack.
 3. Regenerate JSON:
 
 ```bash
@@ -225,200 +199,99 @@ cd ~/Documents/work/projects/monjizeen-dev/mora
 python3 scripts/sync-registry.py
 ```
 
-Commit in `mora` repo only if user asked to commit; otherwise list files changed.
+Commit in `mora` only if user asked.
 
 ---
 
-## Gate 5 — Google OAuth (manual — STOP here)
+## Gate 5 — Google OAuth (manual — web only)
+
+**Skip entirely for `native-mobile`** unless user is also standing up a web API (second init or add Laravel later).
 
 **Do not continue until user confirms OAuth client is created and creds are ready.**
 
-Show this block verbatim (fill `{PROJECT}`, `{STAGING_FQDN}`, `{PRODUCTION_FQDN}`):
+Show OAuth block from previous skill version (fill `{PROJECT}`, `{STAGING_FQDN}`, `{PRODUCTION_FQDN}`). See [reference.md — Google links](reference.md#google-links-quick-reference).
 
 ---
 
-### Google OAuth setup for `{PROJECT}`
+## Gate 6 — Secrets on disk (web only)
 
-**1. OAuth consent screen** (once per GCP project, skip if already done)
+Write staging/local and production secrets files. Update local `.env` from staging secrets. See previous gate-6 instructions in git history or reference.md OAuth section.
 
-- Open: https://console.cloud.google.com/apis/credentials/consent
-- User type: External (or Internal if Google Workspace)
-- Add authorized domain: `mnjz.in`
-
-**2. Create OAuth client — staging + local** (do this first)
-
-- Open: https://console.cloud.google.com/apis/credentials/oauthclient
-- Application type: **Web application**
-- Name: `{PROJECT} staging` (or similar)
-- **Authorized JavaScript origins:**
-  - `https://{STAGING_FQDN}`
-- **Authorized redirect URIs:**
-  - `https://{STAGING_FQDN}/auth/google/callback`
-- For local dev, also add:
-  - Origin: `http://127.0.0.1:8000`
-  - Redirect: `http://127.0.0.1:8000/auth/google/callback`
-- Click **Create**
-
-**3. Create OAuth client — production** (separate client)
-
-- Open: https://console.cloud.google.com/apis/credentials/oauthclient
-- Application type: **Web application**
-- Name: `{PROJECT} production` (or similar)
-- **Authorized JavaScript origins:**
-  - `https://{PRODUCTION_FQDN}`
-- **Authorized redirect URIs:**
-  - `https://{PRODUCTION_FQDN}/auth/google/callback`
-- Click **Create**
-
-**4. Save credentials**
-
-Google shows **Client ID** and **Client secret** only once per client. Copy both pairs.
-
-**5. Tell me when done**
-
-Reply with one of:
-
-- `done` — paste both Client ID + Client secret pairs in chat (agent writes both secrets files), **or**
-- `saved` — you already wrote staging/local to `~/.cursor/secrets/{PROJECT}.env` and production to `~/.cursor/secrets/{PROJECT}-production.env`, **or**
-- send two `client_secret_*.json` download paths (staging/local first, production second)
+If Gate 1 VPS answer was `later`, skip Gate 7.
 
 ---
 
-**Ask user** to confirm `done`, `saved`, or JSON paths. If `done`, accept creds and write both secrets files (Gate 6). Never echo secrets back.
-
----
-
-## Gate 6 — Secrets on disk
-
-Write **two** secrets files (mode 600):
-
-```bash
-mkdir -p ~/.cursor/secrets
-
-# Staging + local dev OAuth client
-cat > "~/.cursor/secrets/${PROJECT}.env" <<'ENVEOF'
-GOOGLE_CLIENT_ID=...
-GOOGLE_CLIENT_SECRET=...
-ENVEOF
-chmod 600 "~/.cursor/secrets/${PROJECT}.env"
-
-# Production OAuth client (separate Google client)
-cat > "~/.cursor/secrets/${PROJECT}-production.env" <<'ENVEOF'
-GOOGLE_CLIENT_ID=...
-GOOGLE_CLIENT_SECRET=...
-ENVEOF
-chmod 600 "~/.cursor/secrets/${PROJECT}-production.env"
-```
-
-If user sent `client_secret_*.json` files, parse `web.client_id` and `web.client_secret` — never print values.
-
-Update local dev `.env` in workspace (not committed) from **staging/local** secrets:
-
-```env
-GOOGLE_CLIENT_ID=...
-GOOGLE_CLIENT_SECRET=...
-GOOGLE_REDIRECT_URI=http://127.0.0.1:8000/auth/google/callback
-```
-
-If Gate 1 answer was `later` for VPS, **skip Gate 7**, jump to Gate 8. User can run Gate 7 anytime with:
-
-```bash
-shared-assets/scripts/init-project/gate7.sh "${PROJECT}"
-```
-
----
-
-## Gate 7 — VPS via SSH from Mac (DNS + deploy)
-
-**Runs on your Mac.** DNS hits Cloudflare API locally; everything else runs on the VPS over SSH. No Cursor session on the server.
-
-**Only if Gate 1 was not `later`.** From monorepo root:
+## Gate 7 — VPS (web only)
 
 ```bash
 set -a && source ~/.cursor/secrets/monjizeen-dev.env && set +a
 ~/Documents/work/projects/monjizeen-dev/shared-assets/scripts/init-project/gate7.sh "${PROJECT}"
 ```
 
-`gate7.sh` does:
+**Expo:** skip — mobile builds via EAS / app stores, not mnjz.in Laravel VPS paths. Document in handoff.
 
-1. **Local:** `dns.sh` → Cloudflare A records `staging-{project}.mnjz.in` and `app-{project}.mnjz.in` → `VPS_PUBLIC_IP`
-2. **SSH:** rsync scripts to `VPS_SHARED_ASSETS_PATH/scripts/init-project/`
-3. **SSH:** copy `~/.cursor/secrets/{project}.env` and `{project}-production.env` to VPS
-4. **SSH:** `remote-setup.sh` on VPS — nginx vhosts (staging → `/staging/public`, production → `/production/public`), certbot if needed, clone repo to both paths, build, migrate (`env-deploy.sh` picks secrets per env)
-5. **Local:** `verify.sh` for staging and production HTTPS + OAuth
-
-On first org setup, ensure VPS has `shared-assets` cloned:
-
-```bash
-ssh vps 'test -d /srv/projects/shared-assets/.git || git clone git@github.com:monjizeen-dev/shared-assets.git /srv/projects/shared-assets'
-```
-
-After merging skill changes to GitHub: `ssh vps 'cd /srv/projects/shared-assets && git pull'`
-
-**Existing repo only** (e.g. kawader already on GitHub): skip Gates 2–3; run Gates 5–6 then `gate7.sh kawader`.
+**Existing web repo only:** skip Gates 2–3; run Gates 5–6 then `gate7.sh {PROJECT}`.
 
 ---
 
 ## Gate 8 — CI workflow
 
-Add `.github/workflows/ci.yml` from [reference.md](reference.md#ci-workflow). Commit and push:
+### Web
 
-```bash
-cd "${WORKSPACE}"
-git add .github/workflows/ci.yml
-git commit -m "chore: add CI workflow from shared-assets template"
-git push
-```
+Add `.github/workflows/ci.yml` from [reference.md — CI workflow](reference.md#ci-workflow). Commit and push.
 
-Remind user: GitHub repo needs `ACCESS_TO_VPS_WWWDATA_FROM_GITHUB_ACTIONS` and Telegram secrets if notifications used (same as monjizeen).
+### Expo
+
+Add `.github/workflows/ci.yml` from [reference.md — Expo CI](reference.md#expo-ci-workflow). Commit and push.
+
+Remind user: web repos need `ACCESS_TO_VPS_WWWDATA_FROM_GITHUB_ACTIONS` on GitHub (same as monjizeen).
 
 ---
 
 ## Gate 9 — Verify & handoff
 
-**Local:**
+### Web
 
 ```bash
 cd "${WORKSPACE}"
 php artisan test
+# if Gate 7 ran:
+shared-assets/scripts/init-project/verify.sh "staging-${PROJECT}.mnjz.in"
+shared-assets/scripts/init-project/verify.sh "app-${PROJECT}.mnjz.in"
 ```
 
-**Remote (if Gate 7 ran):**
+### Expo
 
 ```bash
-shared-assets/scripts/init-project/verify.sh "staging-{PROJECT}.mnjz.in"
-shared-assets/scripts/init-project/verify.sh "app-{PROJECT}.mnjz.in"
+cd "${WORKSPACE}"
+npx expo export --platform web 2>/dev/null || npx tsc --noEmit 2>/dev/null || true
 ```
 
 Print handoff summary:
 
-| Item | Value |
-|------|-------|
-| Repo | `https://github.com/monjizeen-dev/{PROJECT}` |
-| Staging URL | `https://staging-{PROJECT}.mnjz.in` (auto on push to `main`) |
-| Production URL | `https://app-{PROJECT}.mnjz.in` (manual deploy only) |
-| Workspace | `{WORKSPACE}` |
-| MORA agent | `domains/monjizeen-dev/agents/{PROJECT}/` |
-| Secrets (staging/local) | `~/.cursor/secrets/{PROJECT}.env` |
-| Secrets (production) | `~/.cursor/secrets/{PROJECT}-production.env` |
-| Deploy staging | push to `main` / auto-merge → CI deploys staging |
-| Deploy production | GitHub Actions `workflow_dispatch` → production |
-
-Suggest: `remember that {PROJECT} staging is https://staging-{PROJECT}.mnjz.in and production is https://app-{PROJECT}.mnjz.in` if user uses MORA memory.
+| Item | Web | Expo |
+|------|-----|------|
+| Repo | `https://github.com/monjizeen-dev/{PROJECT}` | same |
+| Staging URL | `https://staging-{PROJECT}.mnjz.in` | N/A (use EAS) |
+| Production URL | `https://app-{PROJECT}.mnjz.in` | App store / EAS |
+| Workspace | `{WORKSPACE}` | same |
+| MORA agent | `domains/monjizeen-dev/agents/{PROJECT}/` | same |
+| Design system | shadcn-vue + `lucide-vue-next` | Lucide RN + `constants/theme.ts` |
+| Stack | Laravel + Inertia + Vue 3 | Expo + TypeScript |
 
 ---
 
 ## Rules
 
-- **Idempotent** — scripts safe to re-run; check before create.
-- **Secrets** — never commit `.env`, never print client secret in chat after writing.
-- **Junk files** — never commit `.DS_Store`, `._*`, `Thumbs.db`, or other OS/editor artifacts; rsync excludes + `.gitignore` + pre-commit `find` in Gate 3.
-- **Pauses** — Gate 5 always waits for human; Gate 7 optional per Gate 1.
-- **SSH** — Gate 7 never requires Cursor on VPS; Mac SSH only.
-- **Bootstrap** — Gate 0 always runs `bootstrap-mac.sh` first; prefer auto-fix over manual steps.
-- **Scope** — do not modify unrelated repos. Do not init kawader unless user names it.
-- **Executor** — run commands yourself; only Gates 1 and 5 need user input unless blocked.
+- **Idempotent** — scripts safe to re-run.
+- **Secrets** — never commit `.env`, never print client secrets after writing.
+- **No kawader scaffold** — use `templates/web-app` only. Kawader is a product, not init template.
+- **Stack routing** — Gate 1 `native-mobile` → Expo; otherwise web template.
+- **Design system** — web: shadcn-vue + Lucide; mobile: Lucide only (no shadcn).
+- **Pauses** — Gate 5 waits for human (web); Gate 7 optional per Gate 1.
+- **Scope** — do not modify unrelated repos.
+- **Executor** — run commands yourself; Gates 1 and 5 need user input unless blocked.
 
 ## Additional resources
 
-- [reference.md](reference.md) — templates, bootstrap, VPS handoff prompt
+- [reference.md](reference.md) — stack matrix, design system, CI, templates, bootstrap

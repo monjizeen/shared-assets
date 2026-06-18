@@ -11,7 +11,7 @@ Custom skills for workflow automation. Copy or symlink to `~/.claude/skills/` fo
 | `cleanup` | Sync main, prune branches, clean local state |
 | `cto` | Review technical decisions, architecture, code quality |
 | `ceo` | Review business decisions, unit economics, strategy |
-| `init-project` | Bootstrap new repo: GitHub, scaffold, MORA, Google OAuth, mnjz.in DNS/VPS |
+| `init-project` | Bootstrap new repo: stack routing (web vs Expo), GitHub, scaffold, shadcn+Lucide, MORA, Google OAuth, mnjz.in DNS/VPS |
 
 ## Setup
 
@@ -81,6 +81,9 @@ skills/
 | Script | Purpose |
 |--------|---------|
 | `bootstrap-mac.sh` | New Mac setup: skill symlink, secrets from VPS, SSH config |
+| `scaffold-web.sh` | Copy `templates/web-app` → new project, install deps |
+| `scaffold-expo.sh` | Create Expo + TypeScript + Lucide mobile app |
+| `build-web-app-template.sh` | Rebuild `templates/web-app` from kawader shell + design system |
 | `gate7.sh` | DNS + SSH deploy |
 | `dns.sh` | Cloudflare A record |
 | `remote-setup.sh` | VPS app setup (via SSH) |
