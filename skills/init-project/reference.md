@@ -60,8 +60,8 @@ Gate 1 **project type** selects scaffold and which later gates apply.
 
 | `PROJECT_TYPE` | `STACK` | Template / script | Gates 5–7 (OAuth/VPS) | Design system |
 |----------------|---------|-------------------|------------------------|---------------|
-| `content` | `web` | `templates/web-app` + `scaffold-web.sh` | Yes | shadcn-vue + Lucide |
-| `web-app` | `web` | `templates/web-app` + `scaffold-web.sh` | Yes | shadcn-vue + Lucide |
+| `content` | `web` | `templates/web-app` + `scaffold-web.sh` | Yes | shadcn-vue + Lucide + tweakcn theme |
+| `web-app` | `web` | `templates/web-app` + `scaffold-web.sh` | Yes | shadcn-vue + Lucide + tweakcn theme |
 | `native-mobile` | `expo` | `scaffold-expo.sh` | **Skip** | Lucide RN + `constants/theme.ts` |
 
 **Decision guide**
@@ -107,6 +107,72 @@ npx shadcn-vue@latest add dialog dropdown-menu select table
 - Import icons from `lucide-vue-next` only — no Heroicons, Font Awesome, or inline SVG sets.
 - Use shadcn `Button`, `Card`, `Input`, etc. before bespoke styled elements.
 - Match monjizeen patterns in `monjizeen/.cursor/rules/design.mdc` when building UI.
+
+### tweakcn themes
+
+Gate 1 asks user to pick a theme from [tweakcn community](https://tweakcn.com/community). Gate 3 applies it after scaffold (skip when user keeps default **zinc**).
+
+| Gate 1 input | `THEME_NAME` | `THEME_URL` | Gate 3 action |
+|--------------|--------------|-------------|---------------|
+| Default zinc | `zinc` | *(empty)* | Skip — template `app-theme.css` already zinc |
+| Community theme | name from tweakcn | `https://tweakcn.com/r/themes/{id}` | `shadcn-vue add` (below) |
+
+**User flow:** open community → pick theme → copy install URL (format `https://tweakcn.com/r/themes/{id}`). Example:
+
+```bash
+npx shadcn-vue@latest add https://tweakcn.com/r/themes/cmmbmmxsb000104l5fqg5b4x3
+```
+
+Use **`shadcn-vue@latest`**, not React `shadcn@latest` — org web stack is Vue.
+
+**CLI bootstrap** (when template lacks `components.json`):
+
+`jsconfig.json` (project root):
+
+```json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": { "@/*": ["resources/js/*"] }
+  },
+  "exclude": ["node_modules", "vendor"]
+}
+```
+
+`components.json` (project root):
+
+```json
+{
+  "$schema": "https://shadcn-vue.com/schema.json",
+  "style": "new-york",
+  "typescript": false,
+  "tailwind": {
+    "config": "",
+    "css": "resources/css/app-theme.css",
+    "baseColor": "zinc",
+    "cssVariables": true
+  },
+  "aliases": {
+    "components": "@/components",
+    "utils": "@/lib/utils",
+    "ui": "@/components/ui",
+    "lib": "@/lib",
+    "composables": "@/composables"
+  },
+  "iconLibrary": "lucide"
+}
+```
+
+Then from project root:
+
+```bash
+npx shadcn-vue@latest add "${THEME_URL}" -y
+npm run build
+```
+
+CLI updates `resources/css/app-theme.css` (`:root`, `.dark`, `@theme inline`). Commit `components.json` and `jsconfig.json` with the scaffold when created.
+
+Record `THEME_NAME` in README, agent `MEMORY.md`, and Gate 9 handoff.
 
 ### Design system (Expo)
 
@@ -163,6 +229,7 @@ description: >
 - Laravel 13, PHP 8.3+, SQLite (dev/CI)
 - Inertia.js + Vue 3, Tailwind CSS v4, Vite
 - Design system: shadcn-vue (Reka UI) + Lucide icons
+- Theme: {THEME_NAME} (tweakcn or zinc default)
 - Google OAuth (Socialite), session guard
 
 ## Memory
@@ -179,6 +246,7 @@ description: >
 
 - Project type: {PROJECT_TYPE}
 - Stack: Laravel + Inertia + Vue 3, shadcn-vue + Lucide, Google OAuth
+- Theme: {THEME_NAME} ({THEME_URL} or template zinc)
 - Staging URL: https://staging-{PROJECT}.mnjz.in
 - Production URL: https://app-{PROJECT}.mnjz.in
 
