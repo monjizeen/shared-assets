@@ -106,7 +106,7 @@ npx shadcn-vue@latest add dialog dropdown-menu select table
 
 - Import icons from `lucide-vue-next` only — no Heroicons, Font Awesome, or inline SVG sets.
 - Use shadcn `Button`, `Card`, `Input`, etc. before bespoke styled elements.
-- Match monjizeen patterns in `monjizeen/.cursor/rules/design.mdc` when building UI.
+- Match monjizeen patterns: **`shared-assets/docs/design-patterns/INDEX.md`** (slug chooser) and **`PATTERNS.md`** (full catalog). Token/rules detail in `monjizeen/.cursor/rules/design.mdc`.
 
 ### tweakcn themes
 
