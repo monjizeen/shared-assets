@@ -2,7 +2,7 @@
 name: init-project
 description: >
   Step-by-step monjizeen-dev project initiation: project-type stack routing
-  (web vs Expo), GitHub repo, scaffold, shadcn-vue + Lucide design system,
+  (web vs Expo), GitHub repo, scaffold, shadcn-vue + Lucide + tweakcn theme,
   MORA registry, Google OAuth, mnjz.in subdomain, VPS deploy. Pauses for manual
   inputs at each gate. Use when user says init project, new project, set up
   project, project initiation, or /init-project.
@@ -44,9 +44,9 @@ Copy and update after each gate:
 ```
 Init project: {project} ({PROJECT_TYPE})
 - [ ] Gate 0 — Prerequisites
-- [ ] Gate 1 — Project identity & stack
+- [ ] Gate 1 — Project identity, stack, theme (web)
 - [ ] Gate 2 — GitHub repo
-- [ ] Gate 3 — Scaffold & first push
+- [ ] Gate 3 — Scaffold, tweakcn theme apply (web), first push
 - [ ] Gate 4 — MORA registry + agent
 - [ ] Gate 5 — Google OAuth (manual, web only)
 - [ ] Gate 6 — Secrets on disk (web only)
@@ -103,8 +103,9 @@ If unsure between `content` and `web-app`, default **`web-app`**.
 If user mentions app store, push notifications, camera, or offline-native → **`native-mobile`**.
 
 4. **Auth model** (web only) — `open` (auto-create users on Google sign-in) or `closed` (only existing users/admins, like monjizeen). Skip for `native-mobile` unless they also want a web API (init web separately).
-5. **Design system** (web only) — confirm org standard: **shadcn-vue** (Reka UI primitives) + **Lucide** (`lucide-vue-next`). Default **yes**; template ships with Button, Card, Input, Label, Separator + zinc theme tokens. User can add components later via `npx shadcn-vue@latest add <name>`.
-6. **Run VPS setup now?** (web only) — default `yes` if SSH preflight passes; `later` skips Gate 7.
+5. **Design system** (web only) — confirm org standard: **shadcn-vue** (Reka UI primitives) + **Lucide** (`lucide-vue-next`). Default **yes**; template ships with Button, Card, Input, Label, Separator. User can add components later via `npx shadcn-vue@latest add <name>`.
+6. **Theme** (web only) — browse [tweakcn community](https://tweakcn.com/community), pick a theme, paste the install URL (`https://tweakcn.com/r/themes/{id}`) or theme name. Default **`zinc`** (template default; skip Gate 3 theme install). Validate custom URLs: `^https://tweakcn\.com/r/themes/[a-z0-9]+$`. See [reference.md — tweakcn themes](reference.md#tweakcn-themes).
+7. **Run VPS setup now?** (web only) — default `yes` if SSH preflight passes; `later` skips Gate 7.
 
 Validate project name: `^[a-z][a-z0-9-]*[a-z0-9]$`, length 2–40, not reserved (`mora`, `shared-assets`, `kawader`).
 
@@ -117,8 +118,10 @@ Set for the rest of the run:
 - `PRODUCTION_FQDN` = `app-{PROJECT}.mnjz.in` (web)
 - `REPO` = `monjizeen-dev/{PROJECT}`
 - `WORKSPACE` = `~/Documents/work/projects/monjizeen-dev/{PROJECT}`
+- `THEME_NAME` = `zinc` or community theme name (web)
+- `THEME_URL` = empty for zinc, else full tweakcn URL (web)
 
-Confirm summary with user before Gate 2.
+Confirm summary with user before Gate 2 (include theme when web).
 
 ---
 
@@ -150,10 +153,23 @@ If `templates/web-app` is missing, run `build-web-app-template.sh` first (mainta
 
 Then customize (agent does this):
 
-1. `README.md` — project purpose + local setup + design system note (shadcn-vue + Lucide).
+1. `README.md` — project purpose + local setup + design system note (shadcn-vue + Lucide + theme name).
 2. `docs/ARCHITECTURE.md` — title, purpose; keep stack/layering/design-system sections.
 3. If auth model is `closed`, note in README that sign-in matches monjizeen allowlist pattern.
 4. If `content`, simplify dashboard copy; stack stays the same.
+
+**Apply theme** (skip when `THEME_NAME` is `zinc`):
+
+1. Ensure `components.json` + `jsconfig.json` exist — create from [reference.md — tweakcn themes](reference.md#tweakcn-themes) if the template lacks them.
+2. Install theme (org stack uses **shadcn-vue**, not React `shadcn`):
+
+```bash
+cd "${WORKSPACE}"
+npx shadcn-vue@latest add "${THEME_URL}" -y
+npm run build
+```
+
+3. Spot-check `resources/css/app-theme.css` — `:root` / `.dark` tokens should match the chosen theme.
 
 ```bash
 php artisan test || true
@@ -277,6 +293,7 @@ Print handoff summary:
 | Workspace | `{WORKSPACE}` | same |
 | MORA agent | `domains/monjizeen-dev/agents/{PROJECT}/` | same |
 | Design system | shadcn-vue + `lucide-vue-next` | Lucide RN + `constants/theme.ts` |
+| Theme | `{THEME_NAME}` ([tweakcn](https://tweakcn.com/community) or zinc default) | N/A |
 | Stack | Laravel + Inertia + Vue 3 | Expo + TypeScript |
 
 ---
@@ -288,6 +305,7 @@ Print handoff summary:
 - **No kawader scaffold** — use `templates/web-app` only. Kawader is a product, not init template.
 - **Stack routing** — Gate 1 `native-mobile` → Expo; otherwise web template.
 - **Design system** — web: shadcn-vue + Lucide; mobile: Lucide only (no shadcn).
+- **Theme** — web: user picks from tweakcn community at Gate 1; apply at Gate 3 via `shadcn-vue add <theme-url>`.
 - **Pauses** — Gate 5 waits for human (web); Gate 7 optional per Gate 1.
 - **Scope** — do not modify unrelated repos.
 - **Executor** — run commands yourself; Gates 1 and 5 need user input unless blocked.
