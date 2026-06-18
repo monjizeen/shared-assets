@@ -1,12 +1,19 @@
 #!/usr/bin/env bash
-# nginx vhost for {fqdn} → /srv/projects/{project}/production/public
+# nginx vhost for {fqdn} → /srv/projects/{project}/{deploy_env}/public
 # Exact server_name beats *.mnjz.in wildcard on this VPS.
-# Usage: nginx-vhost.sh <project> <fqdn>
+# Usage: nginx-vhost.sh <project> <fqdn> [deploy_env]
+# deploy_env: staging (default) or production
 
 set -euo pipefail
 
 PROJECT="${1:?project name required}"
 FQDN="${2:?fqdn required}"
+DEPLOY_ENV="${3:-staging}"
+
+if [[ "${DEPLOY_ENV}" != "staging" && "${DEPLOY_ENV}" != "production" ]]; then
+  echo "error: deploy_env must be staging or production" >&2
+  exit 1
+fi
 
 SITES_AVAILABLE="/etc/nginx/sites-available"
 SITES_ENABLED="/etc/nginx/sites-enabled"
@@ -43,7 +50,7 @@ server {
     listen [::]:443 ssl http2;
     server_name ${FQDN};
 
-    root /srv/projects/${PROJECT}/production/public;
+    root /srv/projects/${PROJECT}/${DEPLOY_ENV}/public;
     index index.php;
 
     ssl_certificate     ${SSL_CERT};
@@ -83,4 +90,4 @@ ln -sf "${CONF_PATH}" "${SITES_ENABLED}/${CONF_NAME}"
 nginx -t
 systemctl reload nginx
 
-echo "nginx: ${FQDN} → /srv/projects/${PROJECT}/production/public"
+echo "nginx: ${FQDN} → /srv/projects/${PROJECT}/${DEPLOY_ENV}/public"

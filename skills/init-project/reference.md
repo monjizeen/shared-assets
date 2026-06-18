@@ -112,7 +112,8 @@ description: >
 ## Decisions
 
 - Stack: Laravel + Inertia + Vue 3, Google OAuth only
-- Production URL: https://{PROJECT}.mnjz.in
+- Staging URL: https://staging-{PROJECT}.mnjz.in
+- Production URL: https://app-{PROJECT}.mnjz.in
 
 ## Open questions
 
@@ -201,11 +202,18 @@ jobs:
 
 Replace `{PROJECT}` with the actual project name.
 
+**Deploy targets:** `deploy-staging` pushes to `/srv/projects/{PROJECT}/staging` (served at `staging-{PROJECT}.mnjz.in`). `deploy-production` is `workflow_dispatch` only → `/srv/projects/{PROJECT}/production` (`app-{PROJECT}.mnjz.in`). Push to `main` / auto-merge only hits staging.
+
 ---
 
 ## nginx vhost template
 
-Used by `scripts/init-project/nginx-vhost.sh`:
+Used by `scripts/init-project/nginx-vhost.sh`. Gate 7 creates **two** vhosts per project:
+
+| FQDN | nginx root |
+|------|------------|
+| `staging-{PROJECT}.mnjz.in` | `/srv/projects/{PROJECT}/staging/public` |
+| `app-{PROJECT}.mnjz.in` | `/srv/projects/{PROJECT}/production/public` |
 
 ```nginx
 server {
@@ -220,7 +228,7 @@ server {
     listen [::]:443 ssl http2;
     server_name {FQDN};
 
-    root /srv/projects/{PROJECT}/production/public;
+    root /srv/projects/{PROJECT}/{DEPLOY_ENV}/public;
     index index.php;
 
     # SSL: Cloudflare origin cert or Let's Encrypt — adjust paths on your VPS
@@ -267,10 +275,14 @@ GOOGLE_REDIRECT_URI="${APP_URL}/auth/google/callback"
 PLATFORM_ADMIN_EMAILS=
 ```
 
-Production `APP_URL`:
+Production `APP_URL` (set by `env-deploy.sh` on VPS):
 
 ```env
-APP_URL=https://{PROJECT}.mnjz.in
+# staging .env
+APP_URL=https://staging-{PROJECT}.mnjz.in
+
+# production .env
+APP_URL=https://app-{PROJECT}.mnjz.in
 ```
 
 ---
@@ -281,14 +293,16 @@ Mac, after Gate 5–6:
 
 ```bash
 source ~/.cursor/secrets/monjizeen-dev.env
-shared-assets/scripts/init-project/gate7.sh {PROJECT} {PROJECT}.mnjz.in
+shared-assets/scripts/init-project/gate7.sh {PROJECT}
 ```
+
+Creates DNS + nginx for `staging-{PROJECT}.mnjz.in` and `app-{PROJECT}.mnjz.in`.
 
 ---
 
 ## nginx note (this VPS)
 
-`*.mnjz.in` wildcard vhost proxies to OpenClaw. Per-app vhosts use **exact** `server_name` (e.g. `kawader.mnjz.in`) and take precedence. Each app needs its own Let's Encrypt cert (`CERTBOT_EMAIL` + certbot in `remote-setup.sh`).
+`*.mnjz.in` wildcard vhost proxies to OpenClaw. Per-app vhosts use **exact** `server_name` (e.g. `staging-kawader.mnjz.in`, `app-kawader.mnjz.in`) and take precedence. Each FQDN needs its own Let's Encrypt cert (`CERTBOT_EMAIL` + certbot in `remote-setup.sh`).
 
 ---
 

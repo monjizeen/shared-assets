@@ -19,8 +19,9 @@ Bootstrap a new monjizeen-dev product end-to-end. **Work step by step.** At each
 | GitHub org | `monjizeen-dev` |
 | Local monorepo root | `~/Documents/work/projects/monjizeen-dev` |
 | Root domain | `mnjz.in` |
-| Subdomain | `{project}.mnjz.in` |
-| OAuth callback | `https://{project}.mnjz.in/auth/google/callback` |
+| Staging FQDN | `staging-{project}.mnjz.in` → auto-deploy on push to `main` |
+| Production FQDN | `app-{project}.mnjz.in` → manual `workflow_dispatch` only |
+| OAuth callbacks | `https://staging-{project}.mnjz.in/auth/google/callback`, `https://app-{project}.mnjz.in/auth/google/callback` |
 | VPS deploy paths | `/srv/projects/{project}/staging`, `/srv/projects/{project}/production` |
 | Org secrets file | `~/.cursor/secrets/monjizeen-dev.env` |
 | Project secrets file | `~/.cursor/secrets/{project}.env` |
@@ -125,7 +126,8 @@ Validate project name: `^[a-z][a-z0-9-]*[a-z0-9]$`, length 2–40, not reserved 
 Set for the rest of the run:
 
 - `PROJECT` = name
-- `FQDN` = `{PROJECT}.mnjz.in`
+- `STAGING_FQDN` = `staging-{PROJECT}.mnjz.in`
+- `PRODUCTION_FQDN` = `app-{PROJECT}.mnjz.in`
 - `REPO` = `monjizeen-dev/{PROJECT}`
 - `WORKSPACE` = `~/Documents/work/projects/monjizeen-dev/{PROJECT}`
 
@@ -215,7 +217,7 @@ Commit in `mora` repo only if user asked to commit; otherwise list files changed
 
 **Do not continue until user confirms OAuth client is created and creds are ready.**
 
-Show this block verbatim (fill `{PROJECT}` and `{FQDN}`):
+Show this block verbatim (fill `{PROJECT}`, `{STAGING_FQDN}`, `{PRODUCTION_FQDN}`):
 
 ---
 
@@ -231,9 +233,13 @@ Show this block verbatim (fill `{PROJECT}` and `{FQDN}`):
 
 - Open: https://console.cloud.google.com/apis/credentials/oauthclient
 - Application type: **Web application**
-- Name: `{PROJECT} production` (or similar)
-- **Authorized JavaScript origins:** `https://{FQDN}`
-- **Authorized redirect URIs:** `https://{FQDN}/auth/google/callback`
+- Name: `{PROJECT}` (or similar)
+- **Authorized JavaScript origins:**
+  - `https://{STAGING_FQDN}`
+  - `https://{PRODUCTION_FQDN}`
+- **Authorized redirect URIs:**
+  - `https://{STAGING_FQDN}/auth/google/callback`
+  - `https://{PRODUCTION_FQDN}/auth/google/callback`
 - For local dev, also add:
   - Origin: `http://127.0.0.1:8000`
   - Redirect: `http://127.0.0.1:8000/auth/google/callback`
@@ -280,7 +286,7 @@ GOOGLE_REDIRECT_URI=http://127.0.0.1:8000/auth/google/callback
 If Gate 1 answer was `later` for VPS, **skip Gate 7**, jump to Gate 8. User can run Gate 7 anytime with:
 
 ```bash
-shared-assets/scripts/init-project/gate7.sh "${PROJECT}" "${FQDN}"
+shared-assets/scripts/init-project/gate7.sh "${PROJECT}"
 ```
 
 ---
@@ -293,16 +299,16 @@ shared-assets/scripts/init-project/gate7.sh "${PROJECT}" "${FQDN}"
 
 ```bash
 set -a && source ~/.cursor/secrets/monjizeen-dev.env && set +a
-~/Documents/work/projects/monjizeen-dev/shared-assets/scripts/init-project/gate7.sh "${PROJECT}" "${FQDN}"
+~/Documents/work/projects/monjizeen-dev/shared-assets/scripts/init-project/gate7.sh "${PROJECT}"
 ```
 
 `gate7.sh` does:
 
-1. **Local:** `dns.sh` → Cloudflare A record `{project}.mnjz.in` → `VPS_PUBLIC_IP`
+1. **Local:** `dns.sh` → Cloudflare A records `staging-{project}.mnjz.in` and `app-{project}.mnjz.in` → `VPS_PUBLIC_IP`
 2. **SSH:** rsync scripts to `VPS_SHARED_ASSETS_PATH/scripts/init-project/`
-3. **SSH:** copy `~/.cursor/secrets/{project}.env` to VPS (for production `.env` merge)
-4. **SSH:** `remote-setup.sh` on VPS — nginx vhost (exact `server_name` beats `*.mnjz.in` wildcard), certbot if needed, clone repo, build, migrate
-5. **Local:** `verify.sh` over HTTPS
+3. **SSH:** copy `~/.cursor/secrets/{project}.env` to VPS (for staging + production `.env` merge)
+4. **SSH:** `remote-setup.sh` on VPS — nginx vhosts (staging → `/staging/public`, production → `/production/public`), certbot if needed, clone repo to both paths, build, migrate
+5. **Local:** `verify.sh` for staging and production HTTPS + OAuth
 
 On first org setup, ensure VPS has `shared-assets` cloned:
 
@@ -312,7 +318,7 @@ ssh vps 'test -d /srv/projects/shared-assets/.git || git clone git@github.com:mo
 
 After merging skill changes to GitHub: `ssh vps 'cd /srv/projects/shared-assets && git pull'`
 
-**Existing repo only** (e.g. kawader already on GitHub): skip Gates 2–3; run Gates 5–6 then `gate7.sh kawader kawader.mnjz.in`.
+**Existing repo only** (e.g. kawader already on GitHub): skip Gates 2–3; run Gates 5–6 then `gate7.sh kawader`.
 
 ---
 
@@ -340,10 +346,11 @@ cd "${WORKSPACE}"
 php artisan test
 ```
 
-**Production (if Gate 7 ran):**
+**Remote (if Gate 7 ran):**
 
 ```bash
-shared-assets/scripts/init-project/verify.sh "${FQDN}"
+shared-assets/scripts/init-project/verify.sh "staging-{PROJECT}.mnjz.in"
+shared-assets/scripts/init-project/verify.sh "app-{PROJECT}.mnjz.in"
 ```
 
 Print handoff summary:
@@ -351,14 +358,15 @@ Print handoff summary:
 | Item | Value |
 |------|-------|
 | Repo | `https://github.com/monjizeen-dev/{PROJECT}` |
-| URL | `https://{FQDN}` |
+| Staging URL | `https://staging-{PROJECT}.mnjz.in` (auto on push to `main`) |
+| Production URL | `https://app-{PROJECT}.mnjz.in` (manual deploy only) |
 | Workspace | `{WORKSPACE}` |
 | MORA agent | `domains/monjizeen-dev/agents/{PROJECT}/` |
 | Secrets | `~/.cursor/secrets/{PROJECT}.env` |
-| Deploy staging | push to `main` (if CI configured) |
-| Deploy production | GitHub Actions `workflow_dispatch` |
+| Deploy staging | push to `main` / auto-merge → CI deploys staging |
+| Deploy production | GitHub Actions `workflow_dispatch` → production |
 
-Suggest: `remember that {PROJECT} lives at https://{FQDN}` if user uses MORA memory.
+Suggest: `remember that {PROJECT} staging is https://staging-{PROJECT}.mnjz.in and production is https://app-{PROJECT}.mnjz.in` if user uses MORA memory.
 
 ---
 
