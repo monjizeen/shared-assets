@@ -56,6 +56,39 @@ if [[ -n "${SHARED_ASSETS}" ]]; then
   fi
 fi
 
+# --- MORA cursor-runtime (hooks + rules) ---
+find_mora() {
+  local candidates=()
+  if [[ -n "${MORA_ROOT:-}" ]]; then
+    candidates+=("${MORA_ROOT}")
+  fi
+  candidates+=(
+    "${HOME}/Documents/work/projects/monjizeen-dev/mora"
+    "${HOME}/work/projects/monjizeen-dev/mora"
+    "${HOME}/projects/monjizeen-dev/mora"
+  )
+  local d
+  for d in "${candidates[@]}"; do
+    if [[ -f "${d}/scripts/install-cursor-runtime.sh" ]]; then
+      echo "${d}"
+      return 0
+    fi
+  done
+  return 1
+}
+
+MORA_HUB="$(find_mora)" || MORA_HUB=""
+if [[ -n "${MORA_HUB}" ]]; then
+  if "${MORA_HUB}/scripts/install-cursor-runtime.sh" "${MORA_HUB}"; then
+    ok "MORA cursor-runtime"
+  else
+    need "fix MORA cursor-runtime install (${MORA_HUB}/scripts/install-cursor-runtime.sh)"
+  fi
+else
+  need "clone monjizeen-dev/mora for Cursor hooks/rules. Example:"
+  need "  git clone git@github.com:monjizeen-dev/mora.git ~/Documents/work/projects/monjizeen-dev/mora"
+fi
+
 # --- Secrets directory ---
 mkdir -p "${HOME}/.cursor/secrets"
 chmod 700 "${HOME}/.cursor/secrets"
