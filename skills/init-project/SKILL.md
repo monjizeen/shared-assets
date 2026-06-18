@@ -53,25 +53,27 @@ Init project: {project}
 
 ## Gate 0 — Mac bootstrap (run first, every time)
 
-**Always run bootstrap before anything else.** It is idempotent — safe on a new Mac or your daily machine.
+**Always run bootstrap before anything else.** It calls **`refresh-mora`** (pull repos, install hooks, symlink skills), then secrets/SSH/tools.
 
 ```bash
-# From any clone of shared-assets (path auto-detected if standard)
 shared-assets/scripts/init-project/bootstrap-mac.sh
 ```
 
-Or pass the repo path:
+Daily sync without starting a new project:
 
 ```bash
-bootstrap-mac.sh ~/Documents/work/projects/monjizeen-dev/shared-assets
+mora/scripts/refresh-mora.sh
+# or in Cursor: /refresh-mora
 ```
 
 `bootstrap-mac.sh` checks and **fixes when possible**:
 
 | Check | Auto-fix |
 |-------|----------|
-| `shared-assets` clone with skill | No — prints `git clone` command |
-| `~/.cursor/skills/init-project` symlink | Yes |
+| `shared-assets` + `mora` git pull | Yes — via `refresh-mora.sh` |
+| `~/.cursor` hooks/rules symlinks | Yes — `install-cursor-runtime.sh` |
+| `~/.cursor/skills/refresh-mora` + `init-project` | Yes |
+| `shared-assets` clone | No — prints `git clone` if bootstrap cannot find repo |
 | `~/.cursor/secrets/` directory | Yes |
 | `~/.cursor/secrets/monjizeen-dev.env` | Yes — `scp` from VPS, or build from VPS `cloudflare.ini` |
 | `~/.ssh/config` Host `vps` | Yes — appends template if missing |
@@ -103,7 +105,7 @@ git clone git@github.com:monjizeen-dev/shared-assets.git ~/Documents/work/projec
 ~/Documents/work/projects/monjizeen-dev/shared-assets/scripts/init-project/bootstrap-mac.sh
 ```
 
-Then in Cursor: `/init-project` (skill symlink created by bootstrap).
+Then in Cursor: `/init-project` (new project) or `/refresh-mora` (sync only).
 
 Manual fallback only if bootstrap cannot SSH to VPS: copy `~/.cursor/secrets/monjizeen-dev.env` from another Mac. See [reference.md — One-time bootstrap](reference.md#one-time-bootstrap).
 
