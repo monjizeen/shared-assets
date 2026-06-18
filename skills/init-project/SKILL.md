@@ -155,7 +155,15 @@ If `WORKSPACE` does not exist, scaffold from template:
 ```bash
 cd ~/Documents/work/projects/monjizeen-dev
 # Copy kawader as base; strip git history and project-specific bits
-rsync -a --exclude '.git' --exclude 'database/database.sqlite' --exclude 'node_modules' --exclude 'vendor' \
+rsync -a \
+  --exclude '.git' \
+  --exclude 'database/database.sqlite' \
+  --exclude 'node_modules' \
+  --exclude 'vendor' \
+  --exclude '.DS_Store' \
+  --exclude '._*' \
+  --exclude 'Thumbs.db' \
+  --exclude 'Desktop.ini' \
   kawader/ "${PROJECT}/"
 cd "${PROJECT}"
 rm -f database/database.sqlite
@@ -166,11 +174,12 @@ git branch -M main
 Then customize (agent does this):
 
 1. `composer.json` / `package.json` — set `name` / description for `{PROJECT}`.
-2. `.env.example` — `APP_NAME`, keep `GOOGLE_*` placeholders (see reference.md).
-3. `README.md` — replace boilerplate with project purpose + local setup.
-4. `docs/ARCHITECTURE.md` — update title and purpose; keep stack/layering sections.
-5. If auth model is `closed`, note in README that sign-in matches monjizeen pattern (implement separately).
-6. Remove kawader-specific routes/models the new project does not need **only if** user asked for minimal scaffold; default: keep OAuth + dashboard shell, delete domain models later.
+2. `.gitignore` — ensure OS/editor junk patterns from [reference.md — gitignore](reference.md#gitignore) (`.DS_Store`, `._*`, `Thumbs.db`, etc.); merge missing lines, do not drop Laravel defaults.
+3. `.env.example` — `APP_NAME`, keep `GOOGLE_*` placeholders (see reference.md).
+4. `README.md` — replace boilerplate with project purpose + local setup.
+5. `docs/ARCHITECTURE.md` — update title and purpose; keep stack/layering sections.
+6. If auth model is `closed`, note in README that sign-in matches monjizeen pattern (implement separately).
+7. Remove kawader-specific routes/models the new project does not need **only if** user asked for minimal scaffold; default: keep OAuth + dashboard shell, delete domain models later.
 
 ```bash
 composer install
@@ -180,6 +189,12 @@ touch database/database.sqlite
 php artisan migrate --seed   # only if default migrations apply; else migrate without seed
 npm install && npm run build
 php artisan test || true       # report failures; do not block init if template tests need tweak
+```
+
+Before initial commit, delete stray OS junk (rsync/dev tools may recreate these):
+
+```bash
+find . \( -name '.DS_Store' -o -name '._*' -o -name 'Thumbs.db' -o -name 'Desktop.ini' \) -delete 2>/dev/null || true
 ```
 
 Initial commit:
@@ -374,6 +389,7 @@ Suggest: `remember that {PROJECT} staging is https://staging-{PROJECT}.mnjz.in a
 
 - **Idempotent** — scripts safe to re-run; check before create.
 - **Secrets** — never commit `.env`, never print client secret in chat after writing.
+- **Junk files** — never commit `.DS_Store`, `._*`, `Thumbs.db`, or other OS/editor artifacts; rsync excludes + `.gitignore` + pre-commit `find` in Gate 3.
 - **Pauses** — Gate 5 always waits for human; Gate 7 optional per Gate 1.
 - **SSH** — Gate 7 never requires Cursor on VPS; Mac SSH only.
 - **Bootstrap** — Gate 0 always runs `bootstrap-mac.sh` first; prefer auto-fix over manual steps.

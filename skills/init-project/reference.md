@@ -306,6 +306,26 @@ Creates DNS + nginx for `staging-{PROJECT}.mnjz.in` and `app-{PROJECT}.mnjz.in`.
 
 ---
 
+## gitignore
+
+Gate 3: after rsync from `kawader`, ensure project `.gitignore` includes these (merge if missing — do not replace Laravel defaults):
+
+```gitignore
+# OS junk
+**/.DS_Store
+.DS_Store
+._*
+.AppleDouble
+.LSOverride
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+```
+
+`kawader` template should already carry most of this; `**/.DS_Store` and `._*` catch nested Finder droppings.
+
+---
+
 ## Google links (quick reference)
 
 | Step | URL |
