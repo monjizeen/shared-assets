@@ -278,12 +278,21 @@ PLATFORM_ADMIN_EMAILS=
 Production `APP_URL` (set by `env-deploy.sh` on VPS):
 
 ```env
-# staging .env
+# staging .env  ← secrets from ~/.cursor/secrets/{PROJECT}.env
 APP_URL=https://staging-{PROJECT}.mnjz.in
 
-# production .env
+# production .env  ← secrets from ~/.cursor/secrets/{PROJECT}-production.env
 APP_URL=https://app-{PROJECT}.mnjz.in
 ```
+
+### OAuth secrets (two Google clients)
+
+| File | Used for | Google OAuth client |
+|------|----------|---------------------|
+| `~/.cursor/secrets/{PROJECT}.env` | Local dev + staging VPS | Staging/local client (`staging-{PROJECT}.mnjz.in` + `127.0.0.1:8000`) |
+| `~/.cursor/secrets/{PROJECT}-production.env` | Production VPS only | Production client (`app-{PROJECT}.mnjz.in`) |
+
+Gate 7 syncs both files to VPS `~/.cursor/secrets/`. `env-deploy.sh` selects the file by deploy target.
 
 ---
 

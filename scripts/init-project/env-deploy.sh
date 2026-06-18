@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Merge Google OAuth + APP_URL into deploy .env on VPS
 # Usage: env-deploy.sh <project> <fqdn> <staging|production>
-# Reads: ~/.cursor/secrets/{project}.env
+# Reads staging: ~/.cursor/secrets/{project}.env (local + staging OAuth client)
+# Reads production: ~/.cursor/secrets/{project}-production.env
 
 set -euo pipefail
 
@@ -15,7 +16,12 @@ if [[ "${DEPLOY_ENV}" != "staging" && "${DEPLOY_ENV}" != "production" ]]; then
 fi
 
 DEPLOY_ENV_FILE="/srv/projects/${PROJECT}/${DEPLOY_ENV}/.env"
-SECRETS="${HOME}/.cursor/secrets/${PROJECT}.env"
+
+if [[ "${DEPLOY_ENV}" == "production" ]]; then
+  SECRETS="${HOME}/.cursor/secrets/${PROJECT}-production.env"
+else
+  SECRETS="${HOME}/.cursor/secrets/${PROJECT}.env"
+fi
 
 if [[ ! -f "${DEPLOY_ENV_FILE}" ]]; then
   echo "error: ${DEPLOY_ENV_FILE} not found" >&2

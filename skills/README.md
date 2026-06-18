@@ -85,7 +85,8 @@ skills/
 | `dns.sh` | Cloudflare A record |
 | `remote-setup.sh` | VPS app setup (via SSH) |
 | `nginx-vhost.sh` | Per-app nginx vhost |
-| `env-production.sh` | Production `.env` merge |
+| `env-deploy.sh` | Merge OAuth + APP_URL into staging or production `.env` |
+| `env-production.sh` | Back-compat wrapper → `env-deploy.sh … production` |
 | `verify.sh` | HTTPS + OAuth smoke test |
 
 New Mac: `git clone shared-assets` → run `bootstrap-mac.sh` → `/init-project`.
