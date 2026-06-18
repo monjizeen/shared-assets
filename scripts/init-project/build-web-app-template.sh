@@ -39,6 +39,14 @@ rsync -a \
   --exclude '._*' \
   "${KAWADER}/" "${TEMPLATE}/"
 
+SHARED_SKILLS="${SCRIPT_DIR}/../../skills"
+echo "build: materialize .agents/skills (GitHub Actions cannot package symlinks)"
+for skill in finish-work start-work; do
+  rm -f "${TEMPLATE}/.agents/skills/${skill}"
+  mkdir -p "${TEMPLATE}/.agents/skills/${skill}"
+  cp "${SHARED_SKILLS}/${skill}/SKILL.md" "${TEMPLATE}/.agents/skills/${skill}/"
+done
+
 echo "build: remove kawader domain code"
 rm -rf \
   "${TEMPLATE}/app/Http/Controllers/Admin" \
