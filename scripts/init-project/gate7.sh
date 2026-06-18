@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 # Gate 7 from Mac: Cloudflare DNS locally, app/nginx/deploy on VPS via SSH.
-# Usage: gate7.sh <project> [fqdn]
+# Usage: gate7.sh <project>
+# Staging: staging-{project}.mnjz.in → /srv/projects/{project}/staging
+# Production: app-{project}.mnjz.in → /srv/projects/{project}/production
 # Requires ~/.cursor/secrets/monjizeen-dev.env and ~/.cursor/secrets/<project>.env on Mac.
 
 set -euo pipefail
 
 PROJECT="${1:?project name required}"
-FQDN="${2:-${PROJECT}.mnjz.in}"
+STAGING_FQDN="staging-${PROJECT}.mnjz.in"
+PRODUCTION_FQDN="app-${PROJECT}.mnjz.in"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ORG_SECRETS="${HOME}/.cursor/secrets/monjizeen-dev.env"
@@ -32,8 +35,11 @@ VPS_SHARED_ASSETS="${VPS_SHARED_ASSETS_PATH:-/srv/projects/shared-assets}"
 
 SSH_OPTS=(-o BatchMode=yes -o ConnectTimeout=15)
 
-echo "gate7: DNS ${FQDN}"
-"${SCRIPT_DIR}/dns.sh" "${PROJECT}" "${VPS_PUBLIC_IP:-}"
+echo "gate7: DNS ${STAGING_FQDN}"
+"${SCRIPT_DIR}/dns.sh" "staging-${PROJECT}" "${VPS_PUBLIC_IP:-}"
+
+echo "gate7: DNS ${PRODUCTION_FQDN}"
+"${SCRIPT_DIR}/dns.sh" "app-${PROJECT}" "${VPS_PUBLIC_IP:-}"
 
 echo "gate7: SSH preflight ${VPS_SSH}"
 ssh "${SSH_OPTS[@]}" "${VPS_SSH}" "command -v nginx git composer npm certbot"
@@ -49,9 +55,12 @@ ssh "${SSH_OPTS[@]}" "${VPS_SSH}" "chmod 600 ~/.cursor/secrets/${PROJECT}.env"
 
 echo "gate7: remote setup on VPS"
 ssh "${SSH_OPTS[@]}" "${VPS_SSH}" \
-  "bash ${VPS_SHARED_ASSETS}/scripts/init-project/remote-setup.sh ${PROJECT} ${FQDN}"
+  "bash ${VPS_SHARED_ASSETS}/scripts/init-project/remote-setup.sh ${PROJECT} ${STAGING_FQDN} ${PRODUCTION_FQDN}"
 
-echo "gate7: verify HTTPS + OAuth redirect"
-"${SCRIPT_DIR}/verify.sh" "${FQDN}"
+echo "gate7: verify staging HTTPS + OAuth"
+"${SCRIPT_DIR}/verify.sh" "${STAGING_FQDN}"
 
-echo "gate7: done — https://${FQDN}"
+echo "gate7: verify production HTTPS + OAuth"
+"${SCRIPT_DIR}/verify.sh" "${PRODUCTION_FQDN}"
+
+echo "gate7: done — staging https://${STAGING_FQDN}, production https://${PRODUCTION_FQDN}"
