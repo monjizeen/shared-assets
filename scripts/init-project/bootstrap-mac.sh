@@ -42,51 +42,25 @@ SHARED_ASSETS="$(find_shared_assets)" || {
   SHARED_ASSETS=""
 }
 
-# --- Cursor skill symlink ---
-CURSOR_SKILL="${HOME}/.cursor/skills/init-project"
+# --- Org repos + cursor-runtime + skills (refresh-mora) ---
+MONO_ROOT="$(cd "${SHARED_ASSETS}/.." && pwd)"
 if [[ -n "${SHARED_ASSETS}" ]]; then
-  SKILL_SRC="${SHARED_ASSETS}/skills/init-project"
-  mkdir -p "${HOME}/.cursor/skills"
-  current="$(readlink "${CURSOR_SKILL}" 2>/dev/null || true)"
-  if [[ "${current}" != "${SKILL_SRC}" ]]; then
-    ln -sfn "${SKILL_SRC}" "${CURSOR_SKILL}"
-    fix "symlink ${CURSOR_SKILL} → ${SKILL_SRC}"
-  else
-    ok "skill symlink"
-  fi
-fi
-
-# --- MORA cursor-runtime (hooks + rules) ---
-find_mora() {
-  local candidates=()
-  if [[ -n "${MORA_ROOT:-}" ]]; then
-    candidates+=("${MORA_ROOT}")
-  fi
-  candidates+=(
-    "${HOME}/Documents/work/projects/monjizeen-dev/mora"
-    "${HOME}/work/projects/monjizeen-dev/mora"
-    "${HOME}/projects/monjizeen-dev/mora"
-  )
-  local d
-  for d in "${candidates[@]}"; do
-    if [[ -f "${d}/scripts/install-cursor-runtime.sh" ]]; then
-      echo "${d}"
-      return 0
+  if [[ ! -d "${MONO_ROOT}/mora/.git" ]]; then
+    if git clone "git@github.com:monjizeen-dev/mora.git" "${MONO_ROOT}/mora" 2>/dev/null; then
+      fix "cloned mora → ${MONO_ROOT}/mora"
+    else
+      need "clone mora: git clone git@github.com:monjizeen-dev/mora.git ${MONO_ROOT}/mora"
     fi
-  done
-  return 1
-}
-
-MORA_HUB="$(find_mora)" || MORA_HUB=""
-if [[ -n "${MORA_HUB}" ]]; then
-  if "${MORA_HUB}/scripts/install-cursor-runtime.sh" "${MORA_HUB}"; then
-    ok "MORA cursor-runtime"
-  else
-    need "fix MORA cursor-runtime install (${MORA_HUB}/scripts/install-cursor-runtime.sh)"
   fi
-else
-  need "clone monjizeen-dev/mora for Cursor hooks/rules. Example:"
-  need "  git clone git@github.com:monjizeen-dev/mora.git ~/Documents/work/projects/monjizeen-dev/mora"
+  if [[ -f "${MONO_ROOT}/mora/scripts/refresh-mora.sh" ]]; then
+    if "${MONO_ROOT}/mora/scripts/refresh-mora.sh" "${MONO_ROOT}"; then
+      ok "refresh-mora"
+    else
+      need "fix refresh-mora (${MONO_ROOT}/mora/scripts/refresh-mora.sh)"
+    fi
+  else
+    need "mora/scripts/refresh-mora.sh missing after clone"
+  fi
 fi
 
 # --- Secrets directory ---
