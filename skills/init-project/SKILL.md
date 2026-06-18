@@ -24,7 +24,8 @@ Bootstrap a new monjizeen-dev product end-to-end. **Work step by step.** At each
 | OAuth callbacks | `https://staging-{project}.mnjz.in/auth/google/callback`, `https://app-{project}.mnjz.in/auth/google/callback` |
 | VPS deploy paths | `/srv/projects/{project}/staging`, `/srv/projects/{project}/production` |
 | Org secrets file | `~/.cursor/secrets/monjizeen-dev.env` |
-| Project secrets file | `~/.cursor/secrets/{project}.env` |
+| Staging/local secrets | `~/.cursor/secrets/{project}.env` (local dev + staging VPS) |
+| Production secrets | `~/.cursor/secrets/{project}-production.env` |
 | Scaffold template | `kawader` (Laravel 13 + Inertia + Vue 3 + Socialite) |
 | Init scripts | `shared-assets/scripts/init-project/` |
 
@@ -244,53 +245,74 @@ Show this block verbatim (fill `{PROJECT}`, `{STAGING_FQDN}`, `{PRODUCTION_FQDN}
 - User type: External (or Internal if Google Workspace)
 - Add authorized domain: `mnjz.in`
 
-**2. Create OAuth client** (one per app — do this now)
+**2. Create OAuth client — staging + local** (do this first)
 
 - Open: https://console.cloud.google.com/apis/credentials/oauthclient
 - Application type: **Web application**
-- Name: `{PROJECT}` (or similar)
+- Name: `{PROJECT} staging` (or similar)
 - **Authorized JavaScript origins:**
   - `https://{STAGING_FQDN}`
-  - `https://{PRODUCTION_FQDN}`
 - **Authorized redirect URIs:**
   - `https://{STAGING_FQDN}/auth/google/callback`
-  - `https://{PRODUCTION_FQDN}/auth/google/callback`
 - For local dev, also add:
   - Origin: `http://127.0.0.1:8000`
   - Redirect: `http://127.0.0.1:8000/auth/google/callback`
 - Click **Create**
 
-**3. Save credentials**
+**3. Create OAuth client — production** (separate client)
 
-Google shows **Client ID** and **Client secret** only once. Copy both.
+- Open: https://console.cloud.google.com/apis/credentials/oauthclient
+- Application type: **Web application**
+- Name: `{PROJECT} production` (or similar)
+- **Authorized JavaScript origins:**
+  - `https://{PRODUCTION_FQDN}`
+- **Authorized redirect URIs:**
+  - `https://{PRODUCTION_FQDN}/auth/google/callback`
+- Click **Create**
 
-**4. Tell me when done**
+**4. Save credentials**
+
+Google shows **Client ID** and **Client secret** only once per client. Copy both pairs.
+
+**5. Tell me when done**
 
 Reply with one of:
 
-- `done` — and you will paste Client ID + Client secret in chat (agent writes secrets file), **or**
-- `saved` — you already wrote them to `~/.cursor/secrets/{PROJECT}.env`
+- `done` — paste both Client ID + Client secret pairs in chat (agent writes both secrets files), **or**
+- `saved` — you already wrote staging/local to `~/.cursor/secrets/{PROJECT}.env` and production to `~/.cursor/secrets/{PROJECT}-production.env`, **or**
+- send two `client_secret_*.json` download paths (staging/local first, production second)
 
 ---
 
-**Ask user** to confirm `done` or `saved`. If `done`, accept creds and write secrets file (Gate 6). Never echo secrets back.
+**Ask user** to confirm `done`, `saved`, or JSON paths. If `done`, accept creds and write both secrets files (Gate 6). Never echo secrets back.
 
 ---
 
 ## Gate 6 — Secrets on disk
 
-Write project secrets file (mode 600):
+Write **two** secrets files (mode 600):
 
 ```bash
 mkdir -p ~/.cursor/secrets
+
+# Staging + local dev OAuth client
 cat > "~/.cursor/secrets/${PROJECT}.env" <<'ENVEOF'
 GOOGLE_CLIENT_ID=...
 GOOGLE_CLIENT_SECRET=...
 ENVEOF
 chmod 600 "~/.cursor/secrets/${PROJECT}.env"
+
+# Production OAuth client (separate Google client)
+cat > "~/.cursor/secrets/${PROJECT}-production.env" <<'ENVEOF'
+GOOGLE_CLIENT_ID=...
+GOOGLE_CLIENT_SECRET=...
+ENVEOF
+chmod 600 "~/.cursor/secrets/${PROJECT}-production.env"
 ```
 
-Update local dev `.env` in workspace (not committed):
+If user sent `client_secret_*.json` files, parse `web.client_id` and `web.client_secret` — never print values.
+
+Update local dev `.env` in workspace (not committed) from **staging/local** secrets:
 
 ```env
 GOOGLE_CLIENT_ID=...
@@ -321,8 +343,8 @@ set -a && source ~/.cursor/secrets/monjizeen-dev.env && set +a
 
 1. **Local:** `dns.sh` → Cloudflare A records `staging-{project}.mnjz.in` and `app-{project}.mnjz.in` → `VPS_PUBLIC_IP`
 2. **SSH:** rsync scripts to `VPS_SHARED_ASSETS_PATH/scripts/init-project/`
-3. **SSH:** copy `~/.cursor/secrets/{project}.env` to VPS (for staging + production `.env` merge)
-4. **SSH:** `remote-setup.sh` on VPS — nginx vhosts (staging → `/staging/public`, production → `/production/public`), certbot if needed, clone repo to both paths, build, migrate
+3. **SSH:** copy `~/.cursor/secrets/{project}.env` and `{project}-production.env` to VPS
+4. **SSH:** `remote-setup.sh` on VPS — nginx vhosts (staging → `/staging/public`, production → `/production/public`), certbot if needed, clone repo to both paths, build, migrate (`env-deploy.sh` picks secrets per env)
 5. **Local:** `verify.sh` for staging and production HTTPS + OAuth
 
 On first org setup, ensure VPS has `shared-assets` cloned:
@@ -377,7 +399,8 @@ Print handoff summary:
 | Production URL | `https://app-{PROJECT}.mnjz.in` (manual deploy only) |
 | Workspace | `{WORKSPACE}` |
 | MORA agent | `domains/monjizeen-dev/agents/{PROJECT}/` |
-| Secrets | `~/.cursor/secrets/{PROJECT}.env` |
+| Secrets (staging/local) | `~/.cursor/secrets/{PROJECT}.env` |
+| Secrets (production) | `~/.cursor/secrets/{PROJECT}-production.env` |
 | Deploy staging | push to `main` / auto-merge → CI deploys staging |
 | Deploy production | GitHub Actions `workflow_dispatch` → production |
 
