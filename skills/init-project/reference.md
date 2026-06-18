@@ -54,6 +54,69 @@ Dashboard → select **mnjz.in** → right sidebar **Zone ID**.
 
 ---
 
+## Stack routing
+
+Gate 1 **project type** selects scaffold and which later gates apply.
+
+| `PROJECT_TYPE` | `STACK` | Template / script | Gates 5–7 (OAuth/VPS) | Design system |
+|----------------|---------|-------------------|------------------------|---------------|
+| `content` | `web` | `templates/web-app` + `scaffold-web.sh` | Yes | shadcn-vue + Lucide |
+| `web-app` | `web` | `templates/web-app` + `scaffold-web.sh` | Yes | shadcn-vue + Lucide |
+| `native-mobile` | `expo` | `scaffold-expo.sh` | **Skip** | Lucide RN + `constants/theme.ts` |
+
+**Decision guide**
+
+- Browser-only product, CMS, marketing, admin CRUD → `content` or `web-app` (same scaffold).
+- Camera, push notifications, biometrics, app store, deep offline-native → `native-mobile` → Expo.
+- Mobile app + Laravel API → init **two** repos (Expo + web) or add API later.
+
+**Do not use `kawader` as init template.** Kawader is an existing talent-directory product.
+
+### Maintainer: rebuild web template
+
+After kawader OAuth shell or monjizeen UI primitives change:
+
+```bash
+shared-assets/scripts/init-project/build-web-app-template.sh
+```
+
+---
+
+## Design system (web)
+
+Org standard for all **web** scaffolds (`content`, `web-app`):
+
+| Piece | Package / path |
+|-------|----------------|
+| Primitives | **shadcn-vue** (Reka UI, not Radix Vue) |
+| Icons | **Lucide** — `lucide-vue-next` only |
+| Styling | Tailwind CSS v4 + `resources/css/app-theme.css` (zinc tokens) |
+| Utils | `resources/js/lib/utils.js` (`cn()` via clsx + tailwind-merge) |
+| Components | `resources/js/components/ui/` |
+
+**Shipped in template:** Button, Card, Input, Label, Separator.
+
+**Add more components** (from project root after scaffold):
+
+```bash
+npx shadcn-vue@latest add dialog dropdown-menu select table
+```
+
+**Rules for agents**
+
+- Import icons from `lucide-vue-next` only — no Heroicons, Font Awesome, or inline SVG sets.
+- Use shadcn `Button`, `Card`, `Input`, etc. before bespoke styled elements.
+- Match monjizeen patterns in `monjizeen/.cursor/rules/design.mdc` when building UI.
+
+### Design system (Expo)
+
+- **Lucide:** `lucide-react-native` + `react-native-svg`
+- **No shadcn** on React Native
+- Shared tokens: `constants/theme.ts` (extend per product)
+- Pair with Laravel API on mnjz.in when backend needed
+
+---
+
 ## REGISTRY.yaml entry
 
 Add under `domains.monjizeen-dev.repos`:
@@ -71,13 +134,15 @@ Add under `domains.monjizeen-dev.repos`:
 
 ## Agent stub
 
+### Web (`content` / `web-app`)
+
 `mora/domains/monjizeen-dev/agents/{PROJECT}/SKILL.md`:
 
 ```markdown
 ---
 name: {PROJECT}
 description: >
-  {PROJECT} agent. {ONE_LINE_PURPOSE}. Laravel + Inertia + Vue 3.
+  {PROJECT} agent. {ONE_LINE_PURPOSE}. Laravel + Inertia + Vue 3 + shadcn-vue + Lucide.
   Triggers on {PROJECT}. Not for other monjizeen-dev repos.
 ---
 
@@ -97,6 +162,7 @@ description: >
 
 - Laravel 13, PHP 8.3+, SQLite (dev/CI)
 - Inertia.js + Vue 3, Tailwind CSS v4, Vite
+- Design system: shadcn-vue (Reka UI) + Lucide icons
 - Google OAuth (Socialite), session guard
 
 ## Memory
@@ -104,20 +170,49 @@ description: >
 `domains/monjizeen-dev/agents/{PROJECT}/MEMORY.md`
 ```
 
-`MEMORY.md`:
+`MEMORY.md` (web):
 
 ```markdown
 # {PROJECT} — agent memory
 
 ## Decisions
 
-- Stack: Laravel + Inertia + Vue 3, Google OAuth only
+- Project type: {PROJECT_TYPE}
+- Stack: Laravel + Inertia + Vue 3, shadcn-vue + Lucide, Google OAuth
 - Staging URL: https://staging-{PROJECT}.mnjz.in
 - Production URL: https://app-{PROJECT}.mnjz.in
 
 ## Open questions
 
 *(Empty — populate with `remember that …`)*
+```
+
+### Expo (`native-mobile`)
+
+`SKILL.md` excerpt:
+
+```markdown
+## Stack
+
+- Expo (React Native) + TypeScript
+- Icons: lucide-react-native
+- Backend API: (TBD — Laravel on mnjz.in if needed)
+```
+
+`MEMORY.md` (expo):
+
+```markdown
+# {PROJECT} — agent memory
+
+## Decisions
+
+- Project type: native-mobile
+- Stack: Expo + TypeScript, Lucide icons
+- No mnjz.in VPS deploy — EAS / app store release path
+
+## Open questions
+
+*(Empty)*
 ```
 
 ---
@@ -203,6 +298,36 @@ jobs:
 Replace `{PROJECT}` with the actual project name.
 
 **Deploy targets:** `deploy-staging` pushes to `/srv/projects/{PROJECT}/staging` (served at `staging-{PROJECT}.mnjz.in`). `deploy-production` is `workflow_dispatch` only → `/srv/projects/{PROJECT}/production` (`app-{PROJECT}.mnjz.in`). Push to `main` / auto-merge only hits staging.
+
+---
+
+## Expo CI workflow
+
+`.github/workflows/ci.yml` for Expo repos:
+
+```yaml
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.2.2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - run: npx tsc --noEmit
+```
+
+Add EAS Build workflow separately when the product is ready for store releases.
 
 ---
 
@@ -317,7 +442,7 @@ Creates DNS + nginx for `staging-{PROJECT}.mnjz.in` and `app-{PROJECT}.mnjz.in`.
 
 ## gitignore
 
-Gate 3: after rsync from `kawader`, ensure project `.gitignore` includes these (merge if missing — do not replace Laravel defaults):
+Gate 3: after scaffold from `templates/web-app`, ensure project `.gitignore` includes these (merge if missing — do not replace Laravel defaults):
 
 ```gitignore
 # OS junk
@@ -331,7 +456,7 @@ ehthumbs.db
 Desktop.ini
 ```
 
-`kawader` template should already carry most of this; `**/.DS_Store` and `._*` catch nested Finder droppings.
+`web-app` template should already carry most of this; `**/.DS_Store` and `._*` catch nested Finder droppings.
 
 ---
 
