@@ -1,43 +1,38 @@
 ---
 name: finish-work
-description: Finish the current task by running tests, committing, pushing, creating a PR, and monitoring until merge succeeds. Use when the user says "finish work", "ship it", "wrap up", "done with this", or invokes /finish-work.
+description: Wrap up a task — run checks, commit, push when done. No automatic PRs or merges. Use when the user says "finish work", "ship it", "wrap up", "done with this", or invokes /finish-work.
 ---
 
-## Finish Work
+# Finish Work
 
-### When to use
+Org-wide skill for monjizeen-dev repos. Repo-local overrides win when present.
 
-* "finish work"
-* "ship it"
-* "wrap up"
-* "done with this"
-* "create a PR"
-* Any time the user is done with the current task and wants to ship
+## Two modes only
 
----
-
-## Steps
-
-### 1. Run all required tests
-
-Run the full test/lint suite before anything else:
+| Mode | Detect | Finish behavior |
+|------|--------|-----------------|
+| **QUICK** | `.git` is a directory | Commit on `main`; optional push when task done |
+| **WORKTREE** | `.git` is a file | Commit on branch; push for review; Omar merges manually |
 
 ```bash
-composer check
-npm run lint
+if [ -f .git ]; then echo WORKTREE; else echo QUICK; fi
 ```
 
-- `composer check` runs Pint (formatting) + PHPStan (static analysis) + tests.
-- `npm run lint` checks frontend code.
+## When to invoke
 
-**If tests fail:** Fix the issues proactively. Re-run until all pass. Do not
-proceed to commit until everything is green.
+- The user says "finish work", "ship it", "wrap up", "done with this"
+- After completing a coding task that changed the repo
+- **Stop hook fired** with uncommitted changes — commit now (do not push unless task is done)
 
-### 2. Check for uncommitted changes
+**Never** create PRs automatically. **Never** auto-merge into `main`.
 
-Run `git status`. If there are uncommitted changes:
+---
 
-- Stage only the files you actually changed (never `git add -A` or `git add .`):
+## During work (commit frequently)
+
+After meaningful edits, commit without waiting for task end:
+
+- Stage only files you actually changed (never `git add -A` or `git add .`):
   ```bash
   git add path/to/file1 path/to/file2
   ```
@@ -45,125 +40,66 @@ Run `git status`. If there are uncommitted changes:
   ```bash
   git commit -m "message here"
   ```
-- One commit per logical unit. If there are multiple logical changes, make
-  multiple commits.
-- Never commit `.env`, credentials, or secrets.
+- One commit per logical unit. Never commit `.env`, credentials, or secrets.
+- **Do not push** mid-task unless Omar asks for backup.
 
-### 3. Push the branch
+---
+
+## Task complete (full finish-work)
+
+Run when the task is done or Omar says to wrap up.
+
+### 1. Run all required tests
+
+Run only what the repo provides:
+
+```bash
+# PHP / Laravel repos
+test -f composer.json && composer check
+
+# Frontend / Node repos
+test -f package.json && npm run lint
+```
+
+- `composer check` (when present): formatting + static analysis + tests.
+- `npm run lint` (when present): frontend lint.
+
+**If tests fail:** Fix the issues. Re-run until all pass. Do not proceed until green.
+
+### 2. Commit remaining changes
+
+Run `git status`. If there are uncommitted changes, commit using the rules above.
+
+### 3. Push (task complete or backup only)
+
+Push when the task is complete, or when Omar explicitly asks for backup:
 
 ```bash
 git push -u origin HEAD
 ```
 
-### 4. Create a Pull Request
+**QUICK mode:** Push to `main` only if Omar wants it now (end of task or backup). Otherwise report commits are local.
 
-```bash
-gh pr create --title "Short title under 70 chars" --body "$(cat <<'EOF'
-## Summary
-- bullet point describing what changed and why
+**WORKTREE mode:** Push the branch so Omar can review. Do not merge.
 
-## Test plan
-- [ ] Tests pass (composer check)
-- [ ] Lint passes (npm run lint)
-- [ ] Additional manual verification if applicable
+### 4. Report
 
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
-EOF
-)"
-```
+**QUICK mode:**
+> Task done. Commits on `main`. [Pushed / not pushed — say which.] `main` should stay deployable.
 
-Rules:
-- PR title under 70 characters
-- Summary explains *why*, not just *what*
-- Test plan includes what was verified
+**WORKTREE mode:**
+> Branch `{branch}` pushed and ready for your review. Merge into `main` when satisfied, then delete the branch and close this worktree.
 
-### 5. Enable auto-merge
-
-```bash
-gh pr merge --auto
-```
-
-This will merge the PR automatically once all required checks pass.
-
-### 6. Monitor CI
-
-#### Estimate wait time from change size
-
-Before the first poll, count the changed files in the PR to determine polling
-intervals:
-
-```bash
-gh pr diff --name-only | wc -l
-```
-
-| Change size          | Initial wait | Subsequent polls |
-|----------------------|-------------|------------------|
-| Small (1–3 files)    | 60 s        | 30 s             |
-| Medium (4–10 files)  | 90 s        | 45 s             |
-| Large (11+ files)    | 120 s       | 60 s             |
-
-#### Polling loop
-
-1. Tell the user the estimated initial wait and say:
-   **"Type `try now` if you'd like to skip the wait and check immediately."**
-2. Wait the initial interval, then run `gh pr checks`.
-3. If checks are still pending, tell the user you'll check again in N seconds
-   and repeat the `try now` prompt. Wait the subsequent interval.
-4. If the user responds with `try now` (or similar: "check now", "skip",
-   "go"), skip the remaining wait and run `gh pr checks` immediately.
-5. Repeat until checks resolve (pass or fail).
-
-#### If checks fail
-
-1. Read the failure output to understand what broke
-2. Fix the issue locally
-3. Run `composer check` and `npm run lint` again locally to verify
-4. Commit the fix (new commit, never amend)
-5. Push again: `git push`
-6. Restart the polling loop (reset to initial wait for the new push)
-7. Repeat up to **3 cycles**
-
-If after 3 cycles checks still fail, stop and report the issue to the user
-with the error details.
-
-### 7. Wait for merge
-
-Once checks pass and auto-merge completes:
-
-```bash
-gh pr view --json state --jq '.state'
-```
-
-If state is `MERGED`, proceed to cleanup.
-
-### 8. Clean up local branch
-
-```bash
-git checkout main
-git pull origin main
-git fetch --prune
-git branch -d {branch-name}
-```
-
-- Remote branch is auto-deleted by GitHub (repo setting enabled).
-- Use `git branch -d` (safe delete). If it says "not fully merged" after a
-  squash/rebase merge on GitHub, confirm with user before using `-D`.
-
-### 9. Report to user
-
-Tell the user:
-- PR URL
-- Merge status (merged successfully / failed with details)
-- Local cleanup done
-- Back on main, synced
+If Omar later says "merge it", help with the local merge steps — but only when explicitly asked. Never auto-merge.
 
 ---
 
 ## Rules
 
-- **Never force-push.** If there's a conflict, rebase non-interactively or ask
-  the user.
-- **Never amend commits.** Always create new commits for fixes.
-- **Never skip hooks** (`--no-verify`). Fix the root cause instead.
+- **Never force-push.** If conflict, rebase non-interactively or ask Omar.
+- **Never amend commits** unless Omar explicitly requests it and the commit was not pushed.
+- **Never skip hooks** (`--no-verify`). Fix the root cause.
 - **Stage files explicitly** — never `git add -A` or `git add .`.
-- **Stop after 3 CI fix cycles** — don't loop forever.
+- **Never create PRs** unless Omar explicitly asks.
+- **Never auto-merge** into `main`.
+- **`main` must always stay stable and deployable.**

@@ -1,114 +1,104 @@
-# Claude Code Skills
+# monjizeen-dev Skills (single source of truth)
 
-Custom skills for workflow automation. Copy or symlink to `~/.claude/skills/` for use across all projects.
+All custom skills live here — versioned on GitHub. **Do not edit copies** under `~/.claude/skills/` or `~/.cursor/skills/`.
 
-## Skills Available
+## Skills
 
 | Skill | Purpose |
 |-------|---------|
-| `start-work` | Create branch, sync main, prep workspace |
-| `finish-work` | Test, commit, push, create PR, monitor merge |
-| `cleanup` | Sync main, prune branches, clean local state |
+| `start-work` | Sync main (QUICK) or confirm branch (WORKTREE); challenge scope before coding |
+| `finish-work` | Test, commit, push when done — no auto PR or merge |
+| `cleanup` | Sync main, prune branches, clean local git state |
 | `cto` | Review technical decisions, architecture, code quality |
 | `ceo` | Review business decisions, unit economics, strategy |
-| `init-project` | Bootstrap new repo: stack routing (web vs Expo), GitHub, scaffold, shadcn+Lucide, MORA, Google OAuth, mnjz.in DNS/VPS |
+| `init-project` | Bootstrap new repo: stack, GitHub, scaffold, MORA, OAuth, DNS/VPS |
+| `pre-mvp-audit` | Pre-launch codebase audit tied to core user loop |
+| `run-mora` | Bootstrap MORA on a new Mac or after pull |
+| `refresh-mora` | Alias for `run-mora` |
+| `caveman` | Communication intensity reference (Cursor enforces via rules + hooks) |
 
-## Setup
+## Install (automatic)
 
-### Option 1: Copy (recommended for teams)
-
-```bash
-cp -r shared-assets/skills/* ~/.claude/skills/
-# Cursor:
-cp -r shared-assets/skills/* ~/.cursor/skills/
-```
-
-Skills become available immediately. Updates require re-copying.
-
-### Option 2: Symlink (for development)
+From mora repo:
 
 ```bash
-# From repo root
-ln -s $(pwd)/shared-assets/skills/* ~/.claude/skills/
+./run-mora.sh
 ```
 
-Skills pull latest from repo automatically. Good for iterating on skill definitions.
+This symlinks every skill here to **both**:
+
+- `~/.cursor/skills/`
+- `~/.claude/skills/`
+
+Re-run after `git pull` on any Mac.
+
+## Manual symlink (if needed)
+
+```bash
+MONO=~/Documents/work/monjizeen-dev
+mkdir -p ~/.cursor/skills ~/.claude/skills
+for skill in "$MONO"/shared-assets/skills/*/; do
+  name=$(basename "$skill")
+  [[ -f "$skill/SKILL.md" ]] || continue
+  ln -sfn "$skill" ~/.cursor/skills/"$name"
+  ln -sfn "$skill" ~/.claude/skills/"$name"
+done
+```
 
 ## Usage
 
-Invoke skills with `/` command:
+Invoke with `/` in Cursor or Claude Code:
 
 ```
 /start-work
 /finish-work
 /cleanup
 /init-project
+/pre-mvp-audit
+/run-mora
 /cto
 /ceo
 ```
 
-Or trigger them naturally in conversation:
-- "start work on user authentication"
-- "finish work"
-- "cleanup"
-- "init project" or "set up a new project"
-- "should we build this" → triggers CEO review
+Or trigger naturally: "start work on …", "finish work", "should we build this" → CEO review.
 
-## File Structure
-
-Each skill is a directory with `SKILL.md`:
+## File structure
 
 ```
 skills/
-├── start-work/
-│   └── SKILL.md
-├── finish-work/
-│   └── SKILL.md
-├── cleanup/
-│   └── SKILL.md
-├── cto/
-│   └── SKILL.md
-├── ceo/
-│   └── SKILL.md
+├── start-work/SKILL.md
+├── finish-work/SKILL.md
+├── cleanup/SKILL.md
+├── cto/SKILL.md
+├── ceo/SKILL.md
 ├── init-project/
 │   ├── SKILL.md
 │   └── reference.md
-└── README.md (this file)
+├── pre-mvp-audit/
+│   ├── SKILL.md
+│   └── CHECKLIST.md
+├── run-mora/SKILL.md
+├── refresh-mora/SKILL.md
+├── caveman/SKILL.md
+└── README.md
 ```
 
-### init-project scripts
+## init-project scripts
 
-| Script | Purpose |
-|--------|---------|
-| `bootstrap-mac.sh` | New Mac setup: skill symlink, secrets from VPS, SSH config |
-| `scaffold-web.sh` | Copy `templates/web-app` → new project, install deps |
-| `scaffold-expo.sh` | Create Expo + TypeScript + Lucide mobile app |
-| `build-web-app-template.sh` | Rebuild `templates/web-app` from kawader shell + design system |
-| `gate7.sh` | DNS + SSH deploy |
-| `dns.sh` | Cloudflare A record |
-| `remote-setup.sh` | VPS app setup (via SSH) |
-| `nginx-vhost.sh` | Per-app nginx vhost |
-| `env-deploy.sh` | Merge OAuth + APP_URL into staging or production `.env` |
-| `env-production.sh` | Back-compat wrapper → `env-deploy.sh … production` |
-| `verify.sh` | HTTPS + OAuth smoke test |
+See `../scripts/init-project/` — `bootstrap-mac.sh` calls `run-mora.sh` which links skills automatically.
 
-New Mac: `git clone shared-assets` → run `bootstrap-mac.sh` → `/init-project`.
+## Updating
 
-## Updating Skills
-
-Edit `SKILL.md` in the skill directory. If using symlink, changes take effect immediately. If using copy, re-run copy command.
+Edit `SKILL.md` in this repo. Commit + push. Run `./run-mora.sh` on each Mac (or rely on symlinks — changes apply immediately).
 
 ## Troubleshooting
 
-**Skill not appearing in Claude Code:**
-- Verify `~/.claude/skills/{skill-name}/SKILL.md` exists
-- Restart Claude Code
-- Check Claude Code skill list: skills listed in UI under "Available"
+**Skill not appearing:**
+- Verify symlink: `ls -l ~/.cursor/skills/{name}` and `ls -l ~/.claude/skills/{name}`
+- Both should point to `shared-assets/skills/{name}`
+- Re-run `./run-mora.sh`
+- Restart Cursor or Claude Code
 
-**Symlink broken:**
-- Verify symlink path: `ls -l ~/.claude/skills/`
-- Recreate symlink if repo moved
-
-**Name conflicts:**
-- Custom skills override built-in skills with same name (rare)
-- Rename custom skill if collision occurs
+**Stale copy instead of symlink:**
+- Remove the copy: `rm -rf ~/.claude/skills/{name}`
+- Re-run `./run-mora.sh`
