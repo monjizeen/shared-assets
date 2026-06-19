@@ -87,6 +87,12 @@ skills/
 
 See `../scripts/init-project/` — `bootstrap-mac.sh` calls `run-mora.sh` which links skills automatically.
 
+## Caveman plugin
+
+Do **not** install the marketplace `caveman@caveman` plugin — it duplicates org skills (`cavecrew`, `caveman-commit`, `compress`, etc.). Use the single `caveman` skill here; Cursor enforces intensity via MORA rules + hooks.
+
+If already installed: `claude plugin uninstall caveman@caveman`
+
 ## Updating
 
 Edit `SKILL.md` in this repo. Commit + push. Run `./run-mora.sh` on each Mac (or rely on symlinks — changes apply immediately).

@@ -44,7 +44,7 @@ Optional: `--all-repos` to clone every app repo listed in REGISTRY.
 
 - Open Cursor on any repo under the mono root — MORA routes via hooks
 - Re-run `/run-mora` after `git pull` on another Mac (or daily)
-- For UI studio work: `invoke-studio.sh` or interactive `claude` + `/frontend`
+- For UI studio work: `invoke-studio.sh` or interactive `claude` + `/frontend-studio`
 
 Exit **0** → tell user "MORA is ready." Exit **1** → show `need` lines from script output.
 
