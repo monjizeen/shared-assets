@@ -70,12 +70,89 @@ ORG_SECRETS="${HOME}/.cursor/secrets/monjizeen-dev.env"
 
 # --- SSH config: ensure Host vps exists ---
 SSH_CONFIG="${HOME}/.ssh/config"
+detect_vps_identity_file() {
+  local ip="${1:-187.77.109.160}"
+  local key=""
+  if [[ -f "${SSH_CONFIG}" ]]; then
+    # Reuse Host root IdentityFile when it targets the same VPS IP.
+    key="$(python3 - "${SSH_CONFIG}" "${ip}" <<'PY'
+import re, sys
+path, ip = sys.argv[1:3]
+text = open(path, encoding="utf-8").read()
+blocks = re.split(r"(?m)^Host\s+", text)
+for block in blocks[1:]:
+    lines = block.splitlines()
+    name = lines[0].strip()
+    if name != "root":
+        continue
+    body = "\n".join(lines[1:])
+    host = re.search(r"(?m)^\s*HostName\s+(\S+)", body)
+    ident = re.search(r"(?m)^\s*IdentityFile\s+(\S+)", body)
+    if host and host.group(1) == ip and ident:
+        print(ident.group(1))
+        break
+PY
+)"
+    if [[ -n "${key}" ]]; then
+      echo "${key}"
+      return 0
+    fi
+  fi
+  for candidate in \
+    "${HOME}/.ssh/access_to_vps_root_from_jasmine_macbook" \
+    "${HOME}/.ssh/id_ed25519"; do
+    if [[ -f "${candidate}" ]]; then
+      echo "${candidate}"
+      return 0
+    fi
+  done
+  echo "${HOME}/.ssh/id_ed25519"
+}
+
 ensure_ssh_vps() {
+  local ip="${1:-187.77.109.160}"
+  local identity
+  identity="$(detect_vps_identity_file "${ip}")"
+
   if [[ -f "${SSH_CONFIG}" ]] && grep -qE '^[Hh]ost[[:space:]]+vps\b' "${SSH_CONFIG}"; then
-    ok "ssh config Host vps"
+    if ssh -o BatchMode=yes -o ConnectTimeout=10 vps 'hostname' >/dev/null 2>&1; then
+      ok "ssh config Host vps"
+      return 0
+    fi
+    fix "Host vps exists but SSH failed — updating IdentityFile"
+    python3 - "${SSH_CONFIG}" "${identity}" "${ip}" <<'PY'
+import re, sys
+path, identity, ip = sys.argv[1:4]
+text = open(path, encoding="utf-8").read()
+pattern = re.compile(
+    r"(# monjizeen-dev VPS \(added by init-project bootstrap\)\n)?"
+    r"Host vps\n"
+    r"(?:.*\n)*?"
+    r"(?=Host |\Z)",
+    re.MULTILINE,
+)
+replacement = (
+    "# monjizeen-dev VPS (added by init-project bootstrap)\n"
+    f"Host vps\n"
+    f"    HostName {ip}\n"
+    f"    User root\n"
+    f"    IdentityFile {identity}\n"
+    f"    IdentitiesOnly yes\n\n"
+)
+if pattern.search(text):
+    text = pattern.sub(replacement, text, count=1)
+else:
+    text = text.rstrip() + "\n\n" + replacement
+open(path, "w", encoding="utf-8").write(text)
+PY
+    if ssh -o BatchMode=yes -o ConnectTimeout=10 vps 'hostname' >/dev/null 2>&1; then
+      ok "ssh config Host vps (repaired)"
+    else
+      need "SSH still fails for Host vps — check key ${identity}"
+    fi
     return 0
   fi
-  local ip="${1:-187.77.109.160}"
+
   mkdir -p "${HOME}/.ssh"
   chmod 700 "${HOME}/.ssh"
   cat >> "${SSH_CONFIG}" <<EOF
@@ -84,7 +161,8 @@ ensure_ssh_vps() {
 Host vps
     HostName ${ip}
     User root
-    IdentityFile ~/.ssh/id_ed25519
+    IdentityFile ${identity}
+    IdentitiesOnly yes
 EOF
   fix "appended Host vps to ~/.ssh/config"
 }
