@@ -204,7 +204,9 @@ Primitives live in `components/ui/` (shadcn-vue). App patterns live in `componen
 
 **Submit affordance:** Circular green `ArrowUp` button inside the pill.
 
-**Paths:** `InlineInputGroup.vue`, `SimpleInlineCreateInput.vue`, `lists/ListInlineCreateInput.vue`, `pile/PileInlineCreateInput.vue`
+**Action overflow (> 3 field actions):** Keep 2 inline; rest in `MoreHorizontal` menu with `DropdownMenuSub` rows (chevron opens same panel as inline). Use `InlineInputActionsBar` + `InlineInputAction`. Submit never counts toward the limit. See `design.mdc` → Inline input action overflow.
+
+**Paths:** `InlineInputGroup.vue`, `InlineInputActionsBar.vue`, `InlineInputAction.vue`, `SimpleInlineCreateInput.vue`, `lists/ListInlineCreateInput.vue`, `pile/PileInlineCreateInput.vue`
 
 ---
 
