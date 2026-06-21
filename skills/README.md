@@ -11,7 +11,8 @@ All custom skills live here — versioned on GitHub. **Do not edit copies** unde
 | `cleanup` | Sync main, prune branches, clean local git state |
 | `cto` | Review technical decisions, architecture, code quality |
 | `ceo` | Review business decisions, unit economics, strategy |
-| `init-project` | Bootstrap new repo: stack, GitHub, scaffold, MORA, OAuth, DNS/VPS |
+| `new-project` | **Canonical** — bootstrap new repo: stack, GitHub, scaffold, MORA, OAuth, mnjz.in DNS/VPS (Cursor + Telegram) |
+| `init-project` | Alias for `new-project` |
 | `pre-mvp-audit` | Pre-launch codebase audit tied to core user loop |
 | `run-mora` | Bootstrap MORA on a new Mac or after pull |
 | `refresh-mora` | Alias for `run-mora` |
@@ -53,6 +54,7 @@ Invoke with `/` in Cursor or Claude Code:
 /start-work
 /finish-work
 /cleanup
+/new-project
 /init-project
 /pre-mvp-audit
 /run-mora
@@ -71,8 +73,9 @@ skills/
 ├── cleanup/SKILL.md
 ├── cto/SKILL.md
 ├── ceo/SKILL.md
+├── new-project/SKILL.md
 ├── init-project/
-│   ├── SKILL.md
+│   ├── SKILL.md      # alias → new-project
 │   └── reference.md
 ├── pre-mvp-audit/
 │   ├── SKILL.md
@@ -85,7 +88,7 @@ skills/
 
 ## init-project scripts
 
-See `../scripts/init-project/` — `bootstrap-mac.sh` calls `run-mora.sh` which links skills automatically.
+See `../scripts/init-project/` — Gate 0 of `/new-project` runs `bootstrap-mac.sh`; `run-mora.sh` links skills automatically.
 
 ## Caveman plugin
 

@@ -240,7 +240,7 @@ fi
 
 echo ""
 if [[ "${NEED_MANUAL}" -eq 0 ]]; then
-  echo "bootstrap: READY — run /init-project"
+  echo "bootstrap: READY — run /new-project"
   exit 0
 fi
 echo "bootstrap: INCOMPLETE — fix items marked 'need' above, then re-run:"
