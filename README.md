@@ -5,6 +5,8 @@ Shared GitHub Actions workflows, composite actions, and Claude Code skills for a
 ## Structure
 
 ```
+packages/
+  design-system/     # @monjizeen/design-system — UI primitives, patterns, tokens (source of truth)
 actions/
   setup-flutter/     # Install Flutter SDK + pub get
   setup-laravel/     # Install PHP + Composer + prepare .env
@@ -79,3 +81,11 @@ jobs:
 - **Different tech stack = separate workflow** (flutter-test vs laravel-test)
 - **Shared functionality = reusable action** (setup, deploy, notifications)
 - **No mega-workflows** — each project has a thin caller CI that composes what it needs
+
+## Design system
+
+**`packages/design-system/`** (`@monjizeen/design-system`) — shadcn-vue primitives, org patterns, CSS tokens. See [packages/design-system/README.md](packages/design-system/README.md).
+
+Pattern docs: [packages/design-system/docs/INDEX.md](packages/design-system/docs/INDEX.md)
+
+Sync from monjizeen reference app: `packages/design-system/scripts/sync-from-monjizeen.sh`

@@ -84,29 +84,31 @@ shared-assets/scripts/init-project/build-web-app-template.sh
 
 ## Design system (web)
 
-Org standard for all **web** scaffolds (`content`, `web-app`):
+Org standard: **`@monjizeen/design-system`** in `shared-assets/packages/design-system/`.
 
-| Piece | Package / path |
+| Piece | Package path |
 |-------|----------------|
-| Primitives | **shadcn-vue** (Reka UI, not Radix Vue) |
-| Icons | **Lucide** — `lucide-vue-next` only |
-| Styling | Tailwind CSS v4 + `resources/css/app-theme.css` (zinc tokens) |
-| Utils | `resources/js/lib/utils.js` (`cn()` via clsx + tailwind-merge) |
-| Components | `resources/js/components/ui/` |
+| Primitives | `@monjizeen/design-system/ui/*` (shadcn-vue) |
+| Patterns | `@monjizeen/design-system/patterns/*` |
+| Icons | **Lucide** — `lucide-vue-next` (app peer dep) |
+| Styling | `@monjizeen/design-system/styles` + Tailwind v4 in app |
+| Utils | `@monjizeen/design-system/lib/utils` |
 
-**Shipped in template:** Button, Card, Input, Label, Separator.
+**Install in app:** `"@monjizeen/design-system": "file:../shared-assets/packages/design-system"` (adjust relative path).
 
-**Add more components** (from project root after scaffold):
+**Maintainer sync** from monjizeen reference:
 
 ```bash
-npx shadcn-vue@latest add dialog dropdown-menu select table
+packages/design-system/scripts/sync-from-monjizeen.sh
 ```
+
+**Legacy template** still copies 5 primitives into `templates/web-app` for offline scaffold; new apps should depend on the package.
 
 **Rules for agents**
 
-- Import icons from `lucide-vue-next` only — no Heroicons, Font Awesome, or inline SVG sets.
-- Use shadcn `Button`, `Card`, `Input`, etc. before bespoke styled elements.
-- Match monjizeen patterns: **`shared-assets/docs/design-patterns/INDEX.md`** (slug chooser) and **`PATTERNS.md`** (full catalog). Token/rules detail in `monjizeen/.cursor/rules/design.mdc`.
+- Import icons from `lucide-vue-next` only.
+- Use `@monjizeen/design-system` primitives/patterns before bespoke UI.
+- Pattern slugs: **`packages/design-system/docs/INDEX.md`** and **`PATTERNS.md`**. Token detail: `monjizeen/.cursor/rules/design.mdc`.
 
 ### tweakcn themes
 

@@ -2,11 +2,14 @@
 
 Org scaffold for `/init-project` — **not** kawader.
 
+Depends on **`@monjizeen/design-system`** (`../../packages/design-system`). Legacy UI files under `resources/js/components/ui/` are duplicated for offline template builds; prefer the package in new apps.
+
 ## Stack
 
 - Laravel 13 + Inertia + Vue 3 + Vite
 - Tailwind CSS v4
-- **shadcn-vue** (Reka UI) + **Lucide** (`lucide-vue-next`)
+- **@monjizeen/design-system** (shadcn-vue primitives + org tokens)
+- **Lucide** (`lucide-vue-next`)
 - Google OAuth shell (home, login, dashboard)
 
 ## Usage

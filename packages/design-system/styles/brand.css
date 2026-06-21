@@ -1,0 +1,9 @@
+/**
+ * Brand palette — change `--brand-green`, `--brand-navy`, and `--brand-blue` here.
+ * Emails & server overrides: config/branding.php (defaults must match).
+ */
+:root {
+  --brand-green: #00cc66;
+  --brand-navy: #000033;
+  --brand-blue: #2563eb;
+}
