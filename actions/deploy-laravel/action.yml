@@ -63,9 +63,7 @@ runs:
             echo "sudo chown -R ${DEPLOY_USER}:${DEPLOY_USER} ${DEPLOY_PATH}/.git"
             exit 1
           else
-            echo "::error::${DEPLOY_USER} cannot repair ${DEPLOY_PATH}/.git (sudo chown failed)."
-            echo "Run once on server: sudo chown -R ${DEPLOY_USER}:${DEPLOY_USER} ${DEPLOY_PATH}/.git"
-            exit 1
+            echo "No passwordless sudo chown as ${DEPLOY_USER}; will verify .git write access instead."
           fi
         fi
 
