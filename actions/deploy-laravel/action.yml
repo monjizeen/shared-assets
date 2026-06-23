@@ -45,20 +45,52 @@ runs:
       env:
         DEPLOY_PATH: ${{ inputs.deploy-path }}
         BRANCH: ${{ inputs.branch }}
+        DEPLOY_USER: ${{ inputs.username }}
         PRE_COMMANDS: ${{ inputs.pre-commands }}
         EXTRA_COMMANDS: ${{ inputs.extra-commands }}
       run: |
         set -eo pipefail
-        cd "${DEPLOY_PATH}"
-        eval "${PRE_COMMANDS}"
-        git fetch origin "${BRANCH}"
-        git reset --hard "origin/${BRANCH}"
-        composer install --no-dev --optimize-autoloader
-        eval "${EXTRA_COMMANDS}"
-        php artisan migrate --force
-        php artisan config:cache
-        php artisan route:cache
-        php artisan view:cache
+
+        run_deploy() {
+          cd "${DEPLOY_PATH}"
+
+          if [ ! -d .git ]; then
+            echo "::error::Not a git repository: ${DEPLOY_PATH}"
+            exit 1
+          fi
+
+          if [ -n "${PRE_COMMANDS}" ]; then
+            eval "${PRE_COMMANDS}"
+          fi
+
+          if [ ! -w .git/objects ] 2>/dev/null; then
+            echo "::error::Cannot write to ${DEPLOY_PATH}/.git/objects as $(whoami):$(id -gn)."
+            echo "Fix on server, e.g.: sudo chown -R ${DEPLOY_USER:-$(whoami)}:${DEPLOY_USER:-$(whoami)} ${DEPLOY_PATH}/.git"
+            ls -la .git .git/objects 2>/dev/null | head -20 || true
+            exit 1
+          fi
+
+          git fetch origin "${BRANCH}"
+          git reset --hard "origin/${BRANCH}"
+          composer install --no-dev --optimize-autoloader
+
+          if [ -n "${EXTRA_COMMANDS}" ]; then
+            eval "${EXTRA_COMMANDS}"
+          fi
+
+          php artisan migrate --force
+          php artisan config:cache
+          php artisan route:cache
+          php artisan view:cache
+        }
+
+        export DEPLOY_PATH BRANCH PRE_COMMANDS EXTRA_COMMANDS DEPLOY_USER
+
+        if [ -n "${DEPLOY_USER}" ] && [ "$(whoami)" != "${DEPLOY_USER}" ]; then
+          sudo -E -u "${DEPLOY_USER}" -H bash -c "$(declare -f run_deploy); run_deploy"
+        else
+          run_deploy
+        fi
 
     - name: Deploy via SSH
       if: inputs.local != 'true'
@@ -92,9 +124,23 @@ runs:
 
         run_deploy() {
           ssh "${SSH_OPTS[@]}" "${SSH_USER}@${SSH_HOST}" bash -s <<EOF
-        set -e
+        set -eo pipefail
         cd ${DEPLOY_PATH}
+
+        if [ ! -d .git ]; then
+          echo "::error::Not a git repository: ${DEPLOY_PATH}"
+          exit 1
+        fi
+
         ${PRE_COMMANDS}
+
+        if [ ! -w .git/objects ] 2>/dev/null; then
+          echo "::error::Cannot write to ${DEPLOY_PATH}/.git/objects as \$(whoami):\$(id -gn)."
+          echo "Fix on server, e.g.: sudo chown -R ${SSH_USER}:${SSH_USER} ${DEPLOY_PATH}/.git"
+          ls -la .git .git/objects 2>/dev/null | head -20 || true
+          exit 1
+        fi
+
         git fetch origin ${BRANCH}
         git reset --hard origin/${BRANCH}
         composer install --no-dev --optimize-autoloader
