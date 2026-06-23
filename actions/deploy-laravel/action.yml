@@ -63,12 +63,13 @@ runs:
             eval "${PRE_COMMANDS}"
           fi
 
-          if [ ! -w .git/objects ] 2>/dev/null; then
+          if ! touch .git/objects/.deploy-write-test 2>/dev/null; then
             echo "::error::Cannot write to ${DEPLOY_PATH}/.git/objects as $(whoami):$(id -gn)."
             echo "Fix on server, e.g.: sudo chown -R ${DEPLOY_USER:-$(whoami)}:${DEPLOY_USER:-$(whoami)} ${DEPLOY_PATH}/.git"
             ls -la .git .git/objects 2>/dev/null | head -20 || true
             exit 1
           fi
+          rm -f .git/objects/.deploy-write-test
 
           git fetch origin "${BRANCH}"
           git reset --hard "origin/${BRANCH}"
@@ -87,6 +88,13 @@ runs:
         export DEPLOY_PATH BRANCH PRE_COMMANDS EXTRA_COMMANDS DEPLOY_USER
 
         if [ -n "${DEPLOY_USER}" ] && [ "$(whoami)" != "${DEPLOY_USER}" ]; then
+          echo "Ensuring ${DEPLOY_PATH}/.git is owned by ${DEPLOY_USER} before deploy..."
+          if ! sudo -n chown -R "${DEPLOY_USER}:${DEPLOY_USER}" "${DEPLOY_PATH}/.git"; then
+            echo "::error::Could not chown ${DEPLOY_PATH}/.git to ${DEPLOY_USER}."
+            echo "Grant the self-hosted runner passwordless sudo chown on that path, or run on server:"
+            echo "sudo chown -R ${DEPLOY_USER}:${DEPLOY_USER} ${DEPLOY_PATH}/.git"
+            exit 1
+          fi
           sudo -E -u "${DEPLOY_USER}" -H bash -c "$(declare -f run_deploy); run_deploy"
         else
           run_deploy
