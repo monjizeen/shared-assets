@@ -187,9 +187,10 @@ Primitives live in `@monjizeen/design-system/src/ui/` (shadcn-vue). App patterns
 
 **When:** Pill-shaped bottom or inline "create" bar with circular submit.
 
-**Shell:** `InlineInputGroup` — `rounded-[24px]`, slots `start` / control / `end`
+**Shell:** `InlineInputGroup` — `rounded-[24px]`, default control slot + `#end`
 - Control must use `data-slot="input-group-control"`
 - Auto-expands to two-row grid when text wraps (`useInlineInputExpanded`)
+- **Field actions and status icons** go in `#end` before submit — never in `#start` (legacy slot; do not use for new work)
 
 **Wrappers:**
 
@@ -198,15 +199,16 @@ Primitives live in `@monjizeen/design-system/src/ui/` (shadcn-vue). App patterns
 | `SimpleInlineCreateInput` | Single-field create (admin index footers) |
 | `ListInlineCreateInput` | Quick Actions multi-entity create (`segment` prop) |
 | `PileInlineCreateInput` | Pile inbox create with project/priority pickers |
+| `LinkInlineCreateInput` | Shared Links create (title in pill; URL + label in action menus) |
 
 **SimpleInlineCreateInput props:** `modelValue`, `placeholder`, `disabled`, `busy`, `errorMessage`, `submitDisabled`, `submitAriaLabel`, `inputId`, `inputAriaLabel`  
 **Emits:** `update:modelValue`, `submit`, `keydown`
 
 **Submit affordance:** Circular green `ArrowUp` button inside the pill.
 
-**Action overflow (> 3 field actions):** Keep 2 inline; rest in `MoreHorizontal` menu with `DropdownMenuSub` rows (chevron opens same panel as inline). Use `InlineInputActionsBar` + `InlineInputAction`. Submit never counts toward the limit. See `design.mdc` → Inline input action overflow.
+**Action overflow (> 3 field actions):** Keep 2 inline; rest in `MoreHorizontal` menu with `DropdownMenuSub` rows (chevron opens same panel as inline). Use `InlineInputActionsBar` + `InlineInputAction` in `#end` before submit. Submit and non-interactive status icons never count toward the limit. See `design.mdc` → Inline input action overflow.
 
-**Paths:** `InlineInputGroup.vue`, `InlineInputActionsBar.vue`, `InlineInputAction.vue`, `SimpleInlineCreateInput.vue`, `lists/ListInlineCreateInput.vue`, `pile/PileInlineCreateInput.vue`
+**Paths:** `InlineInputGroup.vue`, `InlineInputActionsBar.vue`, `InlineInputAction.vue`, `SimpleInlineCreateInput.vue`, `lists/ListInlineCreateInput.vue`, `pile/PileInlineCreateInput.vue`, `links/LinkInlineCreateInput.vue`
 
 ---
 

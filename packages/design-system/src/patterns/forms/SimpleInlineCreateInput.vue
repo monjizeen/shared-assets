@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import InlineInputGroup from '@monjizeen/design-system/patterns/forms/InlineInputGroup.vue'
+import InlineInputActionsBar from '@monjizeen/design-system/patterns/forms/InlineInputActionsBar.vue'
 import ValidationFieldHint from '@monjizeen/design-system/patterns/forms/ValidationFieldHint.vue'
 import { Button } from '@monjizeen/design-system/ui/button'
 import { Textarea } from '@monjizeen/design-system/ui/textarea'
@@ -44,10 +45,6 @@ const submitLabel = computed(() => props.submitAriaLabel || t('actionCreate'))
       :invalid="Boolean(errorMessage)"
       :text="modelValue"
     >
-      <template v-if="$slots.start" #start>
-        <slot name="start" />
-      </template>
-
       <ValidationFieldHint :error="errorMessage || null">
         <Textarea
           :id="inputId || undefined"
@@ -64,7 +61,12 @@ const submitLabel = computed(() => props.submitAriaLabel || t('actionCreate'))
       </ValidationFieldHint>
 
       <template #end>
-        <slot name="end" />
+        <InlineInputActionsBar
+          v-if="$slots.end"
+          :disabled="disabled || busy"
+        >
+          <slot name="end" />
+        </InlineInputActionsBar>
 
         <ValidationFieldHint :error="errorMessage || null">
           <Button
