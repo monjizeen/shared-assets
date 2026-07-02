@@ -156,12 +156,12 @@ If exists: `gh repo view monjizeen-dev/${PROJECT}` and continue.
 ### Web
 
 ```bash
-"${SHARED_ASSETS}/scripts/init-project/scaffold-web.sh" "${PROJECT}"
+"${SHARED_ASSETS}/scripts/init-project/scaffold-web.sh" "${PROJECT}" "${MONO_ROOT}" "${AUTH_MODEL}"
 cd "${WORKSPACE}"
 git init && git branch -M main
 ```
 
-Customize README, `docs/ARCHITECTURE.md`. Apply tweakcn theme if not zinc (see init-project Gate 3).
+Closed auth apps should redirect guests from `/` to `/login`; open apps keep the public home page. Customize README, `docs/ARCHITECTURE.md`. Apply tweakcn theme if not zinc (see init-project Gate 3).
 
 ### Expo
 

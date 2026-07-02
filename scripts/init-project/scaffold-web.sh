@@ -1,15 +1,21 @@
 #!/usr/bin/env bash
 # Scaffold a new monjizeen-dev web app from templates/web-app (not kawader).
-# Usage: scaffold-web.sh <project> [monorepo-root]
+# Usage: scaffold-web.sh <project> [monorepo-root] [open|closed]
 
 set -euo pipefail
 
 PROJECT="${1:?project name required}"
 MONO_ROOT="${2:-${HOME}/Documents/work/projects/monjizeen-dev}"
+AUTH_MODEL="${3:-closed}"
 WORKSPACE="${MONO_ROOT}/${PROJECT}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEMPLATE="${SCRIPT_DIR}/../../templates/web-app"
 SHARED_ASSETS="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+
+if [[ "${AUTH_MODEL}" != "open" && "${AUTH_MODEL}" != "closed" ]]; then
+  echo "error: auth model must be 'open' or 'closed'" >&2
+  exit 1
+fi
 
 if [[ ! -d "${TEMPLATE}" ]]; then
   echo "error: missing ${TEMPLATE} — run build-web-app-template.sh first" >&2
@@ -48,6 +54,11 @@ composer.description = title;
 fs.writeFileSync(composerPath, JSON.stringify(composer, null, 2) + '\n');
 let envEx = fs.readFileSync('.env.example', 'utf8');
 envEx = envEx.replace(/^APP_NAME=.*/m, 'APP_NAME=\"' + title + '\"');
+if (/^PLATFORM_AUTH_MODEL=/m.test(envEx)) {
+  envEx = envEx.replace(/^PLATFORM_AUTH_MODEL=.*/m, 'PLATFORM_AUTH_MODEL=${AUTH_MODEL}');
+} else {
+  envEx += '\nPLATFORM_AUTH_MODEL=${AUTH_MODEL}\n';
+}
 fs.writeFileSync('.env.example', envEx);
 "
 
@@ -60,7 +71,10 @@ php artisan migrate --force --no-interaction
 npm install
 npm run build
 
-php artisan test --no-interaction || echo "scaffold-web: warn — tests failed (review before push)"
+bash "${SHARED_ASSETS}/packages/design-system/scripts/install-cursor-rules.sh" "${WORKSPACE}"
+cp "${SHARED_ASSETS}/packages/design-system/docs/BRIEF.template.md" "${WORKSPACE}/BRIEF.md"
+
+php artisan test || echo "scaffold-web: warn — tests failed (review before push)"
 
 find . \( -name '.DS_Store' -o -name '._*' -o -name 'Thumbs.db' -o -name 'Desktop.ini' \) -delete 2>/dev/null || true
 

@@ -15,8 +15,16 @@ Depends on **`@monjizeen/design-system`** (`../../packages/design-system`). Lega
 ## Usage
 
 ```bash
-shared-assets/scripts/init-project/scaffold-web.sh my-app
+shared-assets/scripts/init-project/scaffold-web.sh my-app ~/Documents/work/monjizeen-dev closed
 ```
+
+Third arg controls auth shell behavior: `closed` redirects guests from `/` to `/login`; `open` keeps the public home page. Scaffold installs org Cursor rules (`org-*.mdc`) and seeds `BRIEF.md` from the design-system template.
+
+## Agent: new pages
+
+1. `packages/design-system/docs/NEW-PAGE.md`
+2. `packages/design-system/gallery/index.html` (visual reference)
+3. Pattern slugs: `packages/design-system/docs/INDEX.md`
 
 ## Rebuild (maintainers)
 

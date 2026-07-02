@@ -47,7 +47,7 @@ class GoogleOAuthTest extends TestCase
         Socialite::shouldReceive('user')->once()->andReturn($socialUser);
 
         $this->get('/auth/google/callback')
-            ->assertRedirect(route('onboarding.show'));
+            ->assertRedirect(route('dashboard'));
 
         $this->assertAuthenticated();
         $this->assertDatabaseHas('users', ['email' => 'newuser@example.com']);
@@ -116,7 +116,7 @@ class GoogleOAuthTest extends TestCase
         Socialite::shouldReceive('driver')->once()->with('google')->andReturnSelf();
         Socialite::shouldReceive('user')->once()->andReturn($socialUser);
 
-        $this->get('/auth/google/callback')->assertRedirect(route('onboarding.show'));
+        $this->get('/auth/google/callback')->assertRedirect(route('dashboard'));
 
         $this->assertDatabaseHas('users', [
             'email' => 'admin-bootstrap@example.com',

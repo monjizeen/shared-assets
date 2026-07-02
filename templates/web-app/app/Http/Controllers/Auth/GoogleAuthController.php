@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Services\Auth\GoogleSignInService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\AbstractUser as SocialiteAbstractUser;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\AbstractProvider;
@@ -60,7 +61,7 @@ class GoogleAuthController extends Controller
 
         Auth::login($user, true);
 
-        if ($user->needsOnboarding()) {
+        if ($user->needsOnboarding() && Route::has('onboarding.show')) {
             return redirect()->route('onboarding.show');
         }
 
