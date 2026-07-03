@@ -502,6 +502,17 @@ shared-assets/scripts/init-project/gate7.sh {PROJECT}
 
 Creates DNS + nginx for `{PROJECT}-staging.mnjz.in` and `{PROJECT}.mnjz.in`.
 
+### Migrate legacy hostnames
+
+Old pattern: `staging-{PROJECT}.mnjz.in`, `app-{PROJECT}.mnjz.in`.
+
+```bash
+source ~/.cursor/secrets/monjizeen-dev.env
+shared-assets/scripts/init-project/migrate-mnjz-subdomains.sh hadeed daftar yawmi
+```
+
+Then update Google OAuth redirect URIs in Cloud Console for each project.
+
 ---
 
 ## nginx note (this VPS)
