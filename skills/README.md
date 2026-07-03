@@ -15,7 +15,7 @@ All custom skills live here — versioned on GitHub. **Do not edit copies** unde
 | `init-project` | Alias for `new-project` |
 | `pre-mvp-audit` | Pre-launch codebase audit tied to core user loop |
 | `run-mora` | Bootstrap MORA on a new Mac or after pull |
-| `refresh-mora` | Alias for `run-mora` |
+| `refresh-mora` | Full sync — `run-mora` + clone/pull all REGISTRY app repos |
 | `caveman` | Communication intensity reference (Cursor enforces via rules + hooks) |
 
 ## Install (automatic)

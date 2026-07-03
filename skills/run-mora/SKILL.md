@@ -27,7 +27,7 @@ If workspace is not mora, try these in order until one exists:
 3. `~/Documents/work/projects/monjizeen-dev/mora/run-mora.sh`
 4. Parent of cwd if folder is named `mora` and contains `run-mora.sh`
 
-Optional: `--all-repos` to clone every app repo listed in REGISTRY.
+Optional: `--all-repos` to clone missing + pull every app repo in REGISTRY (same as `/refresh-mora`).
 
 ## What it does (automatic)
 

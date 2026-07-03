@@ -1,17 +1,41 @@
 ---
 name: refresh-mora
 description: >
-  Alias for run-mora — sync monjizeen-dev environment (repos, hooks, studios, skills).
-  Use when user says refresh mora, sync mora, /refresh-mora. Prefer /run-mora.
+  Full monjizeen-dev sync — mora infra, hooks, studios, skills, plus clone any new
+  app repos from REGISTRY and pull all registry repos up to date. Use when user says
+  refresh mora, sync mora, /refresh-mora, new mac, switch device, or sync all repos.
 disable-model-invocation: true
 ---
 
 # Refresh MORA
 
-Same as **run-mora**. Execute immediately:
+**Device switch / daily full sync.** Run immediately — do not ask the user to run steps manually.
+
+## Execute now
 
 ```bash
-bash /path/to/mora/run-mora.sh
+bash "$(git -C "${workspace}" rev-parse --show-toplevel 2>/dev/null || echo ~/Documents/work/monjizeen-dev/mora)/scripts/refresh-mora.sh"
 ```
 
-See `shared-assets/skills/run-mora/SKILL.md` for full behavior.
+If workspace is not mora, try these in order until one exists:
+
+1. `./scripts/refresh-mora.sh` when cwd is inside a mora clone
+2. `~/Documents/work/monjizeen-dev/mora/scripts/refresh-mora.sh`
+3. `~/Documents/work/projects/monjizeen-dev/mora/scripts/refresh-mora.sh`
+
+Equivalent: `run-mora.sh --all-repos`
+
+## What it does (vs `/run-mora`)
+
+| Step | Action |
+|------|--------|
+| 1 | Clone/pull **mora**, **shared-assets**, **studios** |
+| 2 | **Clone** any missing app repo from REGISTRY |
+| 3 | **Pull** every existing registry app repo (ff-only) |
+| 4 | Install Cursor hooks/rules + symlink skills + Claude studios |
+
+`/run-mora` alone skips steps 2–3 (hooks/skills only). Use **refresh** when switching Macs or after new repos land in REGISTRY.
+
+Exit **0** → "MORA synced — all repos up to date." Exit **1** → show `need` lines (dirty tree, merge conflict, etc.).
+
+See `shared-assets/skills/run-mora/SKILL.md` for path fallbacks and hook details.
