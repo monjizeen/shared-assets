@@ -6,7 +6,7 @@ Shared GitHub Actions workflows, composite actions, and Claude Code skills for a
 
 ```
 packages/
-  design-system/     # @monjizeen/design-system — UI primitives, patterns, tokens (source of truth)
+  design-system/     # redirect — canonical package in github.com/monjizeen-dev/enjaz
 actions/
   setup-flutter/     # Install Flutter SDK + pub get
   setup-laravel/     # Install PHP + Composer + prepare .env
@@ -84,8 +84,8 @@ jobs:
 
 ## Design system
 
-**`packages/design-system/`** (`@monjizeen/design-system`) — shadcn-vue primitives, org patterns, CSS tokens. See [packages/design-system/README.md](packages/design-system/README.md).
+**`@enjaz/design-system`** lives in the [**enjaz**](https://github.com/monjizeen-dev/enjaz) repo. Live gallery: https://enjaz.mnjz.in
 
-Pattern docs: [packages/design-system/docs/INDEX.md](packages/design-system/docs/INDEX.md)
+Pattern docs: [enjaz/packages/design-system/docs/INDEX.md](https://github.com/monjizeen-dev/enjaz/blob/main/packages/design-system/docs/INDEX.md)
 
-Sync from monjizeen reference app: `packages/design-system/scripts/sync-from-monjizeen.sh`
+Sync from monjizeen: `cd enjaz/packages/design-system && npm run sync`

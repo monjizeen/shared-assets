@@ -1,9 +1,0 @@
- * Ghost actions column: remove the *previous* cell’s inline-end border (Tailwind `border-e`),
- * so there’s no vertical rule between the last data column and `.table-actions-col`.
- * `border-inline-end: none` beats width/color-only overrides; scoped to tables only.
- */
-table.min-w-full tr > :is(td, th):has(+ .table-actions-col),
-table.w-full tr > :is(td, th):has(+ .table-actions-col) {
-    border-inline-end: none;
-}
-

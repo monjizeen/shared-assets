@@ -84,31 +84,32 @@ shared-assets/scripts/init-project/build-web-app-template.sh
 
 ## Design system (web)
 
-Org standard: **`@monjizeen/design-system`** in `shared-assets/packages/design-system/`.
+Org standard: **`@enjaz/design-system`** in the **`enjaz`** repo (`packages/design-system/`).
 
 | Piece | Package path |
 |-------|----------------|
-| Primitives | `@monjizeen/design-system/ui/*` (shadcn-vue) |
-| Patterns | `@monjizeen/design-system/patterns/*` |
+| Primitives | `@enjaz/design-system/ui/*` (shadcn-vue) |
+| Patterns | `@enjaz/design-system/patterns/*` |
 | Icons | **Lucide** — `lucide-vue-next` (app peer dep) |
-| Styling | `@monjizeen/design-system/styles` + Tailwind v4 in app |
-| Utils | `@monjizeen/design-system/lib/utils` |
+| Styling | `@enjaz/design-system/styles` + Tailwind v4 in app |
+| Utils | `@enjaz/design-system/lib/utils` |
+| Live gallery | https://enjaz.mnjz.in |
 
-**Install in app:** `"@monjizeen/design-system": "file:../shared-assets/packages/design-system"` (adjust relative path).
+**Install in app:** `"@enjaz/design-system": "file:../enjaz/packages/design-system"` (mono root).
+
+**External / GitHub:** `"@enjaz/design-system": "github:monjizeen-dev/enjaz#main:packages/design-system"`
 
 **Maintainer sync** from monjizeen reference:
 
 ```bash
-packages/design-system/scripts/sync-from-monjizeen.sh
+cd enjaz/packages/design-system && npm run sync
 ```
-
-**Legacy template** still copies 5 primitives into `templates/web-app` for offline scaffold; new apps should depend on the package.
 
 **Rules for agents**
 
 - Import icons from `lucide-vue-next` only.
-- Use `@monjizeen/design-system` primitives/patterns before bespoke UI.
-- Pattern slugs: **`packages/design-system/docs/INDEX.md`** and **`PATTERNS.md`**. Token detail: `monjizeen/.cursor/rules/design.mdc`.
+- Use `@enjaz/design-system` primitives/patterns before bespoke UI.
+- Pattern slugs: **`enjaz/packages/design-system/docs/INDEX.md`** and **`PATTERNS.md`**. Gallery: https://enjaz.mnjz.in
 
 ### tweakcn themes
 

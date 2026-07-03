@@ -71,8 +71,9 @@ php artisan migrate --force --no-interaction
 npm install
 npm run build
 
-bash "${SHARED_ASSETS}/packages/design-system/scripts/install-cursor-rules.sh" "${WORKSPACE}"
-cp "${SHARED_ASSETS}/packages/design-system/docs/BRIEF.template.md" "${WORKSPACE}/BRIEF.md"
+ENJAZ="${MONO_ROOT}/enjaz"
+bash "${ENJAZ}/packages/design-system/scripts/install-cursor-rules.sh" "${WORKSPACE}"
+cp "${ENJAZ}/packages/design-system/docs/BRIEF.template.md" "${WORKSPACE}/BRIEF.md"
 
 php artisan test || echo "scaffold-web: warn — tests failed (review before push)"
 

@@ -1,7 +1,7 @@
-# Design patterns — moved
+# Design patterns (redirect)
 
-The org design system now lives in **`packages/design-system/`**.
+The org design system now lives in the **enjaz** repo.
 
-- Quick index: [../packages/design-system/docs/INDEX.md](../packages/design-system/docs/INDEX.md)
-- Full catalog: [../packages/design-system/docs/PATTERNS.md](../packages/design-system/docs/PATTERNS.md)
-- Package README: [../packages/design-system/README.md](../packages/design-system/README.md)
+- Quick index: [enjaz/packages/design-system/docs/INDEX.md](https://github.com/monjizeen-dev/enjaz/blob/main/packages/design-system/docs/INDEX.md)
+- Full catalog: [enjaz/packages/design-system/docs/PATTERNS.md](https://github.com/monjizeen-dev/enjaz/blob/main/packages/design-system/docs/PATTERNS.md)
+- Live gallery: https://enjaz.mnjz.in

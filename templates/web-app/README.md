@@ -2,13 +2,13 @@
 
 Org scaffold for `/init-project` — **not** kawader.
 
-Depends on **`@monjizeen/design-system`** (`../../packages/design-system`). Legacy UI files under `resources/js/components/ui/` are duplicated for offline template builds; prefer the package in new apps.
+Depends on **`@enjaz/design-system`** (`../../../enjaz/packages/design-system`). Legacy UI files under `resources/js/components/ui/` are duplicated for offline template builds; prefer the package in new apps.
 
 ## Stack
 
 - Laravel 13 + Inertia + Vue 3 + Vite
 - Tailwind CSS v4
-- **@monjizeen/design-system** (shadcn-vue primitives + org tokens)
+- **@enjaz/design-system** (shadcn-vue primitives + org tokens)
 - **Lucide** (`lucide-vue-next`)
 - Google OAuth shell (home, login, dashboard)
 
@@ -22,9 +22,9 @@ Third arg controls auth shell behavior: `closed` redirects guests from `/` to `/
 
 ## Agent: new pages
 
-1. `packages/design-system/docs/NEW-PAGE.md`
-2. `packages/design-system/gallery/index.html` (visual reference)
-3. Pattern slugs: `packages/design-system/docs/INDEX.md`
+1. `enjaz/packages/design-system/docs/NEW-PAGE.md`
+2. https://enjaz.mnjz.in (live gallery)
+3. Pattern slugs: `enjaz/packages/design-system/docs/INDEX.md`
 
 ## Rebuild (maintainers)
 
