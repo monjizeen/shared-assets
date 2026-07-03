@@ -96,7 +96,7 @@ Import from \`lucide-react-native\` only.
 
 ## Backend
 
-Pair with a Laravel API project on \`staging-${PROJECT}.mnjz.in\` when the product needs a web backend.
+Pair with a Laravel API project on \`${PROJECT}-staging.mnjz.in\` when the product needs a web backend.
 MD
 
 find "${WORKSPACE}" \( -name '.DS_Store' -o -name '._*' \) -delete 2>/dev/null || true

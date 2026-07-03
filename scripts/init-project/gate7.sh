@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 # Gate 7 from Mac: Cloudflare DNS locally, app/nginx/deploy on VPS via SSH.
 # Usage: gate7.sh <project>
-# Staging: staging-{project}.mnjz.in → /srv/projects/{project}/staging
-# Production: app-{project}.mnjz.in → /srv/projects/{project}/production
+# Staging: {project}-staging.mnjz.in → /srv/projects/{project}/staging
+# Production: {project}.mnjz.in → /srv/projects/{project}/production
 # Requires ~/.cursor/secrets/monjizeen-dev.env, <project>.env (staging/local),
 # and <project>-production.env on Mac.
 
 set -euo pipefail
 
 PROJECT="${1:?project name required}"
-STAGING_FQDN="staging-${PROJECT}.mnjz.in"
-PRODUCTION_FQDN="app-${PROJECT}.mnjz.in"
+STAGING_FQDN="${PROJECT}-staging.mnjz.in"
+PRODUCTION_FQDN="${PROJECT}.mnjz.in"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ORG_SECRETS="${HOME}/.cursor/secrets/monjizeen-dev.env"
@@ -43,10 +43,10 @@ VPS_SHARED_ASSETS="${VPS_SHARED_ASSETS_PATH:-/srv/projects/shared-assets}"
 SSH_OPTS=(-o BatchMode=yes -o ConnectTimeout=15)
 
 echo "gate7: DNS ${STAGING_FQDN}"
-"${SCRIPT_DIR}/dns.sh" "staging-${PROJECT}" "${VPS_PUBLIC_IP:-}"
+"${SCRIPT_DIR}/dns.sh" "${PROJECT}-staging" "${VPS_PUBLIC_IP:-}"
 
 echo "gate7: DNS ${PRODUCTION_FQDN}"
-"${SCRIPT_DIR}/dns.sh" "app-${PROJECT}" "${VPS_PUBLIC_IP:-}"
+"${SCRIPT_DIR}/dns.sh" "${PROJECT}" "${VPS_PUBLIC_IP:-}"
 
 echo "gate7: SSH preflight ${VPS_SSH}"
 ssh "${SSH_OPTS[@]}" "${VPS_SSH}" "command -v nginx git composer npm certbot"

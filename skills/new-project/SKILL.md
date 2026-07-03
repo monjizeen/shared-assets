@@ -60,9 +60,9 @@ MORA="${MONO_ROOT}/mora"
 |-----|-------|
 | GitHub org | `monjizeen-dev` |
 | Root domain | `mnjz.in` |
-| Staging FQDN | `staging-{project}.mnjz.in` → auto-deploy on push to `main` (web only) |
-| Production FQDN | `app-{project}.mnjz.in` → manual `workflow_dispatch` only (web only) |
-| OAuth callbacks | `https://staging-{project}.mnjz.in/auth/google/callback`, `https://app-{project}.mnjz.in/auth/google/callback` |
+| Staging FQDN | `{project}-staging.mnjz.in` → auto-deploy on push to `main` (web only) |
+| Production FQDN | `{project}.mnjz.in` → manual `workflow_dispatch` only (web only) |
+| OAuth callbacks | `https://{project}-staging.mnjz.in/auth/google/callback`, `https://{project}.mnjz.in/auth/google/callback` |
 | VPS deploy paths | `/srv/projects/{project}/staging`, `/srv/projects/{project}/production` |
 | Org secrets file | `~/.cursor/secrets/monjizeen-dev.env` |
 | Staging/local secrets | `~/.cursor/secrets/{project}.env` |
@@ -215,7 +215,7 @@ set -a && source ~/.cursor/secrets/monjizeen-dev.env && set +a
 "${SHARED_ASSETS}/scripts/init-project/gate7.sh" "${PROJECT}"
 ```
 
-Creates `staging-{PROJECT}.mnjz.in` + `app-{PROJECT}.mnjz.in` (Cloudflare DNS, nginx, deploy dirs).
+Creates `{PROJECT}-staging.mnjz.in` + `{PROJECT}.mnjz.in` (Cloudflare DNS, nginx, deploy dirs).
 
 **Expo:** skip — document EAS path in handoff.
 
@@ -236,8 +236,8 @@ Web repos need GitHub secret `ACCESS_TO_VPS_WWWDATA_FROM_GITHUB_ACTIONS`.
 ```bash
 cd "${WORKSPACE}"
 php artisan test
-"${SHARED_ASSETS}/scripts/init-project/verify.sh" "staging-${PROJECT}.mnjz.in"
-"${SHARED_ASSETS}/scripts/init-project/verify.sh" "app-${PROJECT}.mnjz.in"
+"${SHARED_ASSETS}/scripts/init-project/verify.sh" "${PROJECT}-staging.mnjz.in"
+"${SHARED_ASSETS}/scripts/init-project/verify.sh" "${PROJECT}.mnjz.in"
 ```
 
 ### Handoff table
@@ -245,8 +245,8 @@ php artisan test
 | Item | Web | Expo |
 |------|-----|------|
 | Repo | `github.com/monjizeen-dev/{PROJECT}` | same |
-| Staging | `https://staging-{PROJECT}.mnjz.in` | N/A |
-| Production | `https://app-{PROJECT}.mnjz.in` | App store / EAS |
+| Staging | `https://{PROJECT}-staging.mnjz.in` | N/A |
+| Production | `https://{PROJECT}.mnjz.in` | App store / EAS |
 | MORA agent | `domains/monjizeen-dev/agents/{PROJECT}/` | same |
 
 ---

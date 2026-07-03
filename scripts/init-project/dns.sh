@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # Create or update Cloudflare A record: {record_label}.mnjz.in → VPS IP
 # Usage: dns.sh <record_label> [vps_ip]
-# Examples: dns.sh staging-kawader   → staging-kawader.mnjz.in
-#           dns.sh app-kawader         → app-kawader.mnjz.in
+# Examples: dns.sh kawader-staging   → kawader-staging.mnjz.in
+#           dns.sh kawader             → kawader.mnjz.in
 # Requires: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ZONE_ID (env or monjizeen-dev.env)
 
 set -euo pipefail
 
-RECORD_LABEL="${1:?record label required (e.g. staging-myapp or app-myapp)}"
+RECORD_LABEL="${1:?record label required (e.g. myapp-staging or myapp)}"
 VPS_IP="${2:-${VPS_PUBLIC_IP:-}}"
 
 if [[ -z "${VPS_IP}" ]]; then

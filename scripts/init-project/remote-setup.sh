@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # Run ON VPS (invoked by gate7.sh over SSH). Idempotent.
 # Usage: remote-setup.sh <project> [staging_fqdn] [production_fqdn]
-# Defaults: staging-{project}.mnjz.in, app-{project}.mnjz.in
+# Defaults: {project}-staging.mnjz.in, {project}.mnjz.in
 
 set -euo pipefail
 
 PROJECT="${1:?project name required}"
-STAGING_FQDN="${2:-staging-${PROJECT}.mnjz.in}"
-PRODUCTION_FQDN="${3:-app-${PROJECT}.mnjz.in}"
+STAGING_FQDN="${2:-${PROJECT}-staging.mnjz.in}"
+PRODUCTION_FQDN="${3:-${PROJECT}.mnjz.in}"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEPLOY_ROOT="/srv/projects/${PROJECT}"

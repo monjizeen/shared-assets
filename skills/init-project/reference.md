@@ -249,8 +249,8 @@ description: >
 - Project type: {PROJECT_TYPE}
 - Stack: Laravel + Inertia + Vue 3, shadcn-vue + Lucide, Google OAuth
 - Theme: {THEME_NAME} ({THEME_URL} or template zinc)
-- Staging URL: https://staging-{PROJECT}.mnjz.in
-- Production URL: https://app-{PROJECT}.mnjz.in
+- Staging URL: https://{PROJECT}-staging.mnjz.in
+- Production URL: https://{PROJECT}.mnjz.in
 
 ## Open questions
 
@@ -367,7 +367,7 @@ jobs:
 
 Replace `{PROJECT}` with the actual project name.
 
-**Deploy targets:** `deploy-staging` pushes to `/srv/projects/{PROJECT}/staging` (served at `staging-{PROJECT}.mnjz.in`). `deploy-production` is `workflow_dispatch` only → `/srv/projects/{PROJECT}/production` (`app-{PROJECT}.mnjz.in`). Push to `main` / auto-merge only hits staging.
+**Deploy targets:** `deploy-staging` pushes to `/srv/projects/{PROJECT}/staging` (served at `{PROJECT}-staging.mnjz.in`). `deploy-production` is `workflow_dispatch` only → `/srv/projects/{PROJECT}/production` (`{PROJECT}.mnjz.in`). Push to `main` / auto-merge only hits staging.
 
 ---
 
@@ -407,8 +407,8 @@ Used by `scripts/init-project/nginx-vhost.sh`. Gate 7 creates **two** vhosts per
 
 | FQDN | nginx root |
 |------|------------|
-| `staging-{PROJECT}.mnjz.in` | `/srv/projects/{PROJECT}/staging/public` |
-| `app-{PROJECT}.mnjz.in` | `/srv/projects/{PROJECT}/production/public` |
+| `{PROJECT}-staging.mnjz.in` | `/srv/projects/{PROJECT}/staging/public` |
+| `{PROJECT}.mnjz.in` | `/srv/projects/{PROJECT}/production/public` |
 
 ```nginx
 server {
@@ -474,18 +474,18 @@ Production `APP_URL` (set by `env-deploy.sh` on VPS):
 
 ```env
 # staging .env  ← secrets from ~/.cursor/secrets/{PROJECT}.env
-APP_URL=https://staging-{PROJECT}.mnjz.in
+APP_URL=https://{PROJECT}-staging.mnjz.in
 
 # production .env  ← secrets from ~/.cursor/secrets/{PROJECT}-production.env
-APP_URL=https://app-{PROJECT}.mnjz.in
+APP_URL=https://{PROJECT}.mnjz.in
 ```
 
 ### OAuth secrets (two Google clients)
 
 | File | Used for | Google OAuth client |
 |------|----------|---------------------|
-| `~/.cursor/secrets/{PROJECT}.env` | Local dev + staging VPS | Staging/local client (`staging-{PROJECT}.mnjz.in` + `127.0.0.1:8000`) |
-| `~/.cursor/secrets/{PROJECT}-production.env` | Production VPS only | Production client (`app-{PROJECT}.mnjz.in`) |
+| `~/.cursor/secrets/{PROJECT}.env` | Local dev + staging VPS | Staging/local client (`{PROJECT}-staging.mnjz.in` + `127.0.0.1:8000`) |
+| `~/.cursor/secrets/{PROJECT}-production.env` | Production VPS only | Production client (`{PROJECT}.mnjz.in`) |
 
 Gate 7 syncs both files to VPS `~/.cursor/secrets/`. `env-deploy.sh` selects the file by deploy target.
 
@@ -500,13 +500,13 @@ source ~/.cursor/secrets/monjizeen-dev.env
 shared-assets/scripts/init-project/gate7.sh {PROJECT}
 ```
 
-Creates DNS + nginx for `staging-{PROJECT}.mnjz.in` and `app-{PROJECT}.mnjz.in`.
+Creates DNS + nginx for `{PROJECT}-staging.mnjz.in` and `{PROJECT}.mnjz.in`.
 
 ---
 
 ## nginx note (this VPS)
 
-`*.mnjz.in` wildcard vhost proxies to OpenClaw. Per-app vhosts use **exact** `server_name` (e.g. `staging-kawader.mnjz.in`, `app-kawader.mnjz.in`) and take precedence. Each FQDN needs its own Let's Encrypt cert (`CERTBOT_EMAIL` + certbot in `remote-setup.sh`).
+`*.mnjz.in` wildcard vhost proxies to OpenClaw. Per-app vhosts use **exact** `server_name` (e.g. `kawader-staging.mnjz.in`, `kawader.mnjz.in`) and take precedence. Each FQDN needs its own Let's Encrypt cert (`CERTBOT_EMAIL` + certbot in `remote-setup.sh`).
 
 ---
 
