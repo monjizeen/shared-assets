@@ -5,7 +5,7 @@ description: Wrap up a task — run checks, commit, push when done. No automatic
 
 # Finish Work
 
-Org-wide skill for monjizeen-dev repos. Repo-local overrides win when present.
+Org-wide skill for monjizeen repos. Repo-local overrides win when present.
 
 ## Two modes only
 

@@ -5,7 +5,7 @@ description: Begin a task — sync main (QUICK mode) or confirm branch (WORKTREE
 
 # Start Work
 
-Org-wide skill for monjizeen-dev repos. Repo-local overrides win when present.
+Org-wide skill for monjizeen repos. Repo-local overrides win when present.
 
 ## Two modes only
 

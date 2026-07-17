@@ -15,7 +15,7 @@ Depends on **`@enjaz/design-system`** (`../../../enjaz/packages/design-system`).
 ## Usage
 
 ```bash
-shared-assets/scripts/init-project/scaffold-web.sh my-app ~/Documents/work/monjizeen-dev closed
+shared-assets/scripts/init-project/scaffold-web.sh my-app ~/Documents/work/projects/monjizeen closed
 ```
 
 Third arg controls auth shell behavior: `closed` redirects guests from `/` to `/login`; `open` keeps the public home page. Scaffold installs org Cursor rules (`org-*.mdc`) and seeds `BRIEF.md` from the design-system template.

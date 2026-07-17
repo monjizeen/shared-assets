@@ -1,6 +1,6 @@
 # Web App Architecture
 
-Generic monjizeen-dev web product scaffold.
+Generic monjizeen web product scaffold.
 
 ## Stack
 

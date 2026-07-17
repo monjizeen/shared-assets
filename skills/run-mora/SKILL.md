@@ -17,14 +17,14 @@ disable-model-invocation: true
 From the mora repo (or pass mono root if known):
 
 ```bash
-bash "$(git -C "${workspace}" rev-parse --show-toplevel 2>/dev/null || echo ~/Documents/work/monjizeen-dev/mora)/run-mora.sh"
+bash "$(git -C "${workspace}" rev-parse --show-toplevel 2>/dev/null || echo ~/Documents/work/projects/monjizeen/mora)/run-mora.sh"
 ```
 
 If workspace is not mora, try these in order until one exists:
 
 1. `./run-mora.sh` when cwd is inside a mora clone
-2. `~/Documents/work/monjizeen-dev/mora/run-mora.sh`
-3. `~/Documents/work/projects/monjizeen-dev/mora/run-mora.sh`
+2. `~/Documents/work/projects/monjizeen/mora/run-mora.sh`
+3. `~/Documents/work/projects/monjizeen/mora/run-mora.sh`
 4. Parent of cwd if folder is named `mora` and contains `run-mora.sh`
 
 Optional: `--all-repos` to clone missing + pull every app repo in REGISTRY (same as `/refresh-mora`).

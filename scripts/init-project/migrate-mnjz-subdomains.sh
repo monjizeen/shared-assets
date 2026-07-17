@@ -10,7 +10,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ORG_SECRETS="${HOME}/.cursor/secrets/monjizeen-dev.env"
+ORG_SECRETS="${HOME}/.cursor/secrets/monjizeen.env"
 
 if [[ ! -f "${ORG_SECRETS}" ]]; then
   echo "error: missing ${ORG_SECRETS}" >&2
@@ -59,9 +59,9 @@ OLD_PRODUCTION="$5"
 SCRIPT_DIR="${VPS_SHARED_ASSETS_PATH:-/srv/projects/shared-assets}/scripts/init-project"
 CERTBOT_EMAIL="${CERTBOT_EMAIL:-}"
 
-if [[ -z "${CERTBOT_EMAIL}" && -f "${HOME}/.cursor/secrets/monjizeen-dev.env" ]]; then
+if [[ -z "${CERTBOT_EMAIL}" && -f "${HOME}/.cursor/secrets/monjizeen.env" ]]; then
   # shellcheck disable=SC1090
-  set -a && source "${HOME}/.cursor/secrets/monjizeen-dev.env" && set +a
+  set -a && source "${HOME}/.cursor/secrets/monjizeen.env" && set +a
 fi
 
 ensure_cert() {

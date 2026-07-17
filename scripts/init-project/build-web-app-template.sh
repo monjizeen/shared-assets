@@ -303,7 +303,7 @@ VUE
 cat > "${TEMPLATE}/docs/ARCHITECTURE.md" <<'MD'
 # Web App Architecture
 
-Generic monjizeen-dev web product scaffold.
+Generic monjizeen web product scaffold.
 
 ## Stack
 
@@ -339,7 +339,7 @@ MD
 cat > "${TEMPLATE}/README.md" <<'MD'
 # Web App (org template)
 
-Generic Laravel + Inertia + Vue 3 scaffold for new monjizeen-dev products.
+Generic Laravel + Inertia + Vue 3 scaffold for new monjizeen products.
 
 ## Stack
 
@@ -374,7 +374,7 @@ const fs = require('fs');
 const path = '${TEMPLATE}/package.json';
 const pkg = JSON.parse(fs.readFileSync(path, 'utf8'));
 pkg.name = 'web-app-template';
-pkg.description = 'monjizeen-dev web app template';
+pkg.description = 'monjizeen web app template';
 const deps = {
   '@enjaz/design-system': 'file:../../../enjaz/packages/design-system',
   'class-variance-authority': '^0.7.1',

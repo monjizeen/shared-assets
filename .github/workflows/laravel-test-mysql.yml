@@ -53,7 +53,7 @@ jobs:
           fi
 
       - name: Setup Laravel
-        uses: monjizeen-dev/shared-assets/actions/setup-laravel@main
+        uses: monjizeen/shared-assets/actions/setup-laravel@main
         with:
           php-version: ${{ inputs.php-version }}
 
@@ -107,7 +107,7 @@ jobs:
 
       - name: Notify Telegram - Passed
         if: success()
-        uses: monjizeen-dev/shared-assets/actions/telegram-notify@main
+        uses: monjizeen/shared-assets/actions/telegram-notify@main
         with:
           bot-token: ${{ secrets.TELEGRAM_NOTIFIER_TOKEN }}
           channel-id: ${{ secrets.TELEGRAM_CHANNEL_ID }}
@@ -116,7 +116,7 @@ jobs:
 
       - name: Notify Telegram - Failed
         if: failure()
-        uses: monjizeen-dev/shared-assets/actions/telegram-notify@main
+        uses: monjizeen/shared-assets/actions/telegram-notify@main
         with:
           bot-token: ${{ secrets.TELEGRAM_NOTIFIER_TOKEN }}
           channel-id: ${{ secrets.TELEGRAM_CHANNEL_ID }}

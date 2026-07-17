@@ -1,7 +1,7 @@
 ---
 name: refresh-mora
 description: >
-  Full monjizeen-dev sync — mora infra, hooks, studios, skills, plus clone any new
+  Full monjizeen sync — mora infra, hooks, studios, skills, plus clone any new
   app repos from REGISTRY and pull all registry repos up to date. Use when user says
   refresh mora, sync mora, /refresh-mora, new mac, switch device, or sync all repos.
 disable-model-invocation: true
@@ -14,14 +14,14 @@ disable-model-invocation: true
 ## Execute now
 
 ```bash
-bash "$(git -C "${workspace}" rev-parse --show-toplevel 2>/dev/null || echo ~/Documents/work/monjizeen-dev/mora)/scripts/refresh-mora.sh"
+bash "$(git -C "${workspace}" rev-parse --show-toplevel 2>/dev/null || echo ~/Documents/work/projects/monjizeen/mora)/scripts/refresh-mora.sh"
 ```
 
 If workspace is not mora, try these in order until one exists:
 
 1. `./scripts/refresh-mora.sh` when cwd is inside a mora clone
-2. `~/Documents/work/monjizeen-dev/mora/scripts/refresh-mora.sh`
-3. `~/Documents/work/projects/monjizeen-dev/mora/scripts/refresh-mora.sh`
+2. `~/Documents/work/projects/monjizeen/mora/scripts/refresh-mora.sh`
+3. `~/Documents/work/projects/monjizeen/mora/scripts/refresh-mora.sh`
 
 Equivalent: `run-mora.sh --all-repos`
 

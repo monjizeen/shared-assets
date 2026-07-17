@@ -1,7 +1,7 @@
 ---
 name: new-project
 description: >
-  Unified new monjizeen-dev product setup — GitHub repo, scaffold, MORA registry,
+  Unified new monjizeen product setup — GitHub repo, scaffold, MORA registry,
   Google OAuth, mnjz.in subdomains, VPS deploy. Same flow on Cursor (Mac) and
   Telegram (VPS). Use when user says /new-project, new project, init project,
   set up project, or project initiation. Alias /init-project.
@@ -31,7 +31,7 @@ Detect before Gate 0:
 
 ```bash
 MONO_ROOT="$(cat ~/.cursor/mono-root 2>/dev/null | head -1)"
-MONO_ROOT="${MONO_ROOT:-${MORA_MONO_ROOT:-$HOME/Documents/work/monjizeen-dev}}"
+MONO_ROOT="${MONO_ROOT:-${MORA_MONO_ROOT:-$HOME/Documents/work/monjizeen}}"
 SHARED_ASSETS="${MONO_ROOT}/shared-assets"
 MORA="${MONO_ROOT}/mora"
 ```
@@ -58,13 +58,13 @@ MORA="${MONO_ROOT}/mora"
 
 | Key | Value |
 |-----|-------|
-| GitHub org | `monjizeen-dev` |
+| GitHub org | `monjizeen` |
 | Root domain | `mnjz.in` |
 | Staging FQDN | `{project}-staging.mnjz.in` → auto-deploy on push to `main` (web only) |
 | Production FQDN | `{project}.mnjz.in` → manual `workflow_dispatch` only (web only) |
 | OAuth callbacks | `https://{project}-staging.mnjz.in/auth/google/callback`, `https://{project}.mnjz.in/auth/google/callback` |
 | VPS deploy paths | `/srv/projects/{project}/staging`, `/srv/projects/{project}/production` |
-| Org secrets file | `~/.cursor/secrets/monjizeen-dev.env` |
+| Org secrets file | `~/.cursor/secrets/monjizeen.env` |
 | Staging/local secrets | `~/.cursor/secrets/{project}.env` |
 | Production secrets | `~/.cursor/secrets/{project}-production.env` |
 | Web scaffold | `{SHARED_ASSETS}/templates/web-app` |
@@ -144,10 +144,10 @@ Confirm summary before Gate 2.
 
 ```bash
 cd "${MONO_ROOT}"
-gh repo create "monjizeen-dev/${PROJECT}" --private --description "{purpose}" --confirm
+gh repo create "monjizeen/${PROJECT}" --private --description "{purpose}" --confirm
 ```
 
-If exists: `gh repo view monjizeen-dev/${PROJECT}` and continue.
+If exists: `gh repo view monjizeen/${PROJECT}` and continue.
 
 ---
 
@@ -177,7 +177,7 @@ git init && git branch -M main
 find . \( -name '.DS_Store' -o -name '._*' \) -delete 2>/dev/null || true
 git add -A
 git commit -m "chore: initial scaffold for ${PROJECT}"
-git remote add origin "git@github.com:monjizeen-dev/${PROJECT}.git" 2>/dev/null || true
+git remote add origin "git@github.com:monjizeen/${PROJECT}.git" 2>/dev/null || true
 git push -u origin main
 ```
 
@@ -186,7 +186,7 @@ git push -u origin main
 ## Gate 4 — MORA registry + agent
 
 1. Edit `{MORA}/REGISTRY.yaml` — add repo + purpose.
-2. Create `{MORA}/domains/monjizeen-dev/agents/{PROJECT}/SKILL.md` and `MEMORY.md` ([agent stub](../init-project/reference.md#agent-stub)).
+2. Create `{MORA}/domains/monjizeen/agents/{PROJECT}/SKILL.md` and `MEMORY.md` ([agent stub](../init-project/reference.md#agent-stub)).
 3. `python3 "${MORA}/scripts/sync-registry.py"`
 4. Commit mora when Omar asks.
 
@@ -211,7 +211,7 @@ If Gate 1 VPS = `later`, skip Gate 7.
 ## Gate 7 — VPS (web only, from Mac)
 
 ```bash
-set -a && source ~/.cursor/secrets/monjizeen-dev.env && set +a
+set -a && source ~/.cursor/secrets/monjizeen.env && set +a
 "${SHARED_ASSETS}/scripts/init-project/gate7.sh" "${PROJECT}"
 ```
 
@@ -244,10 +244,10 @@ php artisan test
 
 | Item | Web | Expo |
 |------|-----|------|
-| Repo | `github.com/monjizeen-dev/{PROJECT}` | same |
+| Repo | `github.com/monjizeen/{PROJECT}` | same |
 | Staging | `https://{PROJECT}-staging.mnjz.in` | N/A |
 | Production | `https://{PROJECT}.mnjz.in` | App store / EAS |
-| MORA agent | `domains/monjizeen-dev/agents/{PROJECT}/` | same |
+| MORA agent | `domains/monjizeen/agents/{PROJECT}/` | same |
 
 ---
 

@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Scaffold a new monjizeen-dev web app from templates/web-app (not kawader).
+# Scaffold a new monjizeen web app from templates/web-app (not kawader).
 # Usage: scaffold-web.sh <project> [monorepo-root] [open|closed]
 
 set -euo pipefail
 
 PROJECT="${1:?project name required}"
-MONO_ROOT="${2:-${HOME}/Documents/work/projects/monjizeen-dev}"
+MONO_ROOT="${2:-${HOME}/Documents/work/projects/monjizeen}"
 AUTH_MODEL="${3:-closed}"
 WORKSPACE="${MONO_ROOT}/${PROJECT}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -49,7 +49,7 @@ pkg.name = '${PROJECT}';
 fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 4) + '\n');
 const composerPath = 'composer.json';
 const composer = JSON.parse(fs.readFileSync(composerPath, 'utf8'));
-composer.name = 'monjizeen-dev/${PROJECT}';
+composer.name = 'monjizeen/${PROJECT}';
 composer.description = title;
 fs.writeFileSync(composerPath, JSON.stringify(composer, null, 2) + '\n');
 let envEx = fs.readFileSync('.env.example', 'utf8');

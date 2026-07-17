@@ -5,18 +5,18 @@
 Gate 0 runs `scripts/init-project/bootstrap-mac.sh` automatically. On a **new Mac**, you only need:
 
 ```bash
-git clone git@github.com:monjizeen-dev/shared-assets.git ~/Documents/work/projects/monjizeen-dev/shared-assets
-~/Documents/work/projects/monjizeen-dev/shared-assets/scripts/init-project/bootstrap-mac.sh
+git clone git@github.com:monjizeen/shared-assets.git ~/Documents/work/projects/monjizeen/shared-assets
+~/Documents/work/projects/monjizeen/shared-assets/scripts/init-project/bootstrap-mac.sh
 gh auth login   # if bootstrap reports gh not authenticated
 ```
 
-Bootstrap will symlink the skill, create secrets dir, pull `monjizeen-dev.env` from VPS (or build from VPS Cloudflare config), append SSH `Host vps` if missing, and validate Cloudflare API.
+Bootstrap will symlink the skill, create secrets dir, pull `monjizeen.env` from VPS (or build from VPS Cloudflare config), append SSH `Host vps` if missing, and validate Cloudflare API.
 
 **Requirements on new Mac:** SSH key accepted by VPS (`~/.ssh/id_ed25519` or update `~/.ssh/config`). Copy key from another Mac or `ssh-copy-id` once.
 
 ### Manual secrets file (fallback only)
 
-If VPS is unreachable, create `~/.cursor/secrets/monjizeen-dev.env` on each Mac (chmod 600). Sync via 1Password/iCloud or copy from another Mac.
+If VPS is unreachable, create `~/.cursor/secrets/monjizeen.env` on each Mac (chmod 600). Sync via 1Password/iCloud or copy from another Mac.
 
 ```bash
 # https://dash.cloudflare.com/profile/api-tokens
@@ -36,14 +36,14 @@ CERTBOT_EMAIL=you@example.com
 Handled by `bootstrap-mac.sh`. Manual equivalent:
 
 ```bash
-ln -sf ~/Documents/work/projects/monjizeen-dev/shared-assets/skills/init-project \
+ln -sf ~/Documents/work/projects/monjizeen/shared-assets/skills/init-project \
   ~/.cursor/skills/init-project
 ```
 
 ### VPS: clone shared-assets (once)
 
 ```bash
-ssh vps 'git clone git@github.com:monjizeen-dev/shared-assets.git /srv/projects/shared-assets 2>/dev/null || (cd /srv/projects/shared-assets && git pull)'
+ssh vps 'git clone git@github.com:monjizeen/shared-assets.git /srv/projects/shared-assets 2>/dev/null || (cd /srv/projects/shared-assets && git pull)'
 ```
 
 Gate 7 rsyncs latest scripts on every run; git pull keeps VPS copy current after merges.
@@ -97,7 +97,7 @@ Org standard: **`@enjaz/design-system`** in the **`enjaz`** repo (`packages/desi
 
 **Install in app:** `"@enjaz/design-system": "file:../enjaz/packages/design-system"` (mono root).
 
-**External / GitHub:** `"@enjaz/design-system": "github:monjizeen-dev/enjaz#main:packages/design-system"`
+**External / GitHub:** `"@enjaz/design-system": "github:monjizeen/enjaz#main:packages/design-system"`
 
 **Maintainer sync** from monjizeen reference:
 
@@ -188,7 +188,7 @@ Record `THEME_NAME` in README, agent `MEMORY.md`, and Gate 9 handoff.
 
 ## REGISTRY.yaml entry
 
-Add under `domains.monjizeen-dev.repos`:
+Add under `domains.monjizeen.repos`:
 
 ```yaml
       {PROJECT}:
@@ -197,7 +197,7 @@ Add under `domains.monjizeen-dev.repos`:
         purpose: {ONE_LINE_PURPOSE}
 ```
 
-`start-work` / `finish-work` hooks apply to all `monjizeen-dev` repos via domain-level `inherit_hooks` in `REGISTRY.yaml`. Opt out per repo with `inherit_hooks: []`.
+`start-work` / `finish-work` hooks apply to all `monjizeen` repos via domain-level `inherit_hooks` in `REGISTRY.yaml`. Opt out per repo with `inherit_hooks: []`.
 
 ---
 
@@ -205,23 +205,23 @@ Add under `domains.monjizeen-dev.repos`:
 
 ### Web (`content` / `web-app`)
 
-`mora/domains/monjizeen-dev/agents/{PROJECT}/SKILL.md`:
+`mora/domains/monjizeen/agents/{PROJECT}/SKILL.md`:
 
 ```markdown
 ---
 name: {PROJECT}
 description: >
   {PROJECT} agent. {ONE_LINE_PURPOSE}. Laravel + Inertia + Vue 3 + shadcn-vue + Lucide.
-  Triggers on {PROJECT}. Not for other monjizeen-dev repos.
+  Triggers on {PROJECT}. Not for other monjizeen repos.
 ---
 
 # {PROJECT} agent
 
 ## Scope
 
-- **Domain:** monjizeen-dev
+- **Domain:** monjizeen
 - **Repo:** `{PROJECT}/`
-- **Workspace:** `~/Documents/work/projects/monjizeen-dev/{PROJECT}`
+- **Workspace:** `~/Documents/work/projects/monjizeen/{PROJECT}`
 
 ## Purpose
 
@@ -237,7 +237,7 @@ description: >
 
 ## Memory
 
-`domains/monjizeen-dev/agents/{PROJECT}/MEMORY.md`
+`domains/monjizeen/agents/{PROJECT}/MEMORY.md`
 ```
 
 `MEMORY.md` (web):
@@ -312,7 +312,7 @@ on:
 
 jobs:
   test:
-    uses: monjizeen-dev/shared-assets/.github/workflows/laravel-test.yml@main
+    uses: monjizeen/shared-assets/.github/workflows/laravel-test.yml@main
     with:
       node-required: true
     secrets: inherit
@@ -325,7 +325,7 @@ jobs:
       (github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_target == 'staging')
     steps:
       - uses: actions/checkout@v4.2.2
-      - uses: monjizeen-dev/shared-assets/actions/deploy-laravel@main
+      - uses: monjizeen/shared-assets/actions/deploy-laravel@main
         with:
           host: 127.0.0.1
           username: www-data
@@ -348,7 +348,7 @@ jobs:
     if: github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_target == 'production'
     steps:
       - uses: actions/checkout@v4.2.2
-      - uses: monjizeen-dev/shared-assets/actions/deploy-laravel@main
+      - uses: monjizeen/shared-assets/actions/deploy-laravel@main
         with:
           host: 127.0.0.1
           username: www-data
@@ -497,7 +497,7 @@ Gate 7 syncs both files to VPS `~/.cursor/secrets/`. `env-deploy.sh` selects the
 Mac, after Gate 5–6:
 
 ```bash
-source ~/.cursor/secrets/monjizeen-dev.env
+source ~/.cursor/secrets/monjizeen.env
 shared-assets/scripts/init-project/gate7.sh {PROJECT}
 ```
 
@@ -508,7 +508,7 @@ Creates DNS + nginx for `{PROJECT}-staging.mnjz.in` and `{PROJECT}.mnjz.in`.
 Old pattern: `staging-{PROJECT}.mnjz.in`, `app-{PROJECT}.mnjz.in`.
 
 ```bash
-source ~/.cursor/secrets/monjizeen-dev.env
+source ~/.cursor/secrets/monjizeen.env
 shared-assets/scripts/init-project/migrate-mnjz-subdomains.sh hadeed daftar yawmi
 ```
 

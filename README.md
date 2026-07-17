@@ -1,12 +1,12 @@
-# monjizeen-dev Shared Assets
+# monjizeen Shared Assets
 
-Shared GitHub Actions workflows, composite actions, and Claude Code skills for all monjizeen-dev projects.
+Shared GitHub Actions workflows, composite actions, and Claude Code skills for all monjizeen projects.
 
 ## Structure
 
 ```
 packages/
-  design-system/     # redirect — canonical package in github.com/monjizeen-dev/enjaz
+  design-system/     # redirect — canonical package in github.com/monjizeen/enjaz
 actions/
   setup-flutter/     # Install Flutter SDK + pub get
   setup-laravel/     # Install PHP + Composer + prepare .env
@@ -36,7 +36,7 @@ scripts/
 ```yaml
 jobs:
   test:
-    uses: monjizeen-dev/shared-assets/.github/workflows/flutter-test.yml@main
+    uses: monjizeen/shared-assets/.github/workflows/flutter-test.yml@main
     secrets: inherit
 
   deploy:
@@ -49,7 +49,7 @@ jobs:
 ```yaml
 jobs:
   test:
-    uses: monjizeen-dev/shared-assets/.github/workflows/laravel-test.yml@main
+    uses: monjizeen/shared-assets/.github/workflows/laravel-test.yml@main
     with:
       node-required: true  # if project has frontend assets
     secrets: inherit
@@ -62,13 +62,13 @@ Use this when migrations have MySQL-specific syntax (raw SQL, composite keys, et
 ```yaml
 jobs:
   test:
-    uses: monjizeen-dev/shared-assets/.github/workflows/laravel-test-mysql.yml@main
+    uses: monjizeen/shared-assets/.github/workflows/laravel-test-mysql.yml@main
     secrets: inherit
 
   deploy-staging:
     needs: test
     steps:
-      - uses: monjizeen-dev/shared-assets/actions/deploy-laravel@main
+      - uses: monjizeen/shared-assets/actions/deploy-laravel@main
         with:
           host: 187.77.109.160
           username: www-data
@@ -84,8 +84,8 @@ jobs:
 
 ## Design system
 
-**`@enjaz/design-system`** lives in the [**enjaz**](https://github.com/monjizeen-dev/enjaz) repo. Live gallery: https://enjaz.mnjz.in
+**`@enjaz/design-system`** lives in the [**enjaz**](https://github.com/monjizeen/enjaz) repo. Live gallery: https://enjaz.mnjz.in
 
-Pattern docs: [enjaz/packages/design-system/docs/INDEX.md](https://github.com/monjizeen-dev/enjaz/blob/main/packages/design-system/docs/INDEX.md)
+Pattern docs: [enjaz/packages/design-system/docs/INDEX.md](https://github.com/monjizeen/enjaz/blob/main/packages/design-system/docs/INDEX.md)
 
 Sync from monjizeen: `cd enjaz/packages/design-system && npm run sync`

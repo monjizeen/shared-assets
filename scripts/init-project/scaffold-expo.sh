@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Scaffold a new monjizeen-dev Expo (React Native) app.
+# Scaffold a new monjizeen Expo (React Native) app.
 # Usage: scaffold-expo.sh <project> [monorepo-root]
 
 set -euo pipefail
 
 PROJECT="${1:?project name required}"
-MONO_ROOT="${2:-${HOME}/Documents/work/projects/monjizeen-dev}"
+MONO_ROOT="${2:-${HOME}/Documents/work/projects/monjizeen}"
 WORKSPACE="${MONO_ROOT}/${PROJECT}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEMPLATE="${SCRIPT_DIR}/../../templates/expo-app"
@@ -81,7 +81,7 @@ fi
 cat > "${WORKSPACE}/README.md" <<MD
 # ${PROJECT}
 
-Expo mobile app (monjizeen-dev org scaffold).
+Expo mobile app (monjizeen org scaffold).
 
 ## Setup
 

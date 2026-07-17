@@ -13,7 +13,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEPLOY_ROOT="/srv/projects/${PROJECT}"
 STAGING="${DEPLOY_ROOT}/staging"
 PROD="${DEPLOY_ROOT}/production"
-REPO="git@github.com:monjizeen-dev/${PROJECT}.git"
+REPO="git@github.com:monjizeen/${PROJECT}.git"
 CERTBOT_EMAIL="${CERTBOT_EMAIL:-}"
 
 ensure_cert() {
@@ -22,9 +22,9 @@ ensure_cert() {
     return 0
   fi
   if [[ -z "${CERTBOT_EMAIL}" ]]; then
-    if [[ -f "${HOME}/.cursor/secrets/monjizeen-dev.env" ]]; then
+    if [[ -f "${HOME}/.cursor/secrets/monjizeen.env" ]]; then
       # shellcheck disable=SC1090
-      set -a && source "${HOME}/.cursor/secrets/monjizeen-dev.env" && set +a
+      set -a && source "${HOME}/.cursor/secrets/monjizeen.env" && set +a
     fi
   fi
   if [[ -n "${CERTBOT_EMAIL:-}" ]]; then

@@ -1,4 +1,4 @@
-# monjizeen-dev Skills (single source of truth)
+# monjizeen Skills (single source of truth)
 
 All custom skills live here — versioned on GitHub. **Do not edit copies** under `~/.claude/skills/` or `~/.cursor/skills/`.
 
@@ -15,6 +15,7 @@ All custom skills live here — versioned on GitHub. **Do not edit copies** unde
 | `init-project` | Alias for `new-project` |
 | `pre-mvp-audit` | Pre-launch codebase audit tied to core user loop |
 | `run-mora` | Bootstrap MORA on a new Mac or after pull |
+| `refresh` | Sync **active workspace** repo — pull, deps, migrate, restart dev server |
 | `refresh-mora` | Full sync — `run-mora` + clone/pull all REGISTRY app repos |
 | `caveman` | Communication intensity reference (Cursor enforces via rules + hooks) |
 
@@ -36,7 +37,7 @@ Re-run after `git pull` on any Mac.
 ## Manual symlink (if needed)
 
 ```bash
-MONO=~/Documents/work/monjizeen-dev
+MONO=~/Documents/work/projects/monjizeen
 mkdir -p ~/.cursor/skills ~/.claude/skills
 for skill in "$MONO"/shared-assets/skills/*/; do
   name=$(basename "$skill")
@@ -54,6 +55,7 @@ Invoke with `/` in Cursor or Claude Code:
 /start-work
 /finish-work
 /cleanup
+/refresh
 /new-project
 /init-project
 /pre-mvp-audit
@@ -71,6 +73,7 @@ skills/
 ├── start-work/SKILL.md
 ├── finish-work/SKILL.md
 ├── cleanup/SKILL.md
+├── refresh/SKILL.md
 ├── cto/SKILL.md
 ├── ceo/SKILL.md
 ├── new-project/SKILL.md

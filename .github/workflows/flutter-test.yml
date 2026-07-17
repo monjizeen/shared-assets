@@ -25,7 +25,7 @@ jobs:
         uses: actions/checkout@v4.2.2
 
       - name: Setup Flutter
-        uses: monjizeen-dev/shared-assets/actions/setup-flutter@main
+        uses: monjizeen/shared-assets/actions/setup-flutter@main
 
       - name: Check formatting
         run: dart format --set-exit-if-changed ${{ inputs.format-paths }}
@@ -39,7 +39,7 @@ jobs:
 
       - name: Notify Telegram - Passed
         if: success()
-        uses: monjizeen-dev/shared-assets/actions/telegram-notify@main
+        uses: monjizeen/shared-assets/actions/telegram-notify@main
         with:
           bot-token: ${{ secrets.TELEGRAM_NOTIFIER_TOKEN }}
           channel-id: ${{ secrets.TELEGRAM_CHANNEL_ID }}
@@ -48,7 +48,7 @@ jobs:
 
       - name: Notify Telegram - Failed
         if: failure()
-        uses: monjizeen-dev/shared-assets/actions/telegram-notify@main
+        uses: monjizeen/shared-assets/actions/telegram-notify@main
         with:
           bot-token: ${{ secrets.TELEGRAM_NOTIFIER_TOKEN }}
           channel-id: ${{ secrets.TELEGRAM_CHANNEL_ID }}

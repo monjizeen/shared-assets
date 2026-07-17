@@ -3,7 +3,7 @@
 # Usage: dns.sh <record_label> [vps_ip]
 # Examples: dns.sh kawader-staging   → kawader-staging.mnjz.in
 #           dns.sh kawader             → kawader.mnjz.in
-# Requires: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ZONE_ID (env or monjizeen-dev.env)
+# Requires: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ZONE_ID (env or monjizeen.env)
 
 set -euo pipefail
 
@@ -16,7 +16,7 @@ if [[ -z "${VPS_IP}" ]]; then
 fi
 
 if [[ -z "${CLOUDFLARE_API_TOKEN:-}" || -z "${CLOUDFLARE_ZONE_ID:-}" ]]; then
-  SECRETS="${HOME}/.cursor/secrets/monjizeen-dev.env"
+  SECRETS="${HOME}/.cursor/secrets/monjizeen.env"
   if [[ -f "${SECRETS}" ]]; then
     # shellcheck disable=SC1090
     set -a && source "${SECRETS}" && set +a

@@ -3,7 +3,7 @@
 # Usage: gate7.sh <project>
 # Staging: {project}-staging.mnjz.in → /srv/projects/{project}/staging
 # Production: {project}.mnjz.in → /srv/projects/{project}/production
-# Requires ~/.cursor/secrets/monjizeen-dev.env, <project>.env (staging/local),
+# Requires ~/.cursor/secrets/monjizeen.env, <project>.env (staging/local),
 # and <project>-production.env on Mac.
 
 set -euo pipefail
@@ -13,7 +13,7 @@ STAGING_FQDN="${PROJECT}-staging.mnjz.in"
 PRODUCTION_FQDN="${PROJECT}.mnjz.in"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ORG_SECRETS="${HOME}/.cursor/secrets/monjizeen-dev.env"
+ORG_SECRETS="${HOME}/.cursor/secrets/monjizeen.env"
 PROJECT_SECRETS="${HOME}/.cursor/secrets/${PROJECT}.env"
 PROJECT_SECRETS_PRODUCTION="${HOME}/.cursor/secrets/${PROJECT}-production.env"
 

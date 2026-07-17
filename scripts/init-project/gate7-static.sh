@@ -9,7 +9,7 @@ PROJECT="${1:?project name required}"
 FQDN="${2:-${PROJECT}.mnjz.in}"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ORG_SECRETS="${HOME}/.cursor/secrets/monjizeen-dev.env"
+ORG_SECRETS="${HOME}/.cursor/secrets/monjizeen.env"
 
 if [[ ! -f "${ORG_SECRETS}" ]]; then
   echo "error: missing ${ORG_SECRETS}" >&2
@@ -25,7 +25,7 @@ VPS_SSH="${VPS_SSH_USER}@${VPS_SSH_HOST}"
 VPS_SHARED_ASSETS="${VPS_SHARED_ASSETS_PATH:-/srv/projects/shared-assets}"
 DEPLOY_ROOT="/srv/projects/${PROJECT}"
 PROD="${DEPLOY_ROOT}/production"
-REPO="git@github.com:monjizeen-dev/${PROJECT}.git"
+REPO="git@github.com:monjizeen/${PROJECT}.git"
 
 SSH_OPTS=(-o BatchMode=yes -o ConnectTimeout=15)
 
@@ -62,8 +62,8 @@ else
 fi
 
 if [[ ! -d "/etc/letsencrypt/live/\${FQDN}" ]]; then
-  if [[ -f "\${HOME}/.cursor/secrets/monjizeen-dev.env" ]]; then
-    set -a && source "\${HOME}/.cursor/secrets/monjizeen-dev.env" && set +a
+  if [[ -f "\${HOME}/.cursor/secrets/monjizeen.env" ]]; then
+    set -a && source "\${HOME}/.cursor/secrets/monjizeen.env" && set +a
   fi
   if [[ -n "\${CERTBOT_EMAIL:-}" ]]; then
     certbot certonly --nginx -d "\${FQDN}" --non-interactive --agree-tos -m "\${CERTBOT_EMAIL}" || true

@@ -16,9 +16,9 @@ find_shared_assets() {
     candidates+=("${SHARED_ASSETS_ROOT}")
   fi
   candidates+=(
-    "${HOME}/Documents/work/projects/monjizeen-dev/shared-assets"
-    "${HOME}/work/projects/monjizeen-dev/shared-assets"
-    "${HOME}/projects/monjizeen-dev/shared-assets"
+    "${HOME}/Documents/work/projects/monjizeen/shared-assets"
+    "${HOME}/work/projects/monjizeen/shared-assets"
+    "${HOME}/projects/monjizeen/shared-assets"
   )
   local d
   for d in "${candidates[@]}"; do
@@ -37,8 +37,8 @@ need(){ echo "bootstrap: need $*" >&2; NEED_MANUAL=1; }
 
 NEED_MANUAL=0
 SHARED_ASSETS="$(find_shared_assets)" || {
-  need "clone monjizeen-dev/shared-assets (skill not found). Example:"
-  need "  git clone git@github.com:monjizeen-dev/shared-assets.git ~/Documents/work/projects/monjizeen-dev/shared-assets"
+  need "clone monjizeen/shared-assets (skill not found). Example:"
+  need "  git clone git@github.com:monjizeen/shared-assets.git ~/Documents/work/projects/monjizeen/shared-assets"
   SHARED_ASSETS=""
 }
 
@@ -46,10 +46,10 @@ SHARED_ASSETS="$(find_shared_assets)" || {
 MONO_ROOT="$(cd "${SHARED_ASSETS}/.." && pwd)"
 if [[ -n "${SHARED_ASSETS}" ]]; then
   if [[ ! -d "${MONO_ROOT}/mora/.git" ]]; then
-    if git clone "git@github.com:monjizeen-dev/mora.git" "${MONO_ROOT}/mora" 2>/dev/null; then
+    if git clone "git@github.com:monjizeen/mora.git" "${MONO_ROOT}/mora" 2>/dev/null; then
       fix "cloned mora → ${MONO_ROOT}/mora"
     else
-      need "clone mora: git clone git@github.com:monjizeen-dev/mora.git ${MONO_ROOT}/mora"
+      need "clone mora: git clone git@github.com:monjizeen/mora.git ${MONO_ROOT}/mora"
     fi
   fi
   if [[ -f "${MONO_ROOT}/mora/scripts/refresh-mora.sh" ]]; then
@@ -66,7 +66,7 @@ fi
 # --- Secrets directory ---
 mkdir -p "${HOME}/.cursor/secrets"
 chmod 700 "${HOME}/.cursor/secrets"
-ORG_SECRETS="${HOME}/.cursor/secrets/monjizeen-dev.env"
+ORG_SECRETS="${HOME}/.cursor/secrets/monjizeen.env"
 
 # --- SSH config: ensure Host vps exists ---
 SSH_CONFIG="${HOME}/.ssh/config"
@@ -125,14 +125,14 @@ import re, sys
 path, identity, ip = sys.argv[1:4]
 text = open(path, encoding="utf-8").read()
 pattern = re.compile(
-    r"(# monjizeen-dev VPS \(added by init-project bootstrap\)\n)?"
+    r"(# monjizeen VPS \(added by init-project bootstrap\)\n)?"
     r"Host vps\n"
     r"(?:.*\n)*?"
     r"(?=Host |\Z)",
     re.MULTILINE,
 )
 replacement = (
-    "# monjizeen-dev VPS (added by init-project bootstrap)\n"
+    "# monjizeen VPS (added by init-project bootstrap)\n"
     f"Host vps\n"
     f"    HostName {ip}\n"
     f"    User root\n"
@@ -157,7 +157,7 @@ PY
   chmod 700 "${HOME}/.ssh"
   cat >> "${SSH_CONFIG}" <<EOF
 
-# monjizeen-dev VPS (added by init-project bootstrap)
+# monjizeen VPS (added by init-project bootstrap)
 Host vps
     HostName ${ip}
     User root
@@ -170,10 +170,10 @@ EOF
 # --- Org secrets file ---
 fetch_secrets_from_vps() {
   local ssh_target="${1:-vps}"
-  if ! ssh -o BatchMode=yes -o ConnectTimeout=10 "${ssh_target}" 'test -f ~/.cursor/secrets/monjizeen-dev.env' 2>/dev/null; then
+  if ! ssh -o BatchMode=yes -o ConnectTimeout=10 "${ssh_target}" 'test -f ~/.cursor/secrets/monjizeen.env' 2>/dev/null; then
     return 1
   fi
-  scp -q "${ssh_target}:~/.cursor/secrets/monjizeen-dev.env" "${ORG_SECRETS}.tmp"
+  scp -q "${ssh_target}:~/.cursor/secrets/monjizeen.env" "${ORG_SECRETS}.tmp"
   chmod 600 "${ORG_SECRETS}.tmp"
   mv "${ORG_SECRETS}.tmp" "${ORG_SECRETS}"
   fix "pulled ${ORG_SECRETS} from VPS (${ssh_target})"
@@ -217,7 +217,7 @@ PY' | {
     read -r CF_ZONE
     read -r CF_EMAIL
     cat > "${ORG_SECRETS}" <<EOF
-# monjizeen-dev org secrets — built from VPS cloudflare.ini
+# monjizeen org secrets — built from VPS cloudflare.ini
 CLOUDFLARE_API_TOKEN=${CF_TOKEN}
 CLOUDFLARE_ZONE_ID=${CF_ZONE}
 VPS_PUBLIC_IP=187.77.109.160
@@ -259,9 +259,9 @@ fi
 
 # --- Shell auto-source (optional, idempotent) ---
 ZSHRC="${HOME}/.zshrc"
-SOURCE_LINE='[ -f ~/.cursor/secrets/monjizeen-dev.env ] && source ~/.cursor/secrets/monjizeen-dev.env'
-if [[ -f "${ZSHRC}" ]] && ! grep -qF 'monjizeen-dev.env' "${ZSHRC}" 2>/dev/null; then
-  printf '\n# monjizeen-dev init-project secrets\n%s\n' "${SOURCE_LINE}" >> "${ZSHRC}"
+SOURCE_LINE='[ -f ~/.cursor/secrets/monjizeen.env ] && source ~/.cursor/secrets/monjizeen.env'
+if [[ -f "${ZSHRC}" ]] && ! grep -qF 'monjizeen.env' "${ZSHRC}" 2>/dev/null; then
+  printf '\n# monjizeen init-project secrets\n%s\n' "${SOURCE_LINE}" >> "${ZSHRC}"
   fix "added secrets source line to ~/.zshrc"
 elif [[ -f "${ZSHRC}" ]]; then
   ok "zshrc already sources org secrets"

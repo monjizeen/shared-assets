@@ -1,6 +1,6 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "monjizeen-dev/kawader",
+    "name": "monjizeen/kawader",
     "type": "project",
     "description": "Kawader talent directory",
     "keywords": ["laravel", "kawader"],
