@@ -448,7 +448,7 @@ jobs:
             npm run build
 ```
 
-If the app uses `@enjaz/design-system` via `file:./enjaz/packages/design-system`, set `enjaz-design-system: true` on the test job and keep an `enjaz/` checkout (or symlink) on the VPS deploy tree before `npm ci`.
+If the app uses `@enjaz/design-system`, prefer vendoring at `packages/design-system` (`file:./packages/design-system`) so CI does not need cross-repo checkout of private `enjaz`. Optional: `enjaz-design-system: true` on the test job when org Actions can read `monjizeen/enjaz`.
 
 ---
 

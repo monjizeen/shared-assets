@@ -16,7 +16,7 @@ on:
         type: string
         default: "20"
       enjaz-design-system:
-        description: Checkout monjizeen-dev/enjaz for file:./enjaz/packages/design-system
+        description: "Deprecated — prefer vendoring file:./packages/design-system. Checkout monjizeen/enjaz when true."
         type: boolean
         default: false
     secrets:
@@ -36,7 +36,7 @@ jobs:
         if: ${{ inputs.enjaz-design-system }}
         uses: actions/checkout@v4.2.2
         with:
-          repository: monjizeen-dev/enjaz
+          repository: monjizeen/enjaz
           path: enjaz
 
       - name: Setup Laravel
