@@ -509,7 +509,7 @@ Old pattern: `staging-{PROJECT}.mnjz.in`, `app-{PROJECT}.mnjz.in`.
 
 ```bash
 source ~/.cursor/secrets/monjizeen.env
-shared-assets/scripts/init-project/migrate-mnjz-subdomains.sh hadeed daftar yawmi
+shared-assets/scripts/init-project/migrate-mnjz-subdomains.sh hadeed daftar waqti
 ```
 
 Then update Google OAuth redirect URIs in Cloud Console for each project.
