@@ -311,7 +311,68 @@ description: >
 
 ## CI workflow
 
-`.github/workflows/ci.yml` in the new repo:
+Both modes deploy code to a **folder**. Nginx (Gate 7) maps the public URL.
+
+| Mode | Push `main` folder | Public URL | Production job |
+|------|--------------------|------------|----------------|
+| playground | `/srv/projects/{PROJECT}/staging` | `{PROJECT}.mnjz.in` | none |
+| live | `/srv/projects/{PROJECT}/staging` | `staging.{DOMAIN}` | manual → `…/production` → `app.{DOMAIN}` |
+
+Replace `{PROJECT}` (and `{DOMAIN}` in docs/memory) with real values. Template default in `templates/web-app` is **playground**.
+
+### CI workflow (playground)
+
+```yaml
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      deploy_target:
+        description: 'Deploy target (leave empty to just run tests)'
+        required: false
+        type: choice
+        options:
+          - staging
+
+jobs:
+  test:
+    uses: monjizeen/shared-assets/.github/workflows/laravel-test.yml@main
+    with:
+      node-required: true
+    secrets: inherit
+
+  deploy-staging:
+    needs: test
+    runs-on: self-hosted
+    if: |
+      (github.ref == 'refs/heads/main' && github.event_name == 'push') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_target == 'staging')
+    steps:
+      - uses: actions/checkout@v4.2.2
+      - uses: monjizeen/shared-assets/actions/deploy-laravel@main
+        with:
+          host: 127.0.0.1
+          username: www-data
+          ssh-key: ${{ secrets.ACCESS_TO_VPS_WWWDATA_FROM_GITHUB_ACTIONS }}
+          deploy-path: /srv/projects/{PROJECT}/staging
+          local: "true"
+          pre-commands: |
+            DEPLOY_USER="$(whoami)"
+            DEPLOY_GROUP="$(id -gn)"
+            sudo chown -R "${DEPLOY_USER}:${DEPLOY_GROUP}" .git 2>/dev/null || true
+            chmod -R u+w .git 2>/dev/null || true
+            chmod -R u+w . 2>/dev/null || true
+          extra-commands: |
+            npm ci
+            npm run build
+```
+
+### CI workflow (live)
 
 ```yaml
 name: CI
@@ -387,11 +448,7 @@ jobs:
             npm run build
 ```
 
-Replace `{PROJECT}` with the actual project name.
-
-**Deploy targets (live):** `deploy-staging` → `/srv/projects/{PROJECT}/staging` (`staging.{DOMAIN}`). `deploy-production` is `workflow_dispatch` only → `…/production` (`app.{DOMAIN}`). Push `main` only hits staging.
-
-**Deploy targets (playground):** same `deploy-staging` job only (URL `{PROJECT}.mnjz.in`). **Omit** `deploy-production` and the production `workflow_dispatch` option from the template above.
+If the app uses `@enjaz/design-system` via `file:./enjaz/packages/design-system`, set `enjaz-design-system: true` on the test job and keep an `enjaz/` checkout (or symlink) on the VPS deploy tree before `npm ci`.
 
 ---
 

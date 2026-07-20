@@ -1,3 +1,6 @@
+# Playground default — push main → {PROJECT}.mnjz.in via …/staging.
+# For live (staging.{DOMAIN} + app.{DOMAIN}), see init-project/reference.md "CI workflow (live)".
+
 name: CI
 
 on:
@@ -13,7 +16,6 @@ on:
         type: choice
         options:
           - staging
-          - production
 
 jobs:
   test:
@@ -35,30 +37,7 @@ jobs:
           host: 127.0.0.1
           username: www-data
           ssh-key: ${{ secrets.ACCESS_TO_VPS_WWWDATA_FROM_GITHUB_ACTIONS }}
-          deploy-path: /srv/projects/kawader/staging
-          local: "true"
-          pre-commands: |
-            DEPLOY_USER="$(whoami)"
-            DEPLOY_GROUP="$(id -gn)"
-            sudo chown -R "${DEPLOY_USER}:${DEPLOY_GROUP}" .git 2>/dev/null || true
-            chmod -R u+w .git 2>/dev/null || true
-            chmod -R u+w . 2>/dev/null || true
-          extra-commands: |
-            npm ci
-            npm run build
-
-  deploy-production:
-    needs: test
-    runs-on: self-hosted
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_target == 'production'
-    steps:
-      - uses: actions/checkout@v4.2.2
-      - uses: monjizeen/shared-assets/actions/deploy-laravel@main
-        with:
-          host: 127.0.0.1
-          username: www-data
-          ssh-key: ${{ secrets.ACCESS_TO_VPS_WWWDATA_FROM_GITHUB_ACTIONS }}
-          deploy-path: /srv/projects/kawader/production
+          deploy-path: /srv/projects/{PROJECT}/staging
           local: "true"
           pre-commands: |
             DEPLOY_USER="$(whoami)"

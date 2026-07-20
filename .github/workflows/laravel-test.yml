@@ -15,6 +15,10 @@ on:
         description: Node.js version (if node-required is true)
         type: string
         default: "20"
+      enjaz-design-system:
+        description: Checkout monjizeen-dev/enjaz for file:./enjaz/packages/design-system
+        type: boolean
+        default: false
     secrets:
       TELEGRAM_NOTIFIER_TOKEN:
         required: false
@@ -27,6 +31,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4.2.2
+
+      - name: Checkout enjaz design system
+        if: ${{ inputs.enjaz-design-system }}
+        uses: actions/checkout@v4.2.2
+        with:
+          repository: monjizeen-dev/enjaz
+          path: enjaz
 
       - name: Setup Laravel
         uses: monjizeen/shared-assets/actions/setup-laravel@main
