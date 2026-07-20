@@ -2,9 +2,9 @@
 name: new-project
 description: >
   Unified new monjizeen product setup — GitHub repo, scaffold, MORA registry,
-  Google OAuth, mnjz.in subdomains, VPS deploy. Same flow on Cursor (Mac) and
-  Telegram (VPS). Use when user says /new-project, new project, init project,
-  set up project, or project initiation. Alias /init-project.
+  Google OAuth, DNS, VPS deploy. Same flow on Cursor (Mac) and Telegram (VPS).
+  Use when user says /new-project, new project, init project, set up project,
+  or project initiation. Alias /init-project.
 disable-model-invocation: true
 ---
 
@@ -54,19 +54,43 @@ MORA="${MONO_ROOT}/mora"
 
 ---
 
+## Deploy modes (locked 2026-07-20)
+
+Two kinds of web projects. Never mix “live on mnjz.in” and “live on custom domain” for the same app.
+
+| Mode | When | Public URL(s) | Push `main` |
+|------|------|---------------|-------------|
+| **playground** | No custom domain in Cloudflare yet | `{project}.mnjz.in` only | Deploys there (no separate production) |
+| **live** | Domain already in Cloudflare | Staging: `staging.{domain}` · Prod: `app.{domain}` | Staging auto; production = manual only |
+
+**Examples**
+
+| Project | Mode | Staging | Production |
+|---------|------|---------|------------|
+| hadeed | playground | `hadeed.mnjz.in` | — (same URL) |
+| monjizeen | live | `staging.monjizeen.com` | `app.monjizeen.com` |
+| modarraj | live | `staging.modarraj.com` | `app.modarraj.com` |
+
+**Rules**
+
+- Playground: one VPS tree (`…/staging`), one OAuth client, one DNS record on `mnjz.in`.
+- Live: two VPS trees (`staging` + `production`), two OAuth clients, DNS on the **project’s domain zone** (not mnjz.in). Apex `{domain}` → redirect to `app.{domain}` (optional, later).
+- Upgrade playground → live: use `/migrate-project` (when skill exists) — do not leave both mnjz live and domain live.
+
+---
+
 ## Constants
 
 | Key | Value |
 |-----|-------|
 | GitHub org | `monjizeen` |
-| Root domain | `mnjz.in` |
-| Staging FQDN | `{project}-staging.mnjz.in` → auto-deploy on push to `main` (web only) |
-| Production FQDN | `{project}.mnjz.in` → manual `workflow_dispatch` only (web only) |
-| OAuth callbacks | `https://{project}-staging.mnjz.in/auth/google/callback`, `https://{project}.mnjz.in/auth/google/callback` |
-| VPS deploy paths | `/srv/projects/{project}/staging`, `/srv/projects/{project}/production` |
+| Playground FQDN | `{project}.mnjz.in` |
+| Live staging FQDN | `staging.{domain}` |
+| Live production FQDN | `app.{domain}` |
+| VPS paths | Playground: `/srv/projects/{project}/staging` only · Live: `…/staging` + `…/production` |
 | Org secrets file | `~/.cursor/secrets/monjizeen.env` |
 | Staging/local secrets | `~/.cursor/secrets/{project}.env` |
-| Production secrets | `~/.cursor/secrets/{project}-production.env` |
+| Production secrets | `~/.cursor/secrets/{project}-production.env` (live only) |
 | Web scaffold | `{SHARED_ASSETS}/templates/web-app` |
 | Mobile scaffold | `{SHARED_ASSETS}/scripts/init-project/scaffold-expo.sh` |
 | Init scripts | `{SHARED_ASSETS}/scripts/init-project/` |
@@ -80,9 +104,9 @@ MORA="${MONO_ROOT}/mora"
 Copy and update after each gate:
 
 ```
-New project: {project} ({PROJECT_TYPE})
+New project: {project} ({PROJECT_TYPE}, {DEPLOY_MODE})
 - [ ] Gate 0 — Prerequisites
-- [ ] Gate 1 — Project identity, stack, theme (web)
+- [ ] Gate 1 — Project identity, stack, theme, deploy mode (web)
 - [ ] Gate 2 — GitHub repo
 - [ ] Gate 3 — Scaffold, tweakcn theme apply (web), first push
 - [ ] Gate 4 — MORA registry + agent
@@ -122,19 +146,26 @@ Exit bootstrap **0** → Gate 1. Exit **1** → fix `need` items, re-run Gate 0.
 
 ## Gate 1 — Project identity & stack
 
-**Ask Omar** (required):
+**Ask Omar** (required), one at a time:
 
-1. **Project name** — lowercase kebab-case (e.g. `my-app`). Drives repo, subdomain, paths.
+1. **Project name** — lowercase kebab-case (e.g. `my-app`). Drives repo, paths, playground subdomain.
 2. **One-line purpose** — for MORA `REGISTRY.yaml`.
 3. **Project type** — `content` | `web-app` | `native-mobile` (see [reference.md — Stack routing](../init-project/reference.md#stack-routing)).
-4. **Auth model** (web only) — `open` or `closed`.
-5. **Design system** (web) — shadcn-vue + Lucide. Default yes.
-6. **Theme** (web) — tweakcn URL or default `zinc`.
-7. **Run VPS setup now?** (web only) — default `yes` on Mac if SSH ok; `later` skips Gate 7.
+4. **Deploy mode** (web only) — **playground** or **live**:
+   - Playground = no custom domain yet → `{project}.mnjz.in` only.
+   - Live = domain already in Cloudflare → ask for **base domain** (e.g. `monjizeen.com`).
+5. If **live**: confirm Cloudflare zone exists for that domain (API check). Set:
+   - `STAGING_FQDN=staging.{domain}`
+   - `PRODUCTION_FQDN=app.{domain}`
+6. If **playground**: set `STAGING_FQDN={project}.mnjz.in`, `PRODUCTION_FQDN=` (empty).
+7. **Auth model** (web only) — `open` or `closed`.
+8. **Design system** (web) — shadcn-vue + Lucide. Default yes.
+9. **Theme** (web) — tweakcn URL or default `zinc`.
+10. **Run VPS setup now?** (web only) — default `yes` on Mac if SSH ok; `later` skips Gate 7.
 
 Validate name: `^[a-z][a-z0-9-]*[a-z0-9]$`, length 2–40, not reserved (`mora`, `shared-assets`, `kawader`).
 
-Set: `PROJECT`, `PROJECT_TYPE`, `STACK`, `STAGING_FQDN`, `PRODUCTION_FQDN`, `REPO`, `WORKSPACE="${MONO_ROOT}/${PROJECT}"`, theme vars.
+Set: `PROJECT`, `PROJECT_TYPE`, `DEPLOY_MODE`, `DOMAIN` (live only), `STACK`, `STAGING_FQDN`, `PRODUCTION_FQDN`, `REPO`, `WORKSPACE="${MONO_ROOT}/${PROJECT}"`, theme vars.
 
 Confirm summary before Gate 2.
 
@@ -185,7 +216,7 @@ git push -u origin main
 
 ## Gate 4 — MORA registry + agent
 
-1. Edit `{MORA}/REGISTRY.yaml` — add repo + purpose.
+1. Edit `{MORA}/REGISTRY.yaml` — add repo + purpose. Prefer `deploy_mode: playground|live` when adding fields later.
 2. Create `{MORA}/domains/monjizeen/agents/{PROJECT}/SKILL.md` and `MEMORY.md` ([agent stub](../init-project/reference.md#agent-stub)).
 3. `python3 "${MORA}/scripts/sync-registry.py"`
 4. Commit mora when Omar asks.
@@ -196,13 +227,25 @@ git push -u origin main
 
 **Skip for `native-mobile`** unless also standing up web API.
 
-**Pause until Omar confirms OAuth client ready.** Show staging + production callback URLs. See [reference.md — Google links](../init-project/reference.md#google-links-quick-reference).
+**Pause until Omar confirms OAuth client ready.**
+
+| Mode | Callbacks to show |
+|------|-------------------|
+| playground | `https://{project}.mnjz.in/auth/google/callback` + local `http://127.0.0.1:8000/auth/google/callback` |
+| live | Staging client: `https://staging.{domain}/auth/google/callback` + local · Production client: `https://app.{domain}/auth/google/callback` |
+
+See [reference.md — Google links](../init-project/reference.md#google-links-quick-reference).
 
 ---
 
 ## Gate 6 — Secrets on disk (web only)
 
-Write `~/.cursor/secrets/{PROJECT}.env` and `{PROJECT}-production.env`. Update local `.env`. Never commit secrets.
+| Mode | Files |
+|------|-------|
+| playground | `~/.cursor/secrets/{PROJECT}.env` only |
+| live | `{PROJECT}.env` + `{PROJECT}-production.env` |
+
+Update local `.env`. Never commit secrets.
 
 If Gate 1 VPS = `later`, skip Gate 7.
 
@@ -212,10 +255,16 @@ If Gate 1 VPS = `later`, skip Gate 7.
 
 ```bash
 set -a && source ~/.cursor/secrets/monjizeen.env && set +a
-"${SHARED_ASSETS}/scripts/init-project/gate7.sh" "${PROJECT}"
+# playground
+"${SHARED_ASSETS}/scripts/init-project/gate7.sh" "${PROJECT}" playground
+# live
+"${SHARED_ASSETS}/scripts/init-project/gate7.sh" "${PROJECT}" live "${DOMAIN}"
 ```
 
-Creates `{PROJECT}-staging.mnjz.in` + `{PROJECT}.mnjz.in` (Cloudflare DNS, nginx, deploy dirs).
+| Mode | Creates |
+|------|---------|
+| playground | DNS `{project}.mnjz.in`, nginx → `…/staging`, one deploy tree |
+| live | DNS `staging.{domain}` + `app.{domain}` on that domain’s Cloudflare zone, nginx → staging + production |
 
 **Expo:** skip — document EAS path in handoff.
 
@@ -223,9 +272,14 @@ Creates `{PROJECT}-staging.mnjz.in` + `{PROJECT}.mnjz.in` (Cloudflare DNS, nginx
 
 ## Gate 8 — CI workflow
 
-Add `.github/workflows/ci.yml` from [reference.md](../init-project/reference.md). Commit and push.
+Add `.github/workflows/ci.yml` from [reference.md](../init-project/reference.md) — pick **playground** or **live** template.
 
 Web repos need GitHub secret `ACCESS_TO_VPS_WWWDATA_FROM_GITHUB_ACTIONS`.
+
+| Mode | CI |
+|------|-----|
+| playground | Push `main` → deploy `…/staging` only (no production job) |
+| live | Push `main` → staging · `workflow_dispatch` → production |
 
 ---
 
@@ -236,18 +290,19 @@ Web repos need GitHub secret `ACCESS_TO_VPS_WWWDATA_FROM_GITHUB_ACTIONS`.
 ```bash
 cd "${WORKSPACE}"
 php artisan test
-"${SHARED_ASSETS}/scripts/init-project/verify.sh" "${PROJECT}-staging.mnjz.in"
-"${SHARED_ASSETS}/scripts/init-project/verify.sh" "${PROJECT}.mnjz.in"
+"${SHARED_ASSETS}/scripts/init-project/verify.sh" "${STAGING_FQDN}"
+# live only:
+"${SHARED_ASSETS}/scripts/init-project/verify.sh" "${PRODUCTION_FQDN}"
 ```
 
 ### Handoff table
 
-| Item | Web | Expo |
-|------|-----|------|
-| Repo | `github.com/monjizeen/{PROJECT}` | same |
-| Staging | `https://{PROJECT}-staging.mnjz.in` | N/A |
-| Production | `https://{PROJECT}.mnjz.in` | App store / EAS |
-| MORA agent | `domains/monjizeen/agents/{PROJECT}/` | same |
+| Item | Playground | Live | Expo |
+|------|------------|------|------|
+| Repo | `github.com/monjizeen/{PROJECT}` | same | same |
+| Staging / app URL | `https://{PROJECT}.mnjz.in` | `https://staging.{domain}` | N/A |
+| Production | — (same as above) | `https://app.{domain}` | App store / EAS |
+| MORA agent | `domains/monjizeen/agents/{PROJECT}/` | same | same |
 
 ---
 
@@ -259,3 +314,4 @@ php artisan test
 - **Pauses** — Gate 5 waits for human; Gate 7 optional per Gate 1.
 - **Executor** — run commands yourself; Gates 1 and 5 need Omar input.
 - **Resume** — Omar can say `/new-project continue {project}` to pick up at first incomplete gate.
+- **No dual live** — never `{project}.mnjz.in` as production **and** `app.{domain}` as production at the same time.

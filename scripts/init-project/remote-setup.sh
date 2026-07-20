@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # Run ON VPS (invoked by gate7.sh over SSH). Idempotent.
-# Usage: remote-setup.sh <project> [staging_fqdn] [production_fqdn]
-# Defaults: {project}-staging.mnjz.in, {project}.mnjz.in
+# Usage: remote-setup.sh <project> <staging_fqdn> [production_fqdn|-]
+# Pass production_fqdn as "-" for playground (staging only).
 
 set -euo pipefail
 
 PROJECT="${1:?project name required}"
-STAGING_FQDN="${2:-${PROJECT}-staging.mnjz.in}"
-PRODUCTION_FQDN="${3:-${PROJECT}.mnjz.in}"
+STAGING_FQDN="${2:?staging FQDN required}"
+PRODUCTION_FQDN="${3:--}"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEPLOY_ROOT="/srv/projects/${PROJECT}"
@@ -72,23 +72,28 @@ build_deploy() {
 }
 
 echo "remote: deploy dirs"
-mkdir -p "${STAGING}" "${PROD}"
+mkdir -p "${STAGING}"
 chown -R www-data:www-data "${DEPLOY_ROOT}"
 
 echo "remote: nginx staging ${STAGING_FQDN}"
 setup_vhost "${STAGING_FQDN}" staging
 
-echo "remote: nginx production ${PRODUCTION_FQDN}"
-setup_vhost "${PRODUCTION_FQDN}" production
-
-echo "remote: clone staging + production"
+echo "remote: clone staging"
 clone_or_update "${STAGING}"
-clone_or_update "${PROD}"
 
 echo "remote: build staging ${STAGING_FQDN}"
 build_deploy "${STAGING}" "${STAGING_FQDN}" staging
 
-echo "remote: build production ${PRODUCTION_FQDN}"
-build_deploy "${PROD}" "${PRODUCTION_FQDN}" production
-
-echo "remote: setup complete — staging https://${STAGING_FQDN}, production https://${PRODUCTION_FQDN}"
+if [[ "${PRODUCTION_FQDN}" != "-" && -n "${PRODUCTION_FQDN}" ]]; then
+  mkdir -p "${PROD}"
+  chown -R www-data:www-data "${DEPLOY_ROOT}"
+  echo "remote: nginx production ${PRODUCTION_FQDN}"
+  setup_vhost "${PRODUCTION_FQDN}" production
+  echo "remote: clone production"
+  clone_or_update "${PROD}"
+  echo "remote: build production ${PRODUCTION_FQDN}"
+  build_deploy "${PROD}" "${PRODUCTION_FQDN}" production
+  echo "remote: setup complete — staging https://${STAGING_FQDN}, production https://${PRODUCTION_FQDN}"
+else
+  echo "remote: setup complete — playground https://${STAGING_FQDN} (no production)"
+fi

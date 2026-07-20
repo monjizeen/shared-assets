@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Create or update Cloudflare A record: {record_label}.mnjz.in → VPS IP
 # Usage: dns.sh <record_label> [vps_ip]
-# Examples: dns.sh kawader-staging   → kawader-staging.mnjz.in
-#           dns.sh kawader             → kawader.mnjz.in
+# Examples: dns.sh hadeed   → hadeed.mnjz.in (playground)
+# For live domains (staging.foo.com / app.foo.com) use dns-fqdn.sh instead.
 # Requires: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ZONE_ID (env or monjizeen.env)
 
 set -euo pipefail

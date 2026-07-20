@@ -240,7 +240,7 @@ description: >
 `domains/monjizeen/agents/{PROJECT}/MEMORY.md`
 ```
 
-`MEMORY.md` (web):
+`MEMORY.md` (web) — **playground**:
 
 ```markdown
 # {PROJECT} — agent memory
@@ -248,10 +248,31 @@ description: >
 ## Decisions
 
 - Project type: {PROJECT_TYPE}
+- Deploy mode: playground
 - Stack: Laravel + Inertia + Vue 3, shadcn-vue + Lucide, Google OAuth
 - Theme: {THEME_NAME} ({THEME_URL} or template zinc)
-- Staging URL: https://{PROJECT}-staging.mnjz.in
-- Production URL: https://{PROJECT}.mnjz.in
+- App URL: https://{PROJECT}.mnjz.in
+- Production: none (playground — push main deploys here)
+
+## Open questions
+
+*(Empty — populate with `remember that …`)*
+```
+
+`MEMORY.md` (web) — **live**:
+
+```markdown
+# {PROJECT} — agent memory
+
+## Decisions
+
+- Project type: {PROJECT_TYPE}
+- Deploy mode: live
+- Domain: {DOMAIN}
+- Stack: Laravel + Inertia + Vue 3, shadcn-vue + Lucide, Google OAuth
+- Theme: {THEME_NAME} ({THEME_URL} or template zinc)
+- Staging URL: https://staging.{DOMAIN}
+- Production URL: https://app.{DOMAIN}
 
 ## Open questions
 
@@ -368,7 +389,9 @@ jobs:
 
 Replace `{PROJECT}` with the actual project name.
 
-**Deploy targets:** `deploy-staging` pushes to `/srv/projects/{PROJECT}/staging` (served at `{PROJECT}-staging.mnjz.in`). `deploy-production` is `workflow_dispatch` only → `/srv/projects/{PROJECT}/production` (`{PROJECT}.mnjz.in`). Push to `main` / auto-merge only hits staging.
+**Deploy targets (live):** `deploy-staging` → `/srv/projects/{PROJECT}/staging` (`staging.{DOMAIN}`). `deploy-production` is `workflow_dispatch` only → `…/production` (`app.{DOMAIN}`). Push `main` only hits staging.
+
+**Deploy targets (playground):** same `deploy-staging` job only (URL `{PROJECT}.mnjz.in`). **Omit** `deploy-production` and the production `workflow_dispatch` option from the template above.
 
 ---
 
@@ -404,12 +427,15 @@ Add EAS Build workflow separately when the product is ready for store releases.
 
 ## nginx vhost template
 
-Used by `scripts/init-project/nginx-vhost.sh`. Gate 7 creates **two** vhosts per project:
+Used by `scripts/init-project/nginx-vhost.sh`.
 
-| FQDN | nginx root |
-|------|------------|
-| `{PROJECT}-staging.mnjz.in` | `/srv/projects/{PROJECT}/staging/public` |
-| `{PROJECT}.mnjz.in` | `/srv/projects/{PROJECT}/production/public` |
+| Mode | FQDN | nginx root |
+|------|------|------------|
+| playground | `{PROJECT}.mnjz.in` | `/srv/projects/{PROJECT}/staging/public` |
+| live | `staging.{DOMAIN}` | `/srv/projects/{PROJECT}/staging/public` |
+| live | `app.{DOMAIN}` | `/srv/projects/{PROJECT}/production/public` |
+
+**Legacy (do not use for new projects):** `{PROJECT}-staging.mnjz.in` + `{PROJECT}.mnjz.in` as prod.
 
 ```nginx
 server {
@@ -471,24 +497,26 @@ GOOGLE_REDIRECT_URI="${APP_URL}/auth/google/callback"
 PLATFORM_ADMIN_EMAILS=
 ```
 
-Production `APP_URL` (set by `env-deploy.sh` on VPS):
+`APP_URL` (set by `env-deploy.sh` on VPS):
 
 ```env
-# staging .env  ← secrets from ~/.cursor/secrets/{PROJECT}.env
-APP_URL=https://{PROJECT}-staging.mnjz.in
-
-# production .env  ← secrets from ~/.cursor/secrets/{PROJECT}-production.env
+# playground / live staging  ← secrets from ~/.cursor/secrets/{PROJECT}.env
 APP_URL=https://{PROJECT}.mnjz.in
+# or live: APP_URL=https://staging.{DOMAIN}
+
+# live production .env only  ← secrets from ~/.cursor/secrets/{PROJECT}-production.env
+APP_URL=https://app.{DOMAIN}
 ```
 
-### OAuth secrets (two Google clients)
+### OAuth secrets
 
-| File | Used for | Google OAuth client |
-|------|----------|---------------------|
-| `~/.cursor/secrets/{PROJECT}.env` | Local dev + staging VPS | Staging/local client (`{PROJECT}-staging.mnjz.in` + `127.0.0.1:8000`) |
-| `~/.cursor/secrets/{PROJECT}-production.env` | Production VPS only | Production client (`{PROJECT}.mnjz.in`) |
+| Mode | File | Google OAuth client |
+|------|------|---------------------|
+| playground | `~/.cursor/secrets/{PROJECT}.env` | `{PROJECT}.mnjz.in` + `127.0.0.1:8000` |
+| live staging | `~/.cursor/secrets/{PROJECT}.env` | `staging.{DOMAIN}` + `127.0.0.1:8000` |
+| live production | `~/.cursor/secrets/{PROJECT}-production.env` | `app.{DOMAIN}` |
 
-Gate 7 syncs both files to VPS `~/.cursor/secrets/`. `env-deploy.sh` selects the file by deploy target.
+Gate 7 syncs secrets to VPS `~/.cursor/secrets/`. `env-deploy.sh` selects the file by deploy target.
 
 ---
 
@@ -498,17 +526,27 @@ Mac, after Gate 5–6:
 
 ```bash
 source ~/.cursor/secrets/monjizeen.env
-shared-assets/scripts/init-project/gate7.sh {PROJECT}
+# playground
+shared-assets/scripts/init-project/gate7.sh {PROJECT} playground
+# live
+shared-assets/scripts/init-project/gate7.sh {PROJECT} live {DOMAIN}
 ```
 
-Creates DNS + nginx for `{PROJECT}-staging.mnjz.in` and `{PROJECT}.mnjz.in`.
+| Mode | Creates |
+|------|---------|
+| playground | `{PROJECT}.mnjz.in` → `…/staging` |
+| live | `staging.{DOMAIN}` + `app.{DOMAIN}` → staging + production |
 
 ### Migrate legacy hostnames
 
-Old pattern: `staging-{PROJECT}.mnjz.in`, `app-{PROJECT}.mnjz.in`.
+**Very old:** `staging-{PROJECT}.mnjz.in`, `app-{PROJECT}.mnjz.in`.  
+**Previous:** `{PROJECT}-staging.mnjz.in` + `{PROJECT}.mnjz.in` as prod.
+
+Clean those DNS/nginx leftovers when migrating; do not leave dual live URLs.
 
 ```bash
 source ~/.cursor/secrets/monjizeen.env
+# legacy helper — review before run; prefer manual cleanup for old staging-/app- names
 shared-assets/scripts/init-project/migrate-mnjz-subdomains.sh hadeed daftar waqti
 ```
 
@@ -518,7 +556,7 @@ Then update Google OAuth redirect URIs in Cloud Console for each project.
 
 ## nginx note (this VPS)
 
-`*.mnjz.in` wildcard vhost proxies to OpenClaw. Per-app vhosts use **exact** `server_name` (e.g. `kawader-staging.mnjz.in`, `kawader.mnjz.in`) and take precedence. Each FQDN needs its own Let's Encrypt cert (`CERTBOT_EMAIL` + certbot in `remote-setup.sh`).
+`*.mnjz.in` wildcard vhost proxies to OpenClaw. Per-app vhosts use **exact** `server_name` (e.g. `hadeed.mnjz.in`, `staging.monjizeen.com`) and take precedence. Each FQDN needs its own Let's Encrypt cert (`CERTBOT_EMAIL` + certbot in `remote-setup.sh`).
 
 ---
 
