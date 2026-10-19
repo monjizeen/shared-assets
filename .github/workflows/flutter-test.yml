@@ -1,6 +1,18 @@
 name: Flutter Test
 
+# Reusable workflow for Flutter consumer repos (`uses: …/flutter-test.yml@main`).
+# This repository has no Flutter app, so real tests must not run here.
+# push/pull_request exist only so GitHub records a passing run on shared-assets
+# instead of the stale Apr 2026 "workflow file issue" failures from invalid
+# `secrets` in `if:` clauses.
 on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/flutter-test.yml"
+  pull_request:
+    paths:
+      - ".github/workflows/flutter-test.yml"
   workflow_call:
     inputs:
       format-paths:
@@ -18,7 +30,17 @@ on:
         required: false
 
 jobs:
+  host-repo:
+    if: github.event_name != 'workflow_call'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Skip Flutter tests on shared-assets
+        run: |
+          echo "flutter-test is a reusable workflow for consumer Flutter repos."
+          echo "shared-assets has no Flutter app; skipping tests."
+
   test:
+    if: github.event_name == 'workflow_call'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
