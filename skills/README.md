@@ -19,6 +19,16 @@ All custom skills live here — versioned on GitHub. **Do not edit copies** unde
 | `refresh-mora` | Full sync — `run-mora` + clone/pull all REGISTRY app repos |
 | `caveman` | Communication intensity reference (Cursor enforces via rules + hooks) |
 
+### Service skills
+
+Our methods and standards for each service Monjizeen sells. Client context
+plugs in through `client-context-brief`. Plan and status: [SERVICES.md](SERVICES.md).
+
+| Skill | Purpose |
+|-------|---------|
+| `client-context-brief` | Build a client's kit at onboarding and turn it into a one-page brief per task |
+| `social-media-graphic` | Social post, carousel, story and ad graphics, Arabic and English |
+
 ## Install (automatic)
 
 From mora repo:
