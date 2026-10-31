@@ -18,6 +18,8 @@ actions/
   laravel-test-mysql.yml  # Reusable: same as above but with MySQL service
 skills/
   (Claude Code / Cursor skills — see skills/README.md)
+clients/
+  <client>/STATUS.md  # each client project's status, read by the main CEO project
 scripts/
   init-project/
     bootstrap-mac.sh  # New Mac: skill symlink + secrets from VPS
