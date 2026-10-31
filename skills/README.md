@@ -11,6 +11,7 @@ All custom skills live here — versioned on GitHub. **Do not edit copies** unde
 | `cleanup` | Sync main, prune branches, clean local git state |
 | `cto` | Review technical decisions, architecture, code quality |
 | `ceo` | Review business decisions, unit economics, strategy |
+| `client-ceo` | Coordinator rules for each client's Claude project; paste-in text in `client-ceo/PROJECT-INSTRUCTIONS.md`; status in `../clients/` |
 | `new-project` | **Canonical** — bootstrap new repo: stack, GitHub, scaffold, MORA, OAuth, mnjz.in DNS/VPS (Cursor + Telegram) |
 | `init-project` | Alias for `new-project` |
 | `pre-mvp-audit` | Pre-launch codebase audit tied to core user loop |
@@ -76,6 +77,9 @@ skills/
 ├── refresh/SKILL.md
 ├── cto/SKILL.md
 ├── ceo/SKILL.md
+├── client-ceo/
+│   ├── SKILL.md
+│   └── PROJECT-INSTRUCTIONS.md
 ├── new-project/SKILL.md
 ├── init-project/
 │   ├── SKILL.md      # alias → new-project
