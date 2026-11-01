@@ -500,7 +500,7 @@ If the app uses `@enjaz/design-system`, prefer vendoring at `packages/design-sys
 | `TELEGRAM_NOTIFIER_TOKEN` | `telegram-notify` | No alert; the run shows a warning |
 | `TELEGRAM_CHANNEL_ID` | `telegram-notify` | Same |
 
-Simplest: keep the two Telegram secrets as **organisation** secrets shared with all repos (GitHub → org Settings → Secrets and variables → Actions), so a new repo gets alerts with no setup.
+Telegram alerts are currently switched off for all repos (`ALERTS_ON` in `actions/telegram-notify/action.yml`); keep the steps in new workflows so turning the switch back on just works. When on, simplest is to keep the two Telegram secrets as **organisation** secrets shared with all repos (GitHub → org Settings → Secrets and variables → Actions), so a new repo gets alerts with no setup.
 
 ### CI workflow (service)
 

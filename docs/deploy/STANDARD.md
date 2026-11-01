@@ -24,8 +24,10 @@ One standard, so every repo looks the same. New projects get it from
 3. Tests run on GitHub's machines; only the deploy job uses `runs-on: self-hosted`.
 4. Push to `main` deploys staging (or the only copy). Production is a manual
    "Run workflow" when the project has one.
-5. Every deploy job sends a Telegram alert on success and on failure with
-   `actions/telegram-notify`.
+5. Every deploy job has Telegram alert steps (`actions/telegram-notify`).
+   Alerts are **switched off** for now (Omar, 2026-11-01): one setting,
+   `ALERTS_ON` in `actions/telegram-notify/action.yml`, turns them back on
+   for every repo.
 6. Secrets: `ACCESS_TO_VPS_WWWDATA_FROM_GITHUB_ACTIONS` (Laravel),
    `TELEGRAM_NOTIFIER_TOKEN`, `TELEGRAM_CHANNEL_ID`.
 
