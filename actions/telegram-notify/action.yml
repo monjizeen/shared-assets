@@ -14,6 +14,9 @@ inputs:
   title:
     description: Notification title (e.g. "Tests Passed", "Deployed to Staging")
     required: true
+  enabled:
+    description: '"true" sends this alert even while alerts are switched off for everyone below'
+    default: "false"
 
 runs:
   using: composite
@@ -27,6 +30,15 @@ runs:
         TITLE: ${{ inputs.title }}
         RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
       run: |
+        # ON/OFF SWITCH for every repo's Telegram alerts (app, site, radar, tests,
+        # new projects). Omar turned them off on 2026-11-01. Set to "true" to turn
+        # them back on everywhere.
+        ALERTS_ON="false"
+        if [ "${ALERTS_ON}" != "true" ] && [ "${{ inputs.enabled }}" != "true" ]; then
+          echo "Telegram alerts are switched off (shared-assets/actions/telegram-notify)."
+          exit 0
+        fi
+
         # A missing secret should say so, not fail quietly with a Telegram 404.
         if [ -z "${BOT_TOKEN}" ] || [ -z "${CHANNEL_ID}" ]; then
           echo "::warning::No Telegram alert sent: add TELEGRAM_NOTIFIER_TOKEN and TELEGRAM_CHANNEL_ID to this repo's secrets (or share the org secrets with it)."

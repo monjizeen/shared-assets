@@ -12,7 +12,7 @@ actions/
   setup-laravel/     # Install PHP + Composer + prepare .env
   deploy-laravel/    # SSH deploy with artisan cache/migrate
   deploy-service/    # VPS deploy for non-Laravel apps: pull, build, restart systemd service
-  telegram-notify/   # Send Telegram status notification (warns if secrets are missing)
+  telegram-notify/   # Telegram status alert (switched off for now: ALERTS_ON in action.yml)
 .github/workflows/
   flutter-test.yml        # Reusable: format + analyze + test
   laravel-test.yml        # Reusable: pint + phpstan + migrate + test (SQLite)
