@@ -1,8 +1,8 @@
 ---
 name: new-project
 description: >
-  Unified new monjizeen product setup — GitHub repo, scaffold, MORA registry,
-  Google OAuth, DNS, VPS deploy. Same flow on Cursor (Mac) and Telegram (VPS).
+  Unified new monjizeen product setup — GitHub repo, scaffold, repo list,
+  Google OAuth, DNS, VPS deploy. Runs from a Claude Code session or Cursor on the Mac.
   Use when user says /new-project, new project, init project, set up project,
   or project initiation. Alias /init-project.
 disable-model-invocation: true
@@ -24,25 +24,24 @@ Detect before Gate 0:
 
 | Signal | Platform | CWD for commands |
 |--------|----------|------------------|
-| Cursor, `~/.cursor/mono-root` exists | **cursor** | `{MONO_ROOT}/mora` or `{MONO_ROOT}/{PROJECT}` |
-| Telegram bot, `MORA_MONO_ROOT=/srv/projects` | **telegram** | `{MONO_ROOT}/mora` |
+| Cursor, `~/.cursor/mono-root` exists | **cursor** | `{MONO_ROOT}/shared-assets` or `{MONO_ROOT}/{PROJECT}` |
+| Telegram bot (retired with MORA on 2026-11-01; use a Claude project thread instead) | **telegram** | — |
 
 **Resolve `MONO_ROOT`:**
 
 ```bash
 MONO_ROOT="$(cat ~/.cursor/mono-root 2>/dev/null | head -1)"
-MONO_ROOT="${MONO_ROOT:-${MORA_MONO_ROOT:-$HOME/Documents/work/monjizeen}}"
+MONO_ROOT="${MONO_ROOT:-$HOME/Documents/work/monjizeen}"
 SHARED_ASSETS="${MONO_ROOT}/shared-assets"
-MORA="${MONO_ROOT}/mora"
 ```
 
 | Gate | Cursor (Mac) | Telegram (VPS) |
 |------|--------------|----------------|
-| 0 Bootstrap | `bootstrap-mac.sh` | `/sync all` + verify mora/shared-assets on disk |
+| 0 Bootstrap | `bootstrap-mac.sh` | verify shared-assets on disk |
 | 1 Identity | Ask Omar (`AskQuestion` in Cursor) | Ask in chat — one question at a time |
 | 2 GitHub | `gh repo create` on Mac | Same if `gh auth` on VPS; else tell Omar to auth or run on Mac |
 | 3 Scaffold | `scaffold-web.sh` / `scaffold-expo.sh` on Mac | Prefer Mac; VPS scaffold only if Omar confirms |
-| 4 MORA registry | Edit mora, sync-registry | Same — mora clone on VPS |
+| 4 Repo list | Add a row to `shared-assets/docs/REPOS.md` | Same |
 | 5 OAuth | **Manual** — pause for Omar | Collect creds via Telegram when ready |
 | 6 Secrets | Write `~/.cursor/secrets/{project}.env` on Mac | **Mac required** for local secrets; VPS copies come in Gate 7 |
 | 7 VPS DNS/nginx | `gate7.sh` from **Mac** (SSH → VPS) | Cannot run from VPS alone — Omar runs Gate 7 on Mac or says `skip vps` |
@@ -109,7 +108,7 @@ New project: {project} ({PROJECT_TYPE}, {DEPLOY_MODE})
 - [ ] Gate 1 — Project identity, stack, theme, deploy mode (web)
 - [ ] Gate 2 — GitHub repo
 - [ ] Gate 3 — Scaffold, mock data, sport theme pack (web), first push
-- [ ] Gate 4 — MORA registry + agent
+- [ ] Gate 4 — Repo list + agent notes
 - [ ] Gate 5 — Google OAuth (manual, web only)
 - [ ] Gate 6 — Secrets on disk (web only)
 - [ ] Gate 7 — VPS: DNS + nginx + deploy (web only, optional)
@@ -127,14 +126,12 @@ New project: {project} ({PROJECT_TYPE}, {DEPLOY_MODE})
 "${SHARED_ASSETS}/scripts/init-project/bootstrap-mac.sh"
 ```
 
-Also valid: `/run-mora` then continue here.
 
 ### Telegram (VPS)
 
 Pull latest hub repos:
 
 ```bash
-cd "${MORA}" && git pull --ff-only
 cd "${SHARED_ASSETS}" && git pull --ff-only
 ```
 
@@ -149,7 +146,7 @@ Exit bootstrap **0** → Gate 1. Exit **1** → fix `need` items, re-run Gate 0.
 **Ask Omar** (required), one at a time:
 
 1. **Project name** — lowercase kebab-case (e.g. `my-app`). Drives repo, paths, playground subdomain.
-2. **One-line purpose** — for MORA `REGISTRY.yaml`.
+2. **One-line purpose** — for `shared-assets/docs/REPOS.md`.
 3. **Project type** — `content` | `web-app` | `native-mobile` (see [reference.md — Stack routing](../init-project/reference.md#stack-routing)).
 4. **Deploy mode** (web only) — **playground** or **live**:
    - Playground = no custom domain yet → `{project}.mnjz.in` only.
@@ -295,12 +292,11 @@ git push -u origin main
 
 ---
 
-## Gate 4 — MORA registry + agent
+## Gate 4 — Repo list + agent notes
 
-1. Edit `{MORA}/REGISTRY.yaml` — add repo + purpose. Prefer `deploy_mode: playground|live` when adding fields later.
-2. Create `{MORA}/domains/monjizeen/agents/{PROJECT}/SKILL.md` and `MEMORY.md` ([agent stub](../init-project/reference.md#agent-stub)).
-3. `python3 "${MORA}/scripts/sync-registry.py"`
-4. Commit mora when Omar asks.
+1. Add a row for the new repo to `{SHARED_ASSETS}/docs/REPOS.md` (name, one-line purpose, status, where it deploys).
+2. In the new repo, write `AGENTS.md` (and `CLAUDE.md` containing `@AGENTS.md`) from the [agent stub](../init-project/reference.md#agent-stub): what the repo is, how to run and deploy it, its rules.
+3. Commit and push both.
 
 ---
 
@@ -405,7 +401,7 @@ php artisan test
 | Repo | `github.com/monjizeen/{PROJECT}` | same | same |
 | Staging / app URL | `https://{PROJECT}.mnjz.in` | `https://staging.{domain}` | N/A |
 | Production | — (same as above) | `https://app.{domain}` | App store / EAS |
-| MORA agent | `domains/monjizeen/agents/{PROJECT}/` | same | same |
+| Agent notes | `{PROJECT}/AGENTS.md` + row in `shared-assets/docs/REPOS.md` | same | same |
 
 ---
 

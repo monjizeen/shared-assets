@@ -42,25 +42,17 @@ SHARED_ASSETS="$(find_shared_assets)" || {
   SHARED_ASSETS=""
 }
 
-# --- Org repos + cursor-runtime + skills (refresh-mora) ---
-MONO_ROOT="$(cd "${SHARED_ASSETS}/.." && pwd)"
+# --- Skills: link shared-assets/skills into ~/.claude/skills and ~/.cursor/skills ---
+# (MORA, which used to do this, was retired on 2026-11-01.)
 if [[ -n "${SHARED_ASSETS}" ]]; then
-  if [[ ! -d "${MONO_ROOT}/mora/.git" ]]; then
-    if git clone "git@github.com:monjizeen/mora.git" "${MONO_ROOT}/mora" 2>/dev/null; then
-      fix "cloned mora → ${MONO_ROOT}/mora"
-    else
-      need "clone mora: git clone git@github.com:monjizeen/mora.git ${MONO_ROOT}/mora"
-    fi
-  fi
-  if [[ -f "${MONO_ROOT}/mora/scripts/refresh-mora.sh" ]]; then
-    if "${MONO_ROOT}/mora/scripts/refresh-mora.sh" "${MONO_ROOT}"; then
-      ok "refresh-mora"
-    else
-      need "fix refresh-mora (${MONO_ROOT}/mora/scripts/refresh-mora.sh)"
-    fi
-  else
-    need "mora/scripts/refresh-mora.sh missing after clone"
-  fi
+  mkdir -p "${HOME}/.claude/skills" "${HOME}/.cursor/skills"
+  for skill in "${SHARED_ASSETS}"/skills/*/; do
+    [[ -f "${skill}/SKILL.md" ]] || continue
+    name="$(basename "${skill}")"
+    ln -sfn "${skill%/}" "${HOME}/.claude/skills/${name}"
+    ln -sfn "${skill%/}" "${HOME}/.cursor/skills/${name}"
+  done
+  ok "skills linked"
 fi
 
 # --- Secrets directory ---

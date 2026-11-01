@@ -12,7 +12,7 @@ description: >
 
 Sync **the repo that invoked this skill** to latest code, prune stale branches (QUICK mode), and restart its dev server.
 
-**Not** `/refresh-mora` — that syncs org infra + all REGISTRY repos. This skill is per-app only.
+This skill is per-app only: it syncs the repo you are in.
 
 ## Target repo (mandatory)
 
