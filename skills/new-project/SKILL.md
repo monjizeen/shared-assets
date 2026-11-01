@@ -355,7 +355,9 @@ set -a && source ~/.cursor/secrets/monjizeen.env && set +a
 
 Add `.github/workflows/ci.yml` from [reference.md](../init-project/reference.md) — pick **playground** or **live** template.
 
-Web repos need GitHub secret `ACCESS_TO_VPS_WWWDATA_FROM_GITHUB_ACTIONS`.
+Web repos need GitHub secret `ACCESS_TO_VPS_WWWDATA_FROM_GITHUB_ACTIONS`, plus `TELEGRAM_NOTIFIER_TOKEN` and `TELEGRAM_CHANNEL_ID` for deploy alerts (org secrets if shared; see reference.md "Secrets every deploying repo needs").
+
+Not Laravel (a Node/Python app run as a systemd service)? Use "CI workflow (service)" in reference.md (`actions/deploy-service`).
 
 | Mode | CI |
 |------|-----|
@@ -379,6 +381,7 @@ Rules:
 - One runner **per repo** (never share / never copy another runner’s directory — that breaks other apps).
 - Path on VPS: `/srv/github-actions-runner-{project}` · name: `{hostname}-{project}`
 - Expo / no VPS deploy: skip this step.
+- Working from a cloud Claude thread (no SSH)? Give Omar the paste-in prompt in reference.md "Runner setup from a cloud Claude thread" instead of running the script.
 - If Gate 7 was `later`, still register the runner **before** first push that expects deploy — or leave deploy jobs commented until runner exists.
 
 ---
