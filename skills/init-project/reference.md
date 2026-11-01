@@ -364,6 +364,22 @@ jobs:
           extra-commands: |
             npm ci
             npm run build
+      - name: Notify Telegram - Deployed
+        if: success()
+        uses: monjizeen/shared-assets/actions/telegram-notify@main
+        with:
+          bot-token: ${{ secrets.TELEGRAM_NOTIFIER_TOKEN }}
+          channel-id: ${{ secrets.TELEGRAM_CHANNEL_ID }}
+          status: success
+          title: "Deployed to Staging"
+      - name: Notify Telegram - Deploy Failed
+        if: failure()
+        uses: monjizeen/shared-assets/actions/telegram-notify@main
+        with:
+          bot-token: ${{ secrets.TELEGRAM_NOTIFIER_TOKEN }}
+          channel-id: ${{ secrets.TELEGRAM_CHANNEL_ID }}
+          status: failure
+          title: "Staging Deploy Failed"
 ```
 
 ### CI workflow (live)
@@ -417,6 +433,22 @@ jobs:
           extra-commands: |
             npm ci
             npm run build
+      - name: Notify Telegram - Deployed
+        if: success()
+        uses: monjizeen/shared-assets/actions/telegram-notify@main
+        with:
+          bot-token: ${{ secrets.TELEGRAM_NOTIFIER_TOKEN }}
+          channel-id: ${{ secrets.TELEGRAM_CHANNEL_ID }}
+          status: success
+          title: "Deployed to Staging"
+      - name: Notify Telegram - Deploy Failed
+        if: failure()
+        uses: monjizeen/shared-assets/actions/telegram-notify@main
+        with:
+          bot-token: ${{ secrets.TELEGRAM_NOTIFIER_TOKEN }}
+          channel-id: ${{ secrets.TELEGRAM_CHANNEL_ID }}
+          status: failure
+          title: "Staging Deploy Failed"
 
   deploy-production:
     needs: test
@@ -440,9 +472,99 @@ jobs:
           extra-commands: |
             npm ci
             npm run build
+      - name: Notify Telegram - Deployed
+        if: success()
+        uses: monjizeen/shared-assets/actions/telegram-notify@main
+        with:
+          bot-token: ${{ secrets.TELEGRAM_NOTIFIER_TOKEN }}
+          channel-id: ${{ secrets.TELEGRAM_CHANNEL_ID }}
+          status: success
+          title: "Deployed to Production"
+      - name: Notify Telegram - Deploy Failed
+        if: failure()
+        uses: monjizeen/shared-assets/actions/telegram-notify@main
+        with:
+          bot-token: ${{ secrets.TELEGRAM_NOTIFIER_TOKEN }}
+          channel-id: ${{ secrets.TELEGRAM_CHANNEL_ID }}
+          status: failure
+          title: "Production Deploy Failed"
 ```
 
 If the app uses `@enjaz/design-system`, prefer vendoring at `packages/design-system` (`file:./packages/design-system`) so CI does not need cross-repo checkout of private `enjaz`. Optional: `enjaz-design-system: true` on the test job when org Actions can read `monjizeen/enjaz`.
+
+### Secrets every deploying repo needs
+
+| Secret | Used by | If missing |
+|--------|---------|------------|
+| `ACCESS_TO_VPS_WWWDATA_FROM_GITHUB_ACTIONS` | `deploy-laravel` (required input, even with `local: "true"`) | Laravel deploy step errors |
+| `TELEGRAM_NOTIFIER_TOKEN` | `telegram-notify` | No alert; the run shows a warning |
+| `TELEGRAM_CHANNEL_ID` | `telegram-notify` | Same |
+
+Simplest: keep the two Telegram secrets as **organisation** secrets shared with all repos (GitHub → org Settings → Secrets and variables → Actions), so a new repo gets alerts with no setup.
+
+### CI workflow (service)
+
+For an app that runs as a background service on the VPS (Node, Python, …; not Laravel), e.g. radar. The app is a git clone owned by `www-data` under `/srv/projects/{PROJECT}`, run by a systemd unit `{SERVICE}`. Same per-repo runner as above.
+
+```yaml
+name: Deploy to VPS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency: deploy
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    timeout-minutes: 10
+    steps:
+      - uses: monjizeen/shared-assets/actions/deploy-service@main
+        with:
+          app-dir: /srv/projects/{PROJECT}
+          service: {SERVICE}
+          build-commands: |
+            npm ci --omit=dev
+      - name: Notify Telegram - Deployed
+        if: success()
+        uses: monjizeen/shared-assets/actions/telegram-notify@main
+        with:
+          bot-token: ${{ secrets.TELEGRAM_NOTIFIER_TOKEN }}
+          channel-id: ${{ secrets.TELEGRAM_CHANNEL_ID }}
+          status: success
+          title: "{PROJECT} deployed"
+      - name: Notify Telegram - Deploy Failed
+        if: failure()
+        uses: monjizeen/shared-assets/actions/telegram-notify@main
+        with:
+          bot-token: ${{ secrets.TELEGRAM_NOTIFIER_TOKEN }}
+          channel-id: ${{ secrets.TELEGRAM_CHANNEL_ID }}
+          status: failure
+          title: "{PROJECT} deploy failed"
+```
+
+The runner user needs passwordless sudo for: running commands as `www-data` (skipped when the runner already runs as `www-data`) and `systemctl restart/is-active/status {SERVICE}` + `journalctl -u {SERVICE}`. If one is missing, the run prints the exact `/etc/sudoers.d` lines to add.
+
+### Runner setup from a cloud Claude thread (no SSH)
+
+Cloud threads cannot SSH to the VPS, so `register-vps-runner.sh` only works from the Mac. From a cloud thread, give Omar this to paste into Claude Code on the VPS (he gets the token at `https://github.com/monjizeen/{PROJECT}/settings/actions/runners/new`):
+
+```text
+Install a GitHub Actions self-hosted runner for monjizeen/{PROJECT} on this
+server, the same way as the existing ones (systemctl list-units
+'actions.runner.*'): fresh download into /srv/github-actions-runner-{PROJECT}
+(never copy another runner's folder), name <hostname>-{PROJECT}, same OS user
+as the others, installed with ./svc.sh install <that user> and started. Ask me
+for the registration token. Then check that user can deploy without a password
+(sudo -l -U <user>): run commands as www-data, and (service apps only)
+systemctl restart/is-active/status {SERVICE} and journalctl -u {SERVICE}.
+Add only what is missing in /etc/sudoers.d/{PROJECT}-deploy (mode 440, checked
+with visudo -cf). Change nothing else. Summarise what you did and how to undo it.
+```
+
+Done when a deploy run shows the runner `<hostname>-{PROJECT}` and finishes green.
 
 ---
 

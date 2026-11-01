@@ -20,16 +20,39 @@ runs:
   steps:
     - name: Send Telegram notification
       shell: bash
+      env:
+        BOT_TOKEN: ${{ inputs.bot-token }}
+        CHANNEL_ID: ${{ inputs.channel-id }}
+        STATUS: ${{ inputs.status }}
+        TITLE: ${{ inputs.title }}
+        RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
       run: |
-        if [ "${{ inputs.status }}" = "success" ]; then
+        # A missing secret should say so, not fail quietly with a Telegram 404.
+        if [ -z "${BOT_TOKEN}" ] || [ -z "${CHANNEL_ID}" ]; then
+          echo "::warning::No Telegram alert sent: add TELEGRAM_NOTIFIER_TOKEN and TELEGRAM_CHANNEL_ID to this repo's secrets (or share the org secrets with it)."
+          exit 0
+        fi
+
+        if [ "${STATUS}" = "success" ]; then
           ICON="✅"
-        elif [ "${{ inputs.status }}" = "failure" ]; then
+        elif [ "${STATUS}" = "failure" ]; then
           ICON="❌"
         else
           ICON="⚠️"
         fi
 
-        curl -s -X POST "https://api.telegram.org/bot${{ inputs.bot-token }}/sendMessage" \
-          -d chat_id=${{ inputs.channel-id }} \
-          -d parse_mode=HTML \
-          -d text="${ICON} <b>${{ inputs.title }}</b>%0A%0A📦 <code>${{ github.repository }}</code>%0A🔀 <code>${{ github.ref_name }}</code>%0A👤 ${{ github.actor }}%0A%0A<a href='https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'>View Run</a>"
+        TEXT="${ICON} <b>${TITLE}</b>
+
+        📦 <code>${GITHUB_REPOSITORY}</code>
+        🔀 <code>${GITHUB_REF_NAME}</code>
+        👤 ${GITHUB_ACTOR}
+
+        <a href='${RUN_URL}'>View Run</a>"
+
+        RESPONSE="$(curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
+          --data-urlencode "chat_id=${CHANNEL_ID}" \
+          --data-urlencode "parse_mode=HTML" \
+          --data-urlencode "text=${TEXT}")"
+        if ! printf '%s' "${RESPONSE}" | grep -q '"ok":true'; then
+          echo "::warning::Telegram did not accept the alert: ${RESPONSE}"
+        fi

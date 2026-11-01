@@ -1,0 +1,102 @@
+name: Deploy service
+description: >
+  Deploy an app that runs as a background service on the VPS (Node, Python, …),
+  from the self-hosted runner that lives there. Pulls the code as the app user,
+  runs optional build commands, restarts the systemd service, then prints its
+  status and recent logs. For Laravel sites use deploy-laravel instead.
+
+inputs:
+  app-dir:
+    description: Absolute path of the git checkout on the VPS (e.g. /srv/projects/radar)
+    required: true
+  service:
+    description: systemd service to restart (e.g. radar-api). Empty = no restart.
+    default: ""
+  branch:
+    description: Branch to deploy
+    default: main
+  app-user:
+    description: OS user that owns app-dir
+    default: www-data
+  build-commands:
+    description: Commands run in app-dir as app-user after the pull (e.g. npm ci --omit=dev)
+    default: ""
+  log-lines:
+    description: How many log lines to print after the restart
+    default: "50"
+
+runs:
+  using: composite
+  steps:
+    - name: Pull, build, restart
+      shell: bash
+      env:
+        APP_DIR: ${{ inputs.app-dir }}
+        SERVICE: ${{ inputs.service }}
+        BRANCH: ${{ inputs.branch }}
+        APP_USER: ${{ inputs.app-user }}
+        BUILD_COMMANDS: ${{ inputs.build-commands }}
+      run: |
+        set -eo pipefail
+        ME="$(whoami)"
+        echo "Deploy: runner=${ME} app_user=${APP_USER} path=${APP_DIR} service=${SERVICE:-none}"
+
+        # Run as the app user; no sudo needed when the runner already is that user.
+        as_app() {
+          if [ "${ME}" = "${APP_USER}" ]; then
+            bash -c "$1"
+          else
+            sudo -n -u "${APP_USER}" -H env APP_DIR="${APP_DIR}" BRANCH="${BRANCH}" BUILD_COMMANDS="${BUILD_COMMANDS}" bash -c "$1"
+          fi
+        }
+
+        help_sudo() {
+          GIT="$(command -v git || echo /usr/bin/git)"
+          CTL="$(command -v systemctl || echo /usr/bin/systemctl)"
+          JRN="$(command -v journalctl || echo /usr/bin/journalctl)"
+          echo "::error::The runner user ${ME} is missing a passwordless sudo right."
+          echo "Fix on the VPS: add /etc/sudoers.d/<project>-deploy (mode 440, check with visudo -cf) containing only:"
+          if [ "${ME}" != "${APP_USER}" ]; then
+            echo "  ${ME} ALL=(${APP_USER}) NOPASSWD: ALL"
+          fi
+          if [ -n "${SERVICE}" ]; then
+            echo "  ${ME} ALL=(root) NOPASSWD: ${CTL} restart ${SERVICE}, ${CTL} is-active ${SERVICE}, ${CTL} status ${SERVICE} --no-pager, ${JRN} -u ${SERVICE} -n * --no-pager"
+          fi
+        }
+
+        if [ ! -d "${APP_DIR}/.git" ]; then
+          echo "::error::Not a git checkout: ${APP_DIR}. Clone the repo there as ${APP_USER} first."
+          exit 1
+        fi
+
+        export APP_DIR BRANCH BUILD_COMMANDS
+        if ! as_app 'set -eo pipefail; cd "$APP_DIR"; git pull --ff-only origin "$BRANCH"; git log -1 --oneline'; then
+          if [ "${ME}" != "${APP_USER}" ] && ! sudo -n -u "${APP_USER}" true 2>/dev/null; then
+            help_sudo
+          fi
+          echo "::error::git pull failed in ${APP_DIR} (see above)."
+          exit 1
+        fi
+
+        if [ -n "${BUILD_COMMANDS}" ]; then
+          as_app 'set -eo pipefail; cd "$APP_DIR"; eval "$BUILD_COMMANDS"'
+        fi
+
+        if [ -n "${SERVICE}" ]; then
+          if ! sudo -n systemctl restart "${SERVICE}"; then
+            help_sudo
+            exit 1
+          fi
+          sleep 2
+          sudo -n systemctl is-active "${SERVICE}"
+        fi
+
+    - name: Service status and logs
+      if: always() && inputs.service != ''
+      shell: bash
+      env:
+        SERVICE: ${{ inputs.service }}
+        LOG_LINES: ${{ inputs.log-lines }}
+      run: |
+        sudo -n systemctl status "${SERVICE}" --no-pager || true
+        sudo -n journalctl -u "${SERVICE}" -n "${LOG_LINES}" --no-pager || true

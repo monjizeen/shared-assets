@@ -48,3 +48,19 @@ jobs:
           extra-commands: |
             npm ci
             npm run build
+      - name: Notify Telegram - Deployed
+        if: success()
+        uses: monjizeen/shared-assets/actions/telegram-notify@main
+        with:
+          bot-token: ${{ secrets.TELEGRAM_NOTIFIER_TOKEN }}
+          channel-id: ${{ secrets.TELEGRAM_CHANNEL_ID }}
+          status: success
+          title: "Deployed to Staging"
+      - name: Notify Telegram - Deploy Failed
+        if: failure()
+        uses: monjizeen/shared-assets/actions/telegram-notify@main
+        with:
+          bot-token: ${{ secrets.TELEGRAM_NOTIFIER_TOKEN }}
+          channel-id: ${{ secrets.TELEGRAM_CHANNEL_ID }}
+          status: failure
+          title: "Staging Deploy Failed"
