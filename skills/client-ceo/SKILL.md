@@ -26,6 +26,9 @@ earlier.
   or in the status file.
 - You never contact the client directly. Anything that leaves Monjizeen goes
   through Omar.
+- **Unclear which repo or product?** Ask Omar once before starting; don't guess.
+- **Push back before building.** Before non-trivial work, say in one line if a
+  simpler or safer way exists, then go with Omar's call.
 
 ## 2. Route work to threads
 

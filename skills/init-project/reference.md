@@ -181,7 +181,7 @@ Add under `domains.monjizeen.repos`:
 
 ### Web (`content` / `web-app`)
 
-`mora/domains/monjizeen/agents/{PROJECT}/SKILL.md`:
+`{PROJECT}/AGENTS.md` (the repo's own agent notes; MORA was retired 2026-11-01):
 
 ```markdown
 ---

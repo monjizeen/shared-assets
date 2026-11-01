@@ -33,7 +33,6 @@ Org skill for monjizeen-domain **Laravel + Inertia + Vue** apps.
 
 1. Confirm **target app repo** (ask if unclear).
 2. Confirm design source paths (HTML/CSS/mocks).
-3. Log request in `mora/REQUESTS.md` if actionable.
 
 ### Phase 1 — Install Enjaz
 
@@ -92,6 +91,5 @@ Output a short **skin brief** (tokens table + component map + gaps). Show Omar T
 
 ## Related
 
-- Rule: `mora/cursor-runtime/rules/enjaz-design-skin.mdc`
 - Enjaz agent: package/gallery ownership
 - App agent: page wiring in product repo

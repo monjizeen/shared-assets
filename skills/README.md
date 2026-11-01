@@ -12,13 +12,10 @@ All custom skills live here — versioned on GitHub. **Do not edit copies** unde
 | `cto` | Review technical decisions, architecture, code quality |
 | `ceo` | Review business decisions, unit economics, strategy |
 | `client-ceo` | Coordinator rules for each client's Claude project; paste-in text in `client-ceo/PROJECT-INSTRUCTIONS.md`; status in `../clients/` |
-| `new-project` | **Canonical** — bootstrap new repo: stack, GitHub, scaffold, MORA, OAuth, mnjz.in DNS/VPS (Cursor + Telegram) |
+| `new-project` | **Canonical** — bootstrap new repo: stack, GitHub, scaffold, repo list, OAuth, mnjz.in DNS/VPS |
 | `init-project` | Alias for `new-project` |
 | `pre-mvp-audit` | Pre-launch codebase audit tied to core user loop |
-| `run-mora` | Bootstrap MORA on a new Mac or after pull |
 | `refresh` | Sync **active workspace** repo — pull, deps, migrate, restart dev server |
-| `refresh-mora` | Full sync — `run-mora` + clone/pull all REGISTRY app repos |
-| `caveman` | Communication intensity reference (Cursor enforces via rules + hooks) |
 
 ### Service skills
 
@@ -30,20 +27,12 @@ plugs in through `client-context-brief`. Plan and status: [SERVICES.md](SERVICES
 | `client-context-brief` | Build a client's kit at onboarding and turn it into a one-page brief per task |
 | `social-media-graphic` | Social post, carousel, story and ad graphics, Arabic and English |
 
-## Install (automatic)
+## Install
 
-From mora repo:
-
-```bash
-./run-mora.sh
-```
-
-This symlinks every skill here to **both**:
-
-- `~/.cursor/skills/`
-- `~/.claude/skills/`
-
-Re-run after `git pull` on any Mac.
+On a Mac, `scripts/init-project/bootstrap-mac.sh` links every skill here into
+`~/.cursor/skills/` and `~/.claude/skills/`. Claude project threads read them
+straight from this repo. (MORA's `run-mora.sh` used to do this; MORA was retired
+on 2026-11-01. The repo list is now [`../docs/REPOS.md`](../docs/REPOS.md).)
 
 ## Manual symlink (if needed)
 
@@ -70,7 +59,6 @@ Invoke with `/` in Cursor or Claude Code:
 /new-project
 /init-project
 /pre-mvp-audit
-/run-mora
 /cto
 /ceo
 ```
@@ -97,34 +85,25 @@ skills/
 ├── pre-mvp-audit/
 │   ├── SKILL.md
 │   └── CHECKLIST.md
-├── run-mora/SKILL.md
-├── refresh-mora/SKILL.md
-├── caveman/SKILL.md
 └── README.md
 ```
 
 ## init-project scripts
 
-See `../scripts/init-project/` — Gate 0 of `/new-project` runs `bootstrap-mac.sh`; `run-mora.sh` links skills automatically.
-
-## Caveman plugin
-
-Do **not** install the marketplace `caveman@caveman` plugin — it duplicates org skills (`cavecrew`, `caveman-commit`, `compress`, etc.). Use the single `caveman` skill here; Cursor enforces intensity via MORA rules + hooks.
-
-If already installed: `claude plugin uninstall caveman@caveman`
+See `../scripts/init-project/` — Gate 0 of `/new-project` runs `bootstrap-mac.sh`; it also links the skills.
 
 ## Updating
 
-Edit `SKILL.md` in this repo. Commit + push. Run `./run-mora.sh` on each Mac (or rely on symlinks — changes apply immediately).
+Edit `SKILL.md` in this repo. Commit + push. Symlinks pick up changes after `git pull`.
 
 ## Troubleshooting
 
 **Skill not appearing:**
 - Verify symlink: `ls -l ~/.cursor/skills/{name}` and `ls -l ~/.claude/skills/{name}`
 - Both should point to `shared-assets/skills/{name}`
-- Re-run `./run-mora.sh`
+- Re-run `scripts/init-project/bootstrap-mac.sh`
 - Restart Cursor or Claude Code
 
 **Stale copy instead of symlink:**
 - Remove the copy: `rm -rf ~/.claude/skills/{name}`
-- Re-run `./run-mora.sh`
+- Re-run `scripts/init-project/bootstrap-mac.sh`
