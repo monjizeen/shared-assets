@@ -18,9 +18,18 @@ it). Org skills live in `shared-assets/skills/`.
 | `monjizeen-business` | Company notebook: ideas, offers, decisions (markdown) | Cloudflare (old site only) |
 | `monjizeen-core` | Rules, QA checks and brief builder handed to AI tools per ticket | none |
 | `shared-assets` | Org skills, shared GitHub Actions, deploy standard, client status files | none |
-| `radar` | MENA web design and copy references (scraped sites) | VPS runner |
-| `enjaz` | Design system (shadcn-vue base) and gallery; rename to Asaas being discussed | — |
+| `radar` | Radar: market exploration. MENA startup sites captured and analysed; users save their own finds to lists | VPS runner, radar.mnjz.in |
+| `asaas` | Asaas (was Enjaz): design system (shadcn-vue base) our apps are built with, and its gallery | gallery at enjaz.mnjz.in |
 | `kawader` | Talent directory; new plan is scraped, internally rated doers | — |
+
+## Products without a repo yet
+
+Decision 0025 in `monjizeen-business` (2026-11-05). Radar, Elham and Sandooq each have one job; see `monjizeen-business/notes/product/architecture.md`.
+
+| Product | Job | Status |
+|---------|-----|--------|
+| Elham (إلهام) | Team-curated, Pinterest-like inspiration for doers. No personal saving (that is Radar) | Not built; elham.mnjz.in redirects to Radar for now |
+| Sandooq (صندوق) | Ready-to-use resources (assets, components, templates, patterns) made or collected by the team | Not built |
 
 ## Retired or parked (outside the CEO project)
 
