@@ -2,7 +2,8 @@
 
 One standard, so every repo looks the same. New projects get it from
 `/new-project` (Gate 8); the workflow text lives in
-`skills/init-project/reference.md`.
+`skills/init-project/reference.md`. Internal tools also get Monjizeen
+sign-in (Gate 5, see "Internal tools" below).
 
 ## Where the code goes
 
@@ -30,6 +31,33 @@ One standard, so every repo looks the same. New projects get it from
    for every repo.
 6. Secrets: `ACCESS_TO_VPS_WWWDATA_FROM_GITHUB_ACTIONS` (Laravel),
    `TELEGRAM_NOTIFIER_TOKEN`, `TELEGRAM_CHANNEL_ID`.
+
+## Internal tools: Monjizeen sign-in, always (Omar, 2026-11-05)
+
+Every internal tool (Radar, Elham, Sandooq, Kawader and any new one) sits
+behind the **same allowed users as app.monjizeen.com**. Build it that way from
+the first commit; never ship one open "for now".
+
+1. **No own login.** No Google client per tool, no `ALLOWED_EMAILS`, no basic
+   auth. The tool uses *Sign in with Monjizeen*: it sends people to
+   `https://app.monjizeen.com/tools/{tool}/sign-in?state=…`, gets a one-time
+   code back on its callback, and swaps it server to server at
+   `POST https://app.monjizeen.com/api/tools/{tool}/redeem`. Who may enter is
+   decided only in the app (team and doers, never client-only members).
+   Full guide: monjizeen-app `docs/TOOL_SIGN_IN.md`.
+2. **Register the tool** with one line in monjizeen-app `config/tools.php`
+   (slug, name, callback URL), merge, and deploy the app to production.
+3. **Gate everything**, not just the API: pages, JSON, images, videos,
+   downloads. Node/static tools: nginx `auth_request` to the tool's
+   `/api/auth/check` (copy radar `docs/SIGN-IN.md` and the sign-in part of
+   `server/server.mjs`). Laravel tools: the same three steps as a controller +
+   `auth` middleware on every route.
+4. **Never let Cloudflare cache gated files**: media headers say
+   `Cache-Control: private`.
+5. **Check after deploy**: `curl -s -o /dev/null -w "%{http_code}" https://{tool}.mnjz.in/`
+   must give `302` (to sign in), never `200`.
+6. Short tool sessions (about 7 days), so removing someone in the app locks
+   them out of every tool within a week.
 
 ## Adding the runner
 

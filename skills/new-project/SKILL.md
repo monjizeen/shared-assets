@@ -109,7 +109,7 @@ New project: {project} ({PROJECT_TYPE}, {DEPLOY_MODE})
 - [ ] Gate 2 — GitHub repo
 - [ ] Gate 3 — Scaffold, mock data, sport theme pack (web), first push
 - [ ] Gate 4 — Repo list + agent notes
-- [ ] Gate 5 — Google OAuth (manual, web only)
+- [ ] Gate 5 — Sign-in: Monjizeen sign-in (internal tools) or Google OAuth (manual, web only)
 - [ ] Gate 6 — Secrets on disk (web only)
 - [ ] Gate 7 — VPS: DNS + nginx + deploy (web only, optional)
 - [ ] Gate 8 — CI workflow + VPS self-hosted runner (web)
@@ -155,7 +155,8 @@ Exit bootstrap **0** → Gate 1. Exit **1** → fix `need` items, re-run Gate 0.
    - `STAGING_FQDN=staging.{domain}`
    - `PRODUCTION_FQDN=app.{domain}`
 6. If **playground**: set `STAGING_FQDN={project}.mnjz.in`, `PRODUCTION_FQDN=` (empty).
-7. **Auth model** (web only) — `open` or `closed`.
+7. **Auth model** (web only) — `internal-tool`, `open` or `closed`.
+   - **`internal-tool`** (default for anything only our team and doers use: Radar, Elham, Sandooq, Kawader…): *Sign in with Monjizeen*, same allowed users as app.monjizeen.com, every page and file gated. No own Google client, no email list. See [STANDARD.md — Internal tools](../../docs/deploy/STANDARD.md#internal-tools-monjizeen-sign-in-always-omar-2026-11-05).
 8. **Design system** (web) — shadcn-vue + Lucide. Default yes.
 9. **Theme** (web) — sport gallery pick (required for web). **No tweakcn.**
    - Resolve gallery path (first that exists):
@@ -300,11 +301,17 @@ git push -u origin main
 
 ---
 
-## Gate 5 — Google OAuth (manual — web only)
+## Gate 5 — Sign-in (web only)
 
 **Skip for `native-mobile`** unless also standing up web API.
 
-**Pause until Omar confirms OAuth client ready.**
+**Internal tool (`internal-tool`)? Skip the Google client entirely.** Instead:
+1. Add the tool to monjizeen-app `config/tools.php` (`'{project}' => $tool('{project}', '{Name}', 'https://{project}.mnjz.in/api/auth/callback')`), open a PR, merge on green, deploy the app to production.
+2. In the new repo, build sign-in per monjizeen-app `docs/TOOL_SIGN_IN.md` and gate every route and file (nginx `auth_request` for static/Node, middleware for Laravel). Copy radar `server/server.mjs` + `docs/SIGN-IN.md` for Node.
+3. After Gate 7/8: `curl https://{project}.mnjz.in/` must answer `302` to sign-in, never `200`.
+Nothing for Omar to do on Google.
+
+**Otherwise, pause until Omar confirms OAuth client ready.**
 
 | Mode | Callbacks to show |
 |------|-------------------|
@@ -414,7 +421,7 @@ php artisan test
 - **No slapdash UI** — Gate 3 must meet the Design quality bar (hierarchy, type, spacing, atmosphere, Enjaz-first).
 - **Shell nav** — logged out: Theme toggle + Login; logged in: logo → dashboard, Theme toggle + Sign out only (no Dashboard link); brand = project name not `App`.
 - **Light/dark toggle** — every web project ships a working theme toggle (header + auth screens); persist preference; no FOUC.
-- **Pauses** — Gate 5 waits for human; Gate 7 optional per Gate 1.
+- **Pauses** — Gate 5 waits for Omar only for a Google client (internal tools use Monjizeen sign-in, no wait); Gate 7 optional per Gate 1.
 - **Executor** — run commands yourself; Gates 1 and 5 need Omar input.
 - **Resume** — Omar can say `/new-project continue {project}` to pick up at first incomplete gate.
 - **No dual live** — never `{project}.mnjz.in` as production **and** `app.{domain}` as production at the same time.
