@@ -18,13 +18,13 @@ it). Org skills live in `shared-assets/skills/`.
 | `monjizeen-business` | Company notebook: ideas, offers, decisions (markdown) | Cloudflare (old site only) |
 | `monjizeen-core` | Rules, QA checks and brief builder handed to AI tools per ticket | none |
 | `shared-assets` | Org skills, shared GitHub Actions, deploy standard, client status files | none |
-| `radar` | Radar: market exploration. MENA startup sites captured and analysed; users save their own finds to lists | VPS runner, radar.mnjz.in |
+| `radar` | Radar: internal market exploration (team and doers only). MENA startup sites captured and analysed; users save their own finds to lists | VPS runner, radar.mnjz.in |
 | `asaas` | Asaas (was Enjaz): design system (shadcn-vue base) our apps are built with, and its gallery | gallery at enjaz.mnjz.in |
 | `kawader` | Talent directory; new plan is scraped, internally rated doers | — |
 
 ## Products without a repo yet
 
-Decision 0025 in `monjizeen-business` (2026-11-05). Radar, Elham and Sandooq each have one job; see `monjizeen-business/notes/product/architecture.md`.
+Decision 0025 in `monjizeen-business` (2026-11-05). Radar, Elham and Sandooq are internal tools, used only by us and our doers (one of our moats), each with one job; see `monjizeen-business/notes/product/architecture.md`.
 
 | Product | Job | Status |
 |---------|-----|--------|
