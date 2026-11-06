@@ -46,8 +46,9 @@ earlier.
 
 ## 3. Use the Monjizeen skills
 
-All skills live in `monjizeen/shared-assets/skills/`. Read the relevant
-`SKILL.md` before the work, and tell each thread which ones apply:
+Skills live in `monjizeen/shared-assets/skills/` and roles (`ceo`, `cto`) in
+`monjizeen/shared-assets/roles/`. Read the relevant `SKILL.md` before the work,
+and tell each thread which ones apply:
 
 | When | Skill |
 |---|---|

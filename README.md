@@ -2,6 +2,25 @@
 
 Shared GitHub Actions workflows, composite actions, and Claude Code skills for all monjizeen projects.
 
+## AI workforce: Maharat, Adwar, Masarat
+
+Monjizeen's AI workforce is written down in three layers, kept as folders in
+this one repo so a rename or change lands in one place:
+
+| Layer | Folder | Holds |
+|---|---|---|
+| Maharat (مهارات) | [`skills/`](skills/) | One skill per job: inputs, method, outputs, limits, checks |
+| Adwar (أدوار) | [`roles/`](roles/) | One agent per role: mission, duties, boundaries, which skills it uses, decision rules |
+| Masarat (مسارات) | [`workflows/`](workflows/) | How roles work together: who starts, who hands off to whom, where Omar approves |
+
+Rules and quality checks every task gets stay in `monjizeen/monjizeen-core`.
+A layer moves to its own repo only if different people own it, someone outside
+needs it on its own, or it changes at a very different pace.
+
+The Arabic names are labels. Folder names stay in English because AI tools
+look for `skills/`, and "Maharat" alone also names Scout's list of 50 freelance
+skills.
+
 ## Structure
 
 ```
@@ -17,8 +36,9 @@ actions/
   flutter-test.yml        # Reusable: format + analyze + test
   laravel-test.yml        # Reusable: pint + phpstan + migrate + test (SQLite)
   laravel-test-mysql.yml  # Reusable: same as above but with MySQL service
-skills/
-  (Claude Code / Cursor skills — see skills/README.md)
+skills/              # Maharat (مهارات): what each skill does — see skills/README.md
+roles/               # Adwar (أدوار): each agent's mission, limits, decisions — see roles/README.md
+workflows/           # Masarat (مسارات): how agents hand work to each other — see workflows/README.md
 clients/
   <client>/STATUS.md  # each client project's status, read by the main CEO project
 scripts/
