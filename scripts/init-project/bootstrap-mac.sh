@@ -42,17 +42,17 @@ SHARED_ASSETS="$(find_shared_assets)" || {
   SHARED_ASSETS=""
 }
 
-# --- Skills: link shared-assets/skills into ~/.claude/skills and ~/.cursor/skills ---
+# --- Skills: link shared-assets/skills and shared-assets/roles into ~/.claude/skills and ~/.cursor/skills ---
 # (MORA, which used to do this, was retired on 2026-11-01.)
 if [[ -n "${SHARED_ASSETS}" ]]; then
   mkdir -p "${HOME}/.claude/skills" "${HOME}/.cursor/skills"
-  for skill in "${SHARED_ASSETS}"/skills/*/; do
+  for skill in "${SHARED_ASSETS}"/skills/*/ "${SHARED_ASSETS}"/roles/*/; do
     [[ -f "${skill}/SKILL.md" ]] || continue
     name="$(basename "${skill}")"
     ln -sfn "${skill%/}" "${HOME}/.claude/skills/${name}"
     ln -sfn "${skill%/}" "${HOME}/.cursor/skills/${name}"
   done
-  ok "skills linked"
+  ok "skills and roles linked"
 fi
 
 # --- Secrets directory ---

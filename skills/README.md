@@ -1,4 +1,8 @@
-# monjizeen Skills (single source of truth)
+# Maharat (مهارات): skills
+
+What each skill can do: its inputs, method, outputs and limits. Part of the
+three layers described in the [repo README](../README.md#ai-workforce-maharat-adwar-masarat):
+skills here, roles in [`../roles/`](../roles/), workflows in [`../workflows/`](../workflows/).
 
 All custom skills live here — versioned on GitHub. **Do not edit copies** under `~/.claude/skills/` or `~/.cursor/skills/`.
 
@@ -9,9 +13,6 @@ All custom skills live here — versioned on GitHub. **Do not edit copies** unde
 | `start-work` | Sync main (QUICK) or confirm branch (WORKTREE); challenge scope before coding |
 | `finish-work` | Test, commit, push when done — no auto PR or merge |
 | `cleanup` | Sync main, prune branches, clean local git state |
-| `cto` | Review technical decisions, architecture, code quality |
-| `ceo` | Review business decisions, unit economics, strategy |
-| `client-ceo` | Coordinator rules for each client's Claude project; paste-in text in `client-ceo/PROJECT-INSTRUCTIONS.md`; status in `../clients/` |
 | `new-project` | **Canonical** — bootstrap new repo: stack, GitHub, scaffold, repo list, OAuth, mnjz.in DNS/VPS |
 | `init-project` | Alias for `new-project` |
 | `pre-mvp-audit` | Pre-launch codebase audit tied to core user loop |
@@ -29,7 +30,8 @@ plugs in through `client-context-brief`. Plan and status: [SERVICES.md](SERVICES
 
 ## Install
 
-On a Mac, `scripts/init-project/bootstrap-mac.sh` links every skill here into
+On a Mac, `scripts/init-project/bootstrap-mac.sh` links every skill here (and
+every role in `../roles/`) into
 `~/.cursor/skills/` and `~/.claude/skills/`. Claude project threads read them
 straight from this repo. (MORA's `run-mora.sh` used to do this; MORA was retired
 on 2026-11-01. The repo list is now [`../docs/REPOS.md`](../docs/REPOS.md).)
@@ -39,7 +41,7 @@ on 2026-11-01. The repo list is now [`../docs/REPOS.md`](../docs/REPOS.md).)
 ```bash
 MONO=~/Documents/work/projects/monjizeen
 mkdir -p ~/.cursor/skills ~/.claude/skills
-for skill in "$MONO"/shared-assets/skills/*/; do
+for skill in "$MONO"/shared-assets/skills/*/ "$MONO"/shared-assets/roles/*/; do
   name=$(basename "$skill")
   [[ -f "$skill/SKILL.md" ]] || continue
   ln -sfn "$skill" ~/.cursor/skills/"$name"
@@ -59,8 +61,8 @@ Invoke with `/` in Cursor or Claude Code:
 /new-project
 /init-project
 /pre-mvp-audit
-/cto
-/ceo
+/cto      # role, in ../roles/
+/ceo      # role, in ../roles/
 ```
 
 Or trigger naturally: "start work on …", "finish work", "should we build this" → CEO review.
@@ -73,11 +75,6 @@ skills/
 ├── finish-work/SKILL.md
 ├── cleanup/SKILL.md
 ├── refresh/SKILL.md
-├── cto/SKILL.md
-├── ceo/SKILL.md
-├── client-ceo/
-│   ├── SKILL.md
-│   └── PROJECT-INSTRUCTIONS.md
 ├── new-project/SKILL.md
 ├── init-project/
 │   ├── SKILL.md      # alias → new-project
@@ -100,7 +97,7 @@ Edit `SKILL.md` in this repo. Commit + push. Symlinks pick up changes after `git
 
 **Skill not appearing:**
 - Verify symlink: `ls -l ~/.cursor/skills/{name}` and `ls -l ~/.claude/skills/{name}`
-- Both should point to `shared-assets/skills/{name}`
+- Both should point to `shared-assets/skills/{name}` (or `shared-assets/roles/{name}` for a role)
 - Re-run `scripts/init-project/bootstrap-mac.sh`
 - Restart Cursor or Claude Code
 
