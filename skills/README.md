@@ -27,6 +27,7 @@ plugs in through `client-context-brief`. Plan and status: [SERVICES.md](SERVICES
 |-------|---------|
 | `client-context-brief` | Build a client's kit at onboarding and turn it into a one-page brief per task |
 | `social-media-graphic` | Social post, carousel, story and ad graphics, Arabic and English |
+| `org-environment` | Onboard, run and cut off a client org's Environment (read-only Jira + status repo) and its master agent's guide |
 
 ## Install
 
