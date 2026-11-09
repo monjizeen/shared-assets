@@ -16,6 +16,7 @@ All custom skills live here — versioned on GitHub. **Do not edit copies** unde
 | `new-project` | **Canonical** — bootstrap new repo: stack, GitHub, scaffold, repo list, OAuth, mnjz.in DNS/VPS |
 | `init-project` | Alias for `new-project` |
 | `pre-mvp-audit` | Pre-launch codebase audit tied to core user loop |
+| `security-check` | Weekly security sweep of all repos and live sites; fixes safe issues, reports risky ones |
 | `refresh` | Sync **active workspace** repo — pull, deps, migrate, restart dev server |
 
 ### Service skills
