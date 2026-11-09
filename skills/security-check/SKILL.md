@@ -14,6 +14,8 @@ reuse the automated scan first, only read code where it points.
 - Repo list: `docs/REPOS.md`. Internal-tool rule: `docs/deploy/STANDARD.md`
   "Internal tools" (everything but the public site sits behind Monjizeen sign-in).
 
+> For a one-off deep dive on one app (before a launch or handover) use `pre-mvp-audit` instead; it needs a core loop, so it is too heavy for the weekly sweep. This skill reuses only its security lens.
+
 ## 2. Checks per repo
 1. **Dependencies**: `composer audit`, `npm audit --omit=dev`, `pip-audit` where
    the lockfile exists. Patch/minor bumps with green tests = safe.
