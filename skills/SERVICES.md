@@ -25,6 +25,16 @@ and plugs in through the brief. Client-specific rules never go into a skill.
 Reference skills from open source (listed per row) were read and adapted, not
 copied.
 
+## Selling a service to org agents
+
+A service is offered to client agents (through the Monjizeen MCP) only when
+its skill is ready: built here, passed internal test flights
+(`agent-requests`), and marked `ready` in monjizeen-app
+`config/agent_services.php`. Each package then picks the ready services it
+includes (Admin → Packages); advanced services go in the higher packages.
+Every delivery passes `qa-reviewer`; client feedback goes through
+`feedback-auditor`.
+
 ## Plan
 
 Status: ✅ built · 🔍 in review · ⏳ next · blank = later

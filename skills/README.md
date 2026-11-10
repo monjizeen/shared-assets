@@ -28,6 +28,9 @@ plugs in through `client-context-brief`. Plan and status: [SERVICES.md](SERVICES
 |-------|---------|
 | `client-context-brief` | Build a client's kit at onboarding and turn it into a one-page brief per task |
 | `social-media-graphic` | Social post, carousel, story and ad graphics, Arabic and English |
+| `agent-requests` | Work the requests client agents send through our MCP: skills + context, do the work, QA, deliver; internal test flights |
+| `qa-reviewer` | Check every delivery against the brief, context, CHECKs and our learnings before the client sees it |
+| `feedback-auditor` | Sort client feedback into client-specific, global or disagree; we review before any skill changes |
 | `org-environment` | Onboard, run and cut off a client org's Environment (the NAME = value keys our agents use), with setup prompts for us and for the org's own agent (Monjizeen MCP) |
 
 ## Install
