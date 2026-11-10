@@ -44,7 +44,12 @@ the org's agent any more: their agent works through our MCP instead.
    the folder and tell them they will lose those skills.
 4. **Their tool is the source of truth for ticket status.** Jira or whatever
    tool they use. We move a ticket in their tool first, then match it on our
-   side. If their tool moves it, we follow.
+   side. If their tool moves it, we follow. This is only for tickets we work
+   in their tool; their own agent never syncs tickets with us.
+5. **Monjizeen executes.** Their agent asks us for work; our agent does it
+   with our tools and skills and delivers; they review. We never ask for
+   dailies, work logs or status updates. Human review is a separate hire
+   through Kawader, not part of Monjizeen.
 
 ## New org: what we do
 
@@ -74,16 +79,19 @@ Follow `OUR-SETUP-PROMPT.md`. In short:
 3. **Their own agent (if they have one):** Environment → Their agent →
    **Connect agent**. It gets a Monjizeen key that only reaches this org
    (shown once: send it privately) and connects through our MCP. Send it
-   `ORG-AGENT-PROMPT.md` (**Copy setup prompt** fills it in). It reads
-   priorities, works on tickets, comments, adds private artifact links and
-   moves tickets to review. It never sets Done. If it goes quiet for 3 days,
-   the card shows "agent silent" and we take over.
+   `ORG-AGENT-PROMPT.md` (**Copy setup prompt** fills it in). It asks us for
+   work in the services of the org's package (Admin → Packages picks them),
+   keeps the org's context current, and approves our deliveries or asks for
+   changes. We work its requests with the `agent-requests` skill.
 4. **Check it works:** Refresh on the card. Anything wrong shows under
    "Action needed".
 5. **Never put values** in chat, notes, issues or this repo. The only place a
    client value lives is the app's Environment card.
 
 ## Running
+
+- **Requests from their agent:** `agent-requests` (do the work, `qa-reviewer`
+  before delivery, `feedback-auditor` on their feedback).
 
 - **Ticket status:** their tool decides. Move the ticket there first, then
   match ours. If their tool refuses the move, keep ours as it is, note it on
