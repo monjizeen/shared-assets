@@ -210,7 +210,10 @@ Inputs used: <list with links>    Not opened: <list, and what it blocks>
       separate, fresh pass on your own delivery (it is a file to follow, not
       a tool), save it as `qa-self-check.md` next to the delivery, and fix
       every FAIL before handing over. A delivery without `qa-self-check.md`
-      fails QA.
+      fails QA. The self-check re-opens every frame, page and source it
+      cites, and proves each "not available" or "not readable" claim before
+      it can pass. Missing client inputs, flagged as Draft, do not lower the
+      rating; guesses do.
 
 ## Shared quality checks
 

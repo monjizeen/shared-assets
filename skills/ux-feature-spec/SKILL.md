@@ -30,7 +30,13 @@ Template parts come from monjizeen-core `notes/ux/templates/flow.md` and
    proposal. **Write down what the data source gives and does not give**
    (fields, when they are missing, limits). Most edge cases come from there.
 2. Find the **existing pattern** the feature should follow in the product
-   (a similar drawer, list, block). Reuse beats invent; name it.
+   (a similar drawer, list, block). Reuse beats invent; name it. Read
+   component and instance names from Figma `get_metadata` /
+   `get_design_context`, not from screenshots.
+3. **Look in the file before you ask.** Open every case frame in the linked
+   section; a question the file already answers is a failure. Today's
+   behaviour you have no frame for is written "not seen", never guessed
+   (no "Retry button as today" without a frame).
 3. If a rule depends on a fact the brief does not have (a regulation, an API
    field), list it as an open question; do not decide it yourself.
 
@@ -62,7 +68,9 @@ Template parts come from monjizeen-core `notes/ux/templates/flow.md` and
    not a fixed English/Arabic pair. Each string is *existing* (today's
    string, reused), *proposed* (your draft, to be confirmed) or *copy needed*
    (hand off to `ux-writing`). Never present a proposed string as the
-   client's.
+   client's. List new strings and changed ones; unchanged strings of the
+   extended screens are not listed. Strings of parts not designed yet
+   (a chart's labels) are rows marked "copy needed, depends on <input>".
 9. **Design and build notes.** Components to reuse (by library name), what
    is new, accessibility notes, analytics events if the brief asks.
 10. **Definition of done.** A checklist the designer ticks: every state
@@ -75,12 +83,17 @@ Template parts come from monjizeen-core `notes/ux/templates/flow.md` and
 
 ## Output
 
+Start with a **Ticket terms → frames** table (| Ticket term | Frame / node |
+Sure? |). A term you could not map gets an assumption and a blocking
+question.
+
 Follow this block, not the headings of the Core templates it borrows from.
 
 ```
 Status: … / Inputs used: … / Not opened: …
 # <Feature>: UX spec
 ## Problem and job
+## Ticket terms → frames
 ## Scope (in / out, platforms, roles, languages)
 ## Entry points
 ## Flow (steps + Mermaid diagram)
@@ -95,8 +108,9 @@ Status: … / Inputs used: … / Not opened: …
 
 ## Standards for MENA work
 
-(When the product has no Arabic, write one line "Arabic/RTL: N/A" and check
-the longest shipped language and each currency instead.)
+(When the product has no Arabic, write one line "Arabic/RTL: N/A" and
+instead define, per shipped language, the decimal and thousands separators,
+where the currency symbol goes, and the longest-language case.)
 
 - Define how amounts, dates (Gregorian or Hijri), digits and masked numbers
   look in each language, and that they keep left-to-right order in RTL.
