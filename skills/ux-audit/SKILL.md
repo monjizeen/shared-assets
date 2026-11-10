@@ -26,7 +26,8 @@ Template in monjizeen-core: `notes/ux/templates/audit.md` (repeated below).
    fields and spacing, no feature changes"), that limit is a rule: every
    recommendation must fit inside it.
 3. **Pick 2–4 key journeys** from the brief (the tasks users come for). If
-   the brief names none, take the product's main job and say so.
+   the brief names none, take the product's main job and say so. List each
+   journey's steps once in Scope (J1.1, J1.2…) so findings can cite them.
 
 ## How to do it
 
@@ -45,9 +46,10 @@ Template in monjizeen-core: `notes/ux/templates/audit.md` (repeated below).
    Write down the date, time and time zone of the walk; quotas, content and
    banners change.
 3. **Sweep the lenses** after the walk (UX-STANDARDS §3): heuristics,
-   WCAG essentials, Arabic/RTL (§5), states (§4). Measure contrast and target
-   sizes rather than guessing (browser dev tools or a contrast checker on the
-   real colours).
+   WCAG essentials, Arabic/RTL (§5), states (§4). Measure contrast and the
+   tap target sizes of the main actions at 390 px with `ux-common/measure.js`
+   (a colour picked from a screenshot pixel is not a measurement). States
+   you could not reach are listed as not reviewed.
 4. **Write one finding per problem**: where (exact screen, element, state,
    width, language), what happens, why it matters (the user's goal, a
    heuristic or a WCAG criterion), the fix, severity 1–4, effort S/M/L, and
@@ -66,11 +68,20 @@ Template in monjizeen-core: `notes/ux/templates/audit.md` (repeated below).
    Number the findings after ranking, then name the screenshots by those
    numbers. When a blocker has a workaround, rate it 3 and say why. Pick up
    to five quick wins (high impact, S effort).
+6b. **Check each finding against its own evidence**: re-read the Issue
+   sentence next to its screenshot or measured value. If the screenshot
+   shows something else, fix the finding. A *signal* finding's fix is the
+   validation step that would prove it (or it moves to Next steps).
+   Each fix must work at every width named in Where.
 7. **Keep what works**: two to four strengths the fix list must not break.
 8. **Say what would raise confidence**: a 5-user test of journey X, an
    analytics check on step Y. Never present your walk as user research.
 
 ## Output
+
+Cite lenses by their own names (Nielsen #4, WCAG 1.4.3), never our standards
+file. Pick the screenshots for the client page: every severity 3–4 finding,
+then the quick wins.
 
 ```
 Status: … / Inputs used: … / Not opened: … / Walked on: <date, time, zone>
@@ -106,8 +117,12 @@ The shared checks in UX-STANDARDS plus:
 
 - CHECK [audit-journeys]: The key journeys are named and each was walked end
   to end; findings say which journey and step they come from.
-- CHECK [audit-severity]: Every finding has severity 1–4 and effort S/M/L,
-  and the table is sorted by severity.
+- CHECK [audit-severity]: Every finding has severity 1–4, effort S/M/L and
+  confidence, and the table is sorted by severity.
+- CHECK [audit-self-consistent]: Every Issue matches its own screenshot or
+  measured value.
+- CHECK [audit-page]: The client page (when made) is one file with its
+  screenshots embedded, and opens with the status line.
 - CHECK [audit-fix]: Every finding has a concrete fix that names the element
   and the change; no "improve the UX".
 - CHECK [audit-limits]: Every fix fits the limits in the brief (no feature or
