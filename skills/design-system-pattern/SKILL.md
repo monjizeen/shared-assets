@@ -44,7 +44,17 @@ Use the client's own level names if they have them. Otherwise:
    `Draft: waiting on instances`, mark every row *settled* (the client
    decided it; quote where) or *proposal* (your rule, with why), and list
    exactly which files would give the instances.
-5. **Names that disagree** (the ticket says "alert-modal", the master says
+   **How deep to search**: until each case has 2 real instances or you have
+   searched the pages most likely to hold it (handoff and shipped-screen
+   pages of the main product areas); write the coverage ("8 of 60 Cards
+   pages, chosen because …"). Nested instances are captured by rendering
+   their parent frame and cropping.
+6. **When real screens disagree with a rule** (the generator says "a
+   screen", the shipped design uses a sheet; one question drawn two ways),
+   the instance matrix flags it and an open question asks which wins; never
+   silently pick one. Real cases the brief's catalogue misses are added as
+   rows marked "new case, to approve".
+7. **Names that disagree** (the ticket says "alert-modal", the master says
    "Alert - Dialog", a doc says "modal"): use the name of the level's
    registry or the ticket, list every alias once in a names table, and ask
    which is canonical.
