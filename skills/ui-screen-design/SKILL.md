@@ -22,8 +22,16 @@ For a feature that has no spec yet, run `ux-feature-spec` (short form) first.
 
 1. **Design system first.** Find the client's library (Figma library,
    component docs, tokens, an existing product). Use their components,
-   tokens and type scale. If there is none, ask; if they say "none", use a
-   neutral 4/8 px spacing system and say so. Never invent brand colours.
+   tokens and type scale. With no library, take the tokens from the live
+   product (measure them, UX-STANDARDS §2) and say so; ask only if there is
+   no product either. Never invent brand colours.
+   When a client token fails WCAG AA where you need it (white text on a
+   light brand green), keep the token for its other uses, use the nearest
+   passing shade from their palette for that use, and list it as a
+   proposal for the client.
+   When the brief asks for Figma but no library or file is reachable, use
+   the HTML route and say in the status line that the Figma version is
+   pending access.
 2. **Look at the existing product** around the new screen: header, nav,
    patterns already used for lists, drawers, forms. The new screen must look
    like it belongs there.
@@ -47,30 +55,47 @@ For a feature that has no spec yet, run `ux-feature-spec` (short form) first.
    - HTML route: one file, CSS variables for tokens, real text in each
      language, rendered with Playwright at 390 and 1440 px (and the
      product's own breakpoints).
-5. **Real content**: real-looking Arabic and English text, long names, big
-   numbers, many and zero items. No lorem ipsum, no placeholder avatars of
-   real people.
+5. **Real content**: real-looking text in each shipped language, long
+   names, big numbers, many and zero items. No lorem ipsum, no placeholder
+   avatars of real people. **Religious, legal and medical content is never
+   made up as if real**: no invented fatwas, verses, hadith, rulings or
+   reference numbers. Use real published items with their link, or mark
+   sample text clearly on the screen (a `[نص تجريبي]` / `[Sample]` tag and
+   numbers like `00000`). Legal texts the brief asks for (a disclaimer)
+   are drafted as proposals for the client's legal or religious board.
 6. **Every state** the screen can be in (UX-STANDARDS §4), drawn, not
-   described. Forms: each field's default, focus, filled, error, disabled.
+   described. Forms: each field's default, focus, filled, error, disabled
+   (one states sheet for fields and buttons is enough).
+   **How much to draw**: every screen and state in the lead language at both
+   widths; the second language at both widths for the key screens (entry,
+   main result, main error) and at phone width for the rest.
 7. **RTL**: a mirrored Arabic frame for every screen when the product ships
    Arabic, checked against §5, not just flipped.
 8. **Accessibility pass**: contrast on real colours, 44 px touch targets on
    mobile, visible labels, focus order noted.
 9. **Annotate**: numbered notes on any non-obvious choice, the components
-   used, and anything new that the design system does not have yet.
-10. **Hand-off check**: frames named `<Screen> / <State> / <Lang> / <Width>`,
-    organised in one place, a cover note listing them.
+   used, and anything new that the design system does not have yet. In
+   Figma, a notes frame beside the screens; in HTML, an annotated copy of
+   the key screens with numbered pins and a legend.
+10. **Hand-off check**: frames named `<Screen> / <State> / <Lang> / <Width>`
+    (HTML and PNG files: `NN-screen__state__lang__width.png`), organised in
+    one place with an index page, and the design note listing them.
+11. **Fonts in HTML**: use the client's web font when it can be loaded;
+    otherwise the closest free font (Google Fonts, saved next to the HTML)
+    and say which stands in for which.
 
 ## Output
 
 - The frames (Figma link to the page) or the HTML files plus PNGs.
 - A short design note:
   ```
+  Status: … / Inputs used: … / Not opened: …
   ## Screens (name, purpose, primary action)
   ## Decisions (numbered, one line each, with why)
   ## States drawn (| Screen | States |)
   ## Components (library ones used; new ones needed)
-  ## Assumptions and open questions
+  ## Proposals for the client (token changes, drafted legal text)
+  ## Assumptions and open questions (who answers; blocking first)
   ```
 
 ## Standards for MENA work

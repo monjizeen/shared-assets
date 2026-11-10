@@ -34,22 +34,38 @@ Template in monjizeen-core: `notes/ux/templates/audit.md` (repeated below).
    and desktop (1440 px), in each language the product ships. Use realistic
    data: long names, Arabic and English, an empty account, a wrong input.
    Take a screenshot of every problem as you find it.
-2. **Break it on purpose**: submit empty and wrong forms, go back mid-flow,
-   reload, open a deep link logged out, try keyboard only, zoom to 200 %.
+2. **Break it on purpose**: try empty and wrong inputs (client-side
+   validation only), go back mid-flow, reload, open a deep link logged
+   out, try keyboard only, zoom to 200 %. **On a live production site never
+   send a form** that creates data or contacts people (questions, sign-ups,
+   emails, payments); on staging with a test account you may. When a
+   journey is blocked (a quota, a login wall, a step that would send
+   data), go as far as is safe, record where and why it stopped, and list
+   the rest as not reviewed.
+   Write down the date, time and time zone of the walk; quotas, content and
+   banners change.
 3. **Sweep the lenses** after the walk (UX-STANDARDS §3): heuristics,
    WCAG essentials, Arabic/RTL (§5), states (§4). Measure contrast and target
    sizes rather than guessing (browser dev tools or a contrast checker on the
    real colours).
 4. **Write one finding per problem**: where (exact screen, element, state,
    width, language), what happens, why it matters (the user's goal, a
-   heuristic or a WCAG criterion), the fix, severity 1–4, effort S/M/L.
-   Merge duplicates; split a finding that hides two problems.
+   heuristic or a WCAG criterion), the fix, severity 1–4, effort S/M/L, and
+   confidence (*seen*: reproduced; *signal*: likely, needs data to prove).
+   Merge duplicates; split a finding that hides two problems. One cause in
+   several places (the same colour failing on buttons and titles) is one
+   finding with every place listed, unless the places need different
+   fixes.
 5. **Make every fix concrete and small**: name the element, the change and
-   the new value or text ("Move 'نشر' to the top bar of the editor, primary
+   the new value or text. Take values from the client's design system, or,
+   with none, from the product itself (a colour it already uses that
+   passes), and say where it came from ("Move 'نشر' to the top bar of the editor, primary
    style", "Raise the label to 14 px and contrast to 4.5:1"). When the brief
    allows code-level advice, give the CSS or HTML change.
 6. **Rank**: severity first, then how many users and how often, then effort.
-   Pick up to five quick wins (high impact, S effort).
+   Number the findings after ranking, then name the screenshots by those
+   numbers. When a blocker has a workaround, rate it 3 and say why. Pick up
+   to five quick wins (high impact, S effort).
 7. **Keep what works**: two to four strengths the fix list must not break.
 8. **Say what would raise confidence**: a 5-user test of journey X, an
    analytics check on step Y. Never present your walk as user research.
@@ -57,10 +73,11 @@ Template in monjizeen-core: `notes/ux/templates/audit.md` (repeated below).
 ## Output
 
 ```
+Status: … / Inputs used: … / Not opened: … / Walked on: <date, time, zone>
 # UX audit: <product>, <scope>
 ## Summary          2–4 sentences: state, top 3 problems, the one change with the most impact
 ## Scope and method role, journeys, widths, languages, lenses; what was out of scope
-## Findings         | # | Sev | Where | Issue | Why it matters | Fix | Effort |
+## Findings         | # | Sev | Where | Issue | Why it matters | Fix | Effort | Confidence |
 ## Quick wins       up to 5, by number
 ## Strengths to keep
 ## Next steps       validation that would raise confidence
@@ -68,7 +85,9 @@ Template in monjizeen-core: `notes/ux/templates/audit.md` (repeated below).
 ```
 
 Attach the screenshots, named by finding number. Turn it into a client page
-with `notes/design/visual-pages.md` when the client reads pages.
+with `notes/design/visual-pages.md` when the client reads pages; embed the
+screenshots it shows as base64 `data:` images (keep them cropped and
+compressed, under about 200 KB each) so the page stays one file.
 
 ## Standards for MENA work
 

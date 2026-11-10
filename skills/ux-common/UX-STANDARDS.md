@@ -65,7 +65,8 @@ are repeated here so a skill works without them.
 - **Measure, don't eyeball.** Colours, sizes, spacing and letter spacing are
   read from the build (`getComputedStyle` in Playwright) or from Figma
   (`get_design_context`), and contrast is computed with the WCAG formula
-  (relative luminance), not guessed from a screenshot.
+  (relative luminance), not guessed from a screenshot. [measure.js](measure.js) does both:
+  `node ux-common/measure.js <url> "<selector>" 390`.
 
 ## 3. Lenses (cite one only to explain a problem)
 
