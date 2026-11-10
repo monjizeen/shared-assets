@@ -183,8 +183,15 @@ they prove. One overview image per screen is fine when it helps orient.
 Side by side images (build vs design) are composed in a small HTML page and
 captured with Playwright.
 
+**Client pages** (made with `visual-pages.md`) show only what the delivery
+says: no new priorities, badges or numbers. Arabic inside an English page
+sits in its own element with `dir="rtl" lang="ar"` (and the reverse). Trees,
+tables and charts stay readable at 390 px (stack or scroll inside their
+box). Before a screenshot of an animated or video page, wait until the text
+you cite is visible.
+
 **Client copy is clean.** The delivery never shows our internals: no
-Monjizeen ticket numbers, skill names, CHECK keys, "UX-STANDARDS §3", agent
+Monjizeen ticket numbers (the "Monjizeen" wordmark as the deliverer is fine), skill names, CHECK keys, "UX-STANDARDS §3", agent
 or model names. Use the client's own ticket keys (e.g. `UIUX-750`) only.
 Our QA notes go in a separate file, not in the delivery.
 

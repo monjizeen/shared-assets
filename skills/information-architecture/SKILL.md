@@ -66,18 +66,24 @@ Template in monjizeen-core: `notes/ux/templates/ia.md`.
 ## Output
 
 ```
+Status: … / Inputs used: … / Not opened: …
+<the job in three lines>
 # IA: <product>
+## Top findings (| # | Sev 1–4 | Finding | Where | Fix |), most severe first
 ## Goals and audiences (with sources)
-## Content inventory and audit (| Item | Audience | Keep/merge/rewrite/move/remove | Why |)
-## Gaps and orphans
+## Content inventory and audit (| Item | Audience | Linked from (visible?) | Keep/merge/rewrite/move/remove | Why |)
+## Calls to action (| Label | Page | Goes to |), from the crawl, not by eye
+## Gaps and orphans (ranked)
 ## Organisation scheme
 ## Structure (tree)
 ## Navigation model and rules
 ## Labels (| Label | Covers | Why | Rejected |)
 ## Priority per audience
 ## Validation plan
-## Assumptions and open questions
+## Assumptions and open questions (who answers; blocking first)
 ```
+
+Lower the validation defaults only with a stated reason.
 
 ## Standards for MENA work
 
