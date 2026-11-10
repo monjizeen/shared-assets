@@ -73,7 +73,16 @@ Read [../ux-common/UX-STANDARDS.md](../ux-common/UX-STANDARDS.md) first.
    HTML at its known width, or list the strings most at risk. Note any
    string that needs the design to change.
 9. **Variants**: for a key message, give one alternative and say how it
-   differs, so the client can choose.
+   differs, so the client can choose. An alternative keeps the original's
+   facts, order and conditions ("first… then…" stays a sequence; "send one
+   of them" stays one).
+10. **Every language before proposing**: look for each shipped language of
+    a string (live page, front-end and translation files) before calling it
+    missing or writing a new one.
+11. **Count characters with a script**, per language, as the user sees
+    them: no markup, diacritics not counted, placeholders at their longest
+    real value. The fit mock shows those real values, not `{placeholders}`.
+    List shipped strings as fit issues only when they visibly break.
 
 ## Output
 
@@ -81,7 +90,7 @@ Read [../ux-common/UX-STANDARDS.md](../ux-common/UX-STANDARDS.md) first.
 Status: … / Inputs used: … / Not opened: …
 # Texts: <feature>
 ## Voice and glossary used
-## Strings (| Key | Where / when | Job | <each shipped language> | Chars | Reuse / proposed | Note |)
+## Strings (| Key | Where / when | Source (URL, file or key) | <each shipped language> | Original if changed | Chars | Reuse / proposed | Note |)
 ## Alternatives for key messages
 ## Fit issues (strings that need a design change)
 ## Facts to confirm
@@ -104,4 +113,7 @@ text; ux-a11y means button and link texts make sense out of context) plus:
   neutral in gender, in the product's register and digits (N/A when the
   product has no Arabic).
 - CHECK [ux-copy-where]: Every rule on where a word may appear is followed.
-- CHECK [ux-copy-status]: Every string is marked reuse or proposed.
+- CHECK [ux-copy-status]: Every string is marked reuse or proposed, with its
+  source, and changed strings show their original.
+- CHECK [ux-copy-meaning]: Every rewrite and alternative keeps the original's
+  facts, order and conditions.

@@ -17,6 +17,16 @@ when to use it, how it looks in every case, and when **not** to use it.
 
 Read [../ux-common/UX-STANDARDS.md](../ux-common/UX-STANDARDS.md) first.
 
+## Overlay and screen forms (name them; they are often confused)
+
+| Form | Is | Closes with |
+|---|---|---|
+| Pushed screen | A new screen in the stack | Back arrow |
+| Full-height modal view ("bottom sheet screen") | Covers the screen, slides up | X / Close |
+| Partial sheet | Part-height sheet over the screen | Drag down, X, tap outside |
+| Alert dialog | Small centred box, 1–2 actions | One of its buttons |
+| Action sheet | List of actions from the bottom | Cancel or tap outside |
+
 ## Levels
 
 Use the client's own level names if they have them. Otherwise:
@@ -35,10 +45,22 @@ Use the client's own level names if they have them. Otherwise:
    instances). Write down where they disagree.
 2. Find the **readiness criteria** the client uses (what makes an item
    "ready"), and the format of items already documented. Match it.
-3. A pattern rests on real cases: collect at least 5 real instances from the
+3. **Cover the brief's "Applies to" list**: every archetype, organism and
+   component it names appears in the doc with its rule.
+4. **Acceptance criteria**: list each one of the brief's acceptance
+   criteria (quick tests, a Figma matrix page, the readiness checklist) with
+   done, not done because <reason>, or N/A: reason. A criterion that needs
+   a Figma page while the brief is read only is declared "to build in a
+   copy after approval".
+5. A pattern rests on real cases: collect at least 5 real instances from the
    product (screens, Figma nodes) before writing a rule. Search the pages
    that hold shipped screens, not the master page (UX-STANDARDS §6). Master
-   components with placeholder text are not instances.
+   components with placeholder text are not instances, and a master's
+   layout counts (5 demo actions) are not limits. Every instance-matrix row
+   carries its node id and a screenshot. A page you name as likely to hold
+   instances is opened before delivery; "not opened" is only for pages you
+   cannot access. Any client input that an acceptance criterion depends on
+   and that you did not open makes the status Draft.
 4. **When you can't find enough real cases** (no access to the product
    files, or the master is all placeholders), still deliver: label the doc
    `Draft: waiting on instances`, mark every row *settled* (the client
@@ -95,7 +117,8 @@ Status: … / Inputs used: … / Not opened: …
 ## Variants
 ## States
 ## Decision table           (| Case | Use | Why | Source | Settled or proposal |)
-## Instance matrix          (| Where (screen / node) | Case | Follows rule? | Fix |)
+## Instance matrix          (| Where (file, page, node id) | Screenshot | Case | Follows rule? | Fix |)
+## Acceptance criteria      (| Criterion | Done / not done: why / N/A: why |)
 ## Do / don't
 ## Content rules
 ## Accessibility
@@ -122,3 +145,6 @@ The shared checks in UX-STANDARDS plus:
 - CHECK [ds-format]: The doc follows the client's existing format and level
   names.
 - CHECK [ds-testable]: Each usage rule can be checked yes or no on a screen.
+- CHECK [ds-applies-to]: Every item in the brief's "Applies to" list and
+  every overlay form involved has its rule.
+- CHECK [ds-criteria]: Every acceptance criterion of the brief has a status.

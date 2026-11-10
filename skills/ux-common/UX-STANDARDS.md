@@ -141,10 +141,13 @@ Most generic UX advice forgets these. They apply to every UX skill.
   and some European languages run much longer. Design for the longest
   language the product ships.
 - **Words.** Use the product's own words and its form of address (check
-  the live product: "حسابكم" vs "حسابك"); write the choice in the note. Use Modern Standard Arabic unless
+  the live product: "حسابكم" vs "حسابك"); write the choice in the note.
+  When the product mixes forms, follow the one it uses most on the screen
+  in question and list the others as fixes; with no product yet, use the
+  formal plural for religious and money products. Use Modern Standard Arabic unless
   the client asks for a dialect. Formal "you" in sensitive products
-  (religion, money). Gender: prefer neutral forms (verb nouns, imperative
-  plural or "يمكنك") over guessing the user's gender.
+  (religion, money). Gender: prefer neutral forms (verb nouns, the
+  plural "يمكنكم") over guessing the user's gender.
 - **Religious content.** Quran verses, hadith and honorifics (ﷺ, عز وجل,
   رضي الله عنه) are shown exactly as given, never cut, restyled as
   decoration, auto-translated or placed where they can be stepped over (a
@@ -219,8 +222,8 @@ Inputs used: <list with links>    Not opened: <list, and what it blocks>
       every FAIL before handing over. A delivery without `qa-self-check.md`
       fails QA. The self-check re-opens every frame, page and source it
       cites, and proves each "not available" or "not readable" claim before
-      it can pass. Missing client inputs, flagged as Draft, do not lower the
-      rating; guesses do.
+      it can pass, and lists each node, page and source it re-opened. Missing
+      client inputs, flagged as Draft, do not lower the rating; guesses do.
 
 ## Shared quality checks
 
