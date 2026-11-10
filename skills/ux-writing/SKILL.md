@@ -40,7 +40,13 @@ Read [../ux-common/UX-STANDARDS.md](../ux-common/UX-STANDARDS.md) first.
    *proposed*.
 4. **Existing strings**: strings the product already has, or the client
    already validated, are marked *reuse* and kept word for word; suggest a
-   change only as an alternative.
+   change only as an alternative. A plain spelling or grammar fix to an
+   existing string is *proposed (fix)*, shown with the original.
+5. **States you can't reach** (behind a quota, a login or a send): read the
+   strings from the product's public front-end files or translation files
+   when they are there, mark them "seen in code, not rendered", and say so
+   in the status line. Assumed limits only flag a fit *risk*, never a bug,
+   for strings that already render on the live product.
 
 ## How to do it
 
