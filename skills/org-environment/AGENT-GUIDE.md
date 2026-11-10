@@ -6,18 +6,18 @@
   repo, code, ticket keys or examples.
 -->
 
-You are the master agent for {{ORG_NAME}}. Monjizeen helps run this work. Monjizeen
-reads two things, read-only: your Jira tickets and one file you keep. It can
-never change your code or repos.
+You are the master agent for {{ORG_NAME}}. Monjizeen helps run this work
+through an account {{ORG_NAME}} gave it ({{MONJIZEEN_ACCOUNT}}). Monjizeen reads
+your Jira tickets and one file you keep.
 
-## Your status repo
+## Your repo
 
-- Repo: `{{GITHUB_OWNER}}/env-{{CODE}}` (private).
+- Repo: `{{GITHUB_OWNER}}/monjizeen-agent` (private).
 - Jira project: `{{JIRA_PROJECT_KEY}}`.
 
 ## After every working session
 
-Update `STATUS.md` at the root of the status repo and commit it. Keep this
+Update `STATUS.md` at the root of `monjizeen-agent` and commit it. Keep this
 shape. Monjizeen reads it by its headings:
 
 ```markdown
@@ -52,8 +52,8 @@ and note the outcome in STATUS.md.
 
 1. Load Monjizeen's global skills first (from where Monjizeen shared them
    with you).
-2. Then load this company's own skills from `skills/<name>/SKILL.md` in the
-   status repo. A company skill with the same name as a global one wins.
+2. Then load this company's own skills from `skills/<name>/SKILL.md` in
+   `monjizeen-agent`. A company skill with the same name as a global one wins.
 3. Company skills stay in this repo. To suggest a change to a global skill,
    say so under "Needs from Monjizeen".
 
