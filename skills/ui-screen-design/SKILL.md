@@ -32,9 +32,15 @@ For a feature that has no spec yet, run `ux-feature-spec` (short form) first.
    When the brief asks for Figma but no library or file is reachable, use
    the HTML route and say in the status line that the Figma version is
    pending access.
-2. **Look at the existing product** around the new screen: header, nav,
+2. **Look at the existing product** around the new screen, **in each
+   language it ships** (draw each language's header, nav and words from that
+   language's live version, never by translating the other): header, nav,
    patterns already used for lists, drawers, forms. The new screen must look
    like it belongs there.
+   When the new screens hand off to an existing flow (sign-in, ask, pay),
+   carry over that flow's rules, branding, limits and wording (quotas,
+   excluded topics, opening hours, the account's name) and list them.
+   Note the product's form of address (formal plural, neutral) and keep it.
 3. **Confirm the deliverable** in one line: screens, platforms and widths,
    languages, states, Figma or HTML, editable source or not.
 
@@ -46,8 +52,9 @@ For a feature that has no spec yet, run `ux-feature-spec` (short form) first.
    why each sits there. Cut what does not serve the job (no dashboard soup:
    at most one hero metric row, then what the user acts on).
 3. **Low-fi first**: 2 layout options as grey boxes when the layout is not
-   given. Pick one and say why in one line (or show both if the client
-   reviews concepts).
+   given, saved with the delivery (`00-lowfi-a.png`, `00-lowfi-b.png`).
+   Pick one and say why in one line (or show both if the client reviews
+   concepts).
 4. **Build hi-fi** with the client's components:
    - Figma route: load `figma-use`, work in the client's file on a new page
      or a copy, use library components and variables, auto layout, real
@@ -57,10 +64,12 @@ For a feature that has no spec yet, run `ux-feature-spec` (short form) first.
      product's own breakpoints).
 5. **Real content**: real-looking text in each shipped language, long
    names, big numbers, many and zero items. No lorem ipsum, no placeholder
-   avatars of real people. **Religious, legal and medical content is never
+   avatars of real people. Sample text reads like real content, never like
+   a note about testing ("long title to test wrapping"). **Religious, legal and medical content is never
    made up as if real**: no invented fatwas, verses, hadith, rulings or
-   reference numbers. Use real published items with their link, or mark
-   sample text clearly on the screen (a `[نص تجريبي]` / `[Sample]` tag and
+   reference numbers. **Prefer real published items from the client's own
+   product** (real titles, numbers and links, copied exactly); only when
+   none fit, mark sample text clearly on the screen (a `[نص تجريبي]` / `[Sample]` tag and
    numbers like `00000`). Legal texts the brief asks for (a disclaimer)
    are drafted as proposals for the client's legal or religious board.
 6. **Every state** the screen can be in (UX-STANDARDS §4), drawn, not
@@ -78,7 +87,8 @@ For a feature that has no spec yet, run `ux-feature-spec` (short form) first.
    Figma, a notes frame beside the screens; in HTML, an annotated copy of
    the key screens with numbered pins and a legend.
 10. **Hand-off check**: frames named `<Screen> / <State> / <Lang> / <Width>`
-    (HTML and PNG files: `NN-screen__state__lang__width.png`), organised in
+    (HTML and PNG files: `NN-screen__state__lang__width.png`; one responsive
+    HTML file per screen and state, the width only in the PNG name), organised in
     one place with an index page, and the design note listing them.
 11. **Fonts in HTML**: use the client's web font when it can be loaded;
     otherwise the closest free font (Google Fonts, saved next to the HTML)
@@ -124,3 +134,12 @@ The shared checks in UX-STANDARDS plus:
   the product ships Arabic.
 - CHECK [ui-handoff]: Frames are named and organised, and the note lists
   decisions, states and components.
+- CHECK [ui-proposals]: Every colour, token or text the client does not have
+  (focus, success, error background, a disclaimer) is listed under
+  Proposals for the client.
+- CHECK [ui-each-language]: Each language's chrome and words match that
+  language's live product.
+- CHECK [ui-lowfi]: Low-fi options are saved with the delivery (or the brief
+  gave the layout).
+- CHECK [ui-consistent]: No screen contradicts itself or the note (query vs
+  result heading, an error away from its field).

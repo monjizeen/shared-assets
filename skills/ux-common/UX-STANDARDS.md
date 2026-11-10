@@ -106,6 +106,7 @@ each that applies:
 | Permission | Read-only user, logged out, no access |
 | Success | Confirmation and where the user goes next |
 | Edge | Zero, one, the maximum; past and future dates |
+| Search | Empty query, too short, misspelled, no results, many results (pagination or load more) |
 
 When a feature extends a screen that already exists, still fill each state:
 say what the screen does today in that state (seen, with a source) and
@@ -139,7 +140,8 @@ Most generic UX advice forgets these. They apply to every UX skill.
 - **Length.** Arabic labels are often shorter in letters but taller; English
   and some European languages run much longer. Design for the longest
   language the product ships.
-- **Words.** Use the product's own words. Use Modern Standard Arabic unless
+- **Words.** Use the product's own words and its form of address (check
+  the live product: "حسابكم" vs "حسابك"); write the choice in the note. Use Modern Standard Arabic unless
   the client asks for a dialect. Formal "you" in sensitive products
   (religion, money). Gender: prefer neutral forms (verb nouns, imperative
   plural or "يمكنك") over guessing the user's gender.
@@ -207,7 +209,8 @@ Inputs used: <list with links>    Not opened: <list, and what it blocks>
 - [ ] Ran the QA reviewer: read `../qa-reviewer/SKILL.md` and do it as a
       separate, fresh pass on your own delivery (it is a file to follow, not
       a tool), save it as `qa-self-check.md` next to the delivery, and fix
-      every FAIL before handing over.
+      every FAIL before handing over. A delivery without `qa-self-check.md`
+      fails QA.
 
 ## Shared quality checks
 
