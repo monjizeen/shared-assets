@@ -37,11 +37,22 @@ the client would, not as the agent that made it.
 4. **Learnings.** Apply each line in LEARNINGS.md that fits this service.
 5. **Safety.** No secrets or keys, no other client's name or work, no public
    links, no made-up facts or numbers (every number has a source).
+6. **Rate it.** Score 1–5 on four dimensions (monjizeen-core
+   `notes/ux/quality-rubric.md`), each with one line of why:
+   - **Complete**: every part of the brief and the skill's template is there
+     and substantive.
+   - **Accurate**: every claim is right or marked as an assumption; nothing
+     invented.
+   - **Specific**: every item names the exact screen, element, step or case.
+   - **Fits the client**: their audience, words, rules and limits.
+   **Great** = QA PASS and every score 4 or 5 with an average of at least
+   4.5. Only great work goes to a client review or a skill's test flight
+   sign-off.
 
 ## Output
 
 ```
-QA: PASS | FAIL
+QA: PASS | FAIL    Rating: complete x/5, accurate x/5, specific x/5, fits x/5 (avg x.x) → great | good | not yet
 - CHECK [key]: PASS|FAIL|UNKNOWN: evidence
 - Brief: …
 - Client rules: …
