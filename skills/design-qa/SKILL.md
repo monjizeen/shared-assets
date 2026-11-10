@@ -28,6 +28,11 @@ Read [../ux-common/UX-STANDARDS.md](../ux-common/UX-STANDARDS.md) first.
   When there are no screen frames, only a component gallery or library,
   compare component by component and token by token, and say the screens
   themselves had no design to check against.
+  **First, a fit check**: if the build and the reference clearly differ as a
+  whole (another colour system, another font, own components), stop the row
+  by row work after a short sample and ask the owner one blocking question:
+  "Is <reference> the source of truth for <build>?" A report of every row
+  against the wrong reference wastes the team's time.
 - The **earlier comments** if this is a follow-up round: Figma comments,
   ticket comments or the last QA report, with their numbers.
 
@@ -56,7 +61,12 @@ Read [../ux-common/UX-STANDARDS.md](../ux-common/UX-STANDARDS.md) first.
      into one question for the owner rather than one per row.
    - **Can't check**: no access, the state can't be reached, or the design
      has no value for it (never call something Wrong without an expected
-     value).
+     value). A published standard counts as an expected value when the
+     design is silent: WCAG AA, the platform's guidelines, and our Arabic
+     rules (UX-STANDARDS §5). Mark those rows "Wrong (standard)".
+   - A component the library has and the build re-made on its own is
+     **Wrong** (uses own `.btn` instead of the library Button), not Changed
+     on purpose.
 5. **Rank the Wrong and Missing rows** with severity 1–4 (UX-STANDARDS §3).
    Changed on purpose? and Can't check rows get no severity.
 6. **Write each fix for a developer**: the element, the expected value from
