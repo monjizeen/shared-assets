@@ -6,7 +6,7 @@ description: >
   app.monjizeen.com org page, plus the guide its master agent follows and its
   monjizeen-agent repo. Use when onboarding a
   new org, adding or rotating its env values, writing its agent's instructions,
-  splitting global vs company-only skills, or when someone says "new org",
+  splitting global, per-org and the org's own skills, or when someone says "new org",
   "set up environment", "connect Jira", "agent repo", "org agent setup".
 ---
 
@@ -32,10 +32,16 @@ Read with this skill: `AGENT-GUIDE.md` (what the org's agent gets) and
    access to this repo. Global skills go to orgs only from a repo or package
    that holds skills and nothing else (see "Skills").
 2. **The org owns the account we use.** The org gives us an account on their
-   side (for example `monjizeen@<their-domain>`, in their Google, Jira and
-   GitHub). Our agent repo and their skills live under that account, private.
-   When they stop working with us, they switch that one account off and
-   everything we had access to is cut at once.
+   side (like `monjizeen@company.com`, in their Google, Jira, GitHub and other
+   tools). It gives us access to their tools, their agents and the skills they
+   already have. When they stop working with us, they switch that one account
+   off and all our access to their side is cut at once.
+3. **Skills we write for an org stay ours.** They live in our GitHub, one
+   folder per org (see "Skills"). When an org stops working with us, we keep
+   the folder and tell them they will lose those skills.
+4. **Their tool is the source of truth for ticket status.** Jira or whatever
+   tool they use. We move a ticket in their tool first, then match it on our
+   side. If their tool moves it, we follow.
 
 ## New org: what we do
 
@@ -43,8 +49,9 @@ Collect everything you'll need from the org in a single ask (step 1), not
 one item at a time.
 
 1. **Ask the org for, all at once:**
-   - An account for Monjizeen on their side (`monjizeen@<their-domain>`), with
-     access to their Jira and GitHub. Only the access our work needs.
+   - An account for Monjizeen on their side (like `monjizeen@company.com`), with
+     access to their ticket tool (Jira or other), GitHub and agents. Only the
+     access our work needs.
    - A private repo named `monjizeen-agent`, owned by that account (or in their
      GitHub org with that account as the only outside collaborator).
    - A Jira API token for that account (id.atlassian.com → Security → API
@@ -82,7 +89,13 @@ one item at a time.
 
 ## Running
 
-- **Questions to the org:** ask on the Jira ticket. We never write into their
+- **Ticket status:** their tool decides. Move the ticket there first, then
+  match ours. If their tool refuses the move, keep ours as it is, note it on
+  our ticket, and ask on their ticket whether to keep working.
+- **Values for our agents:** an agent gets only the values its task needs,
+  at the moment it runs, and never prints, logs or repeats them (like any
+  well-run AI tool). Values never go into prompts, commits, comments or chat.
+- **Questions to the org:** ask on their ticket. We never write into their
   repo unless the org gave read-and-write access for that.
 - **Rotation:** "Action needed" warns 14 days before a value expires. Ask the
   org for a new one, paste it into Edit (an empty value keeps the old one),
@@ -95,19 +108,25 @@ one item at a time.
 1. Environment → Remove each value. That deletes them at once.
 2. Ask the org to switch off the Monjizeen account on their side. That cuts
    every key and repo access in one step.
-3. Delete any local copies of their skills or files.
+3. Delete any local copies of their files. Keep our folder of skills we
+   wrote for them (we own it) and tell them they will lose those skills.
 
-## Skills: global and company-only
+## Skills: global, ours per org, and theirs
 
 - **Global skills and workflows** (ours, shared with every org) come from one
   source of truth. Orgs get them from a skills-only repo or a Claude Code plugin
   that holds **only** those skills: no client names, no `clients/` folder, no
   internal docs. Until that repo exists, send orgs a copy of the specific
   skill folders they need, never this whole repo.
-- **Org skills** live in `monjizeen-agent/skills/<name>/SKILL.md` under the
-  org's Monjizeen account: the ones we write for them and any they already
-  had. They never leave it. The org page's "Org skills" card lists them.
-- **Load order** for the org's agent: global first, then company-only. A
-  company skill with the same name overrides the global one.
+- **Skills we write for one org** live in our GitHub, in
+  `shared-assets/clients/<client>/skills/<name>/SKILL.md` (next to that
+  client's STATUS.md). They are ours; the org's agent gets only that org's
+  folder, never the whole repo.
+- **The org's own skills** (ones they had before us) stay on their side. Our
+  account reads them there. The org page's "Org skills" card lists what is in
+  their agent repo.
+- **Load order** for the org's agent: global first, then the ones we wrote for
+  that org, then the org's own. A later one with the same name overrides an
+  earlier one.
 - Skills are plain markdown, so agents that can't install plugins (for
   example Torus) can read them as instructions.

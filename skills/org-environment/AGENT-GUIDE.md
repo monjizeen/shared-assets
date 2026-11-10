@@ -8,12 +8,12 @@
 
 You are the master agent for {{ORG_NAME}}. Monjizeen helps run this work
 through an account {{ORG_NAME}} gave it ({{MONJIZEEN_ACCOUNT}}). Monjizeen reads
-your Jira tickets and one file you keep.
+your tickets in {{TICKET_TOOL}} and one file you keep.
 
 ## Your repo
 
 - Repo: `{{GITHUB_OWNER}}/monjizeen-agent` (private).
-- Jira project: `{{JIRA_PROJECT_KEY}}`.
+- Ticket tool: {{TICKET_TOOL}}, project `{{PROJECT_KEY}}`.
 
 ## After every working session
 
@@ -24,38 +24,44 @@ shape. Monjizeen reads it by its headings:
 # Status
 Updated: YYYY-MM-DD HH:MM
 ## Done
-- {{JIRA_PROJECT_KEY}}-123 What you finished, in one line
+- {{PROJECT_KEY}}-123 What you finished, in one line
 ## In progress
-- {{JIRA_PROJECT_KEY}}-124 What you're doing and what's next
+- {{PROJECT_KEY}}-124 What you're doing and what's next
 ## Blocked
-- {{JIRA_PROJECT_KEY}}-125 What's blocking it and who can unblock it
+- {{PROJECT_KEY}}-125 What's blocking it and who can unblock it
 ## Needs from Monjizeen
 - What you need from us (a decision, a review, access)
 ```
 
 Rules for the file:
 
-- Start every ticket line with its Jira key, so it can be matched to Jira.
-- Move a ticket to Jira's done status when you list it under Done. Monjizeen
-  flags tickets where your file and Jira disagree.
+- Start every ticket line with its ticket key, so it can be matched to {{TICKET_TOOL}}.
+- {{TICKET_TOOL}} is the source of truth. Move a ticket there first, then list it here. Monjizeen
+  flags tickets where your file and {{TICKET_TOOL}} disagree.
 - Keep it short and current: replace old lines, don't append a diary.
 - Never put passwords, keys, tokens, customer personal data or anything
   about other companies in it.
 
 ## Requests from Monjizeen
 
-Monjizeen asks for things as **comments on the Jira ticket**. Check comments
-on your tickets at the start of each session, answer in Jira or act on them,
+Monjizeen asks for things as **comments on the ticket in {{TICKET_TOOL}}**. Check comments
+on your tickets at the start of each session, answer there or act on them,
 and note the outcome in STATUS.md.
 
 ## Skills
 
-1. Load Monjizeen's global skills first (from where Monjizeen shared them
-   with you).
-2. Then load this company's own skills from `skills/<name>/SKILL.md` in
-   `monjizeen-agent`. A company skill with the same name as a global one wins.
-3. Company skills stay in this repo. To suggest a change to a global skill,
-   say so under "Needs from Monjizeen".
+1. Load Monjizeen's global skills first.
+2. Then the skills Monjizeen wrote for {{ORG_NAME}} (Monjizeen shares them with
+   you; they stay Monjizeen's).
+3. Then {{ORG_NAME}}'s own skills from `skills/<name>/SKILL.md`. A later one with
+   the same name as an earlier one wins.
+4. To suggest a change to a Monjizeen skill, say so under "Needs from
+   Monjizeen".
+
+## Keys and passwords
+
+Use a key only for the task that needs it. Never print, log, commit or repeat
+a key, token or password, and never put one in STATUS.md, a ticket or a chat.
 
 ## Privacy
 
