@@ -26,8 +26,15 @@ Template in monjizeen-core: `notes/ux/templates/ia.md`.
    research or analytics. If none exist, use behavioural segments
    ("first-time visitor curious about X") and mark them as assumptions. No
    invented personas.
-3. **The user's words**: what users call things (search terms, support
-   questions, competitors' labels). Internal names are flagged.
+3. **The user's words**: what users call things. Sources, best first: the
+   client's search logs and analytics, support or chat first messages,
+   reviews, competitors' labels, then the site's own FAQ (labelled
+   "site-written", weakest). Ask for the first two if they exist. Internal
+   names are flagged.
+4. **Crawl from the sitemap** (`/sitemap.xml`, `/wp-sitemap.xml`) in the
+   background when it is large, and record for each page its inbound links
+   and whether they are visible. Clusters of pages that never link to each
+   other, hidden menus and dead links are findings.
 
 ## How to do it
 
@@ -47,9 +54,14 @@ Template in monjizeen-core: `notes/ux/templates/ia.md`.
 6. **Labels**: table of label, what it covers, why, alternatives rejected.
    One action, one label everywhere.
 7. **Priority per audience**: for each audience, what the home page or entry
-   leads with and the path to their goal in 3 steps or fewer.
+   leads with and the path to their goal in 3 steps or fewer (clicks from
+   the home page, the final action click included).
 8. **Validation plan**: tree test tasks or a card sort, who to recruit,
-   what success looks like.
+   what success looks like. Defaults unless the client has better: tree
+   test with 15–20 people per audience, success when 80 % find the right
+   place and directness is 70 % or more; open card sort with 15 people.
+   For a small brochure site the nav rules can be short; write "N/A: <why>"
+   for a rule that cannot apply.
 
 ## Output
 
@@ -69,13 +81,19 @@ Template in monjizeen-core: `notes/ux/templates/ia.md`.
 
 ## Standards for MENA work
 
+When the site lacks a language its audience needs (an Arabic audience on an
+English-only site), say so as a finding and give labels in that language as
+proposals.
+
 - Arabic labels are short, plain and in the product's register; check them
   in the nav at phone width, where Arabic can wrap badly.
 - Search and nav must handle Arabic spelling variants (ة/ه, ى/ي, أ/إ/ا,
   with or without diacritics).
 - For religious and da'wah sites, separate content for Muslims and for
   people new to Islam, and never lead non-Muslim visitors with internal
-  community terms; check the tone of every label with the client.
+  community terms (da'wah, revert, terms of worship in Arabic without a
+  gloss). Calls to convert ("Become a Muslim") are a client decision of
+  tone and placement: propose, show where it sits, and ask.
 
 ## Quality checks
 

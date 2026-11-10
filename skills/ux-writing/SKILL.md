@@ -26,8 +26,13 @@ Read [../ux-common/UX-STANDARDS.md](../ux-common/UX-STANDARDS.md) first.
 2. Get each string's **place and limit**: the component (button, banner,
    alert title), the max characters or lines, and the languages the product
    ships (the table's language columns come from here). With no limits
-   given, use these and label them assumed: button 24, title 50, banner
-   body 140, alert body 200 characters in English.
+   given, use these and label them assumed (English characters; a
+   `{placeholder}` counts as its longest real value): button 24, field
+   label 30, toast 60, title 50, helper or error line 90, banner body 140,
+   option or card body 160, alert or modal body 200.
+   When the brief says the texts already exist somewhere you cannot open (a
+   prototype, a doc), write proposals anyway, mark the delivery Draft, and
+   add "compare with <source>" to Facts to confirm.
 3. Get the **facts** behind each message (dates, fees, what happens next,
    what the user can do). Never invent a date, fee, deadline or policy:
    facts you don't have become `{placeholders}` and go in "Facts to

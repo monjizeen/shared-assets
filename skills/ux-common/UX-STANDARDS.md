@@ -38,7 +38,10 @@ are repeated here so a skill works without them.
 5. **Restate the job in three lines** before you start: who the user is, what
    they are trying to do, and what the deliverable is (format, scope,
    platforms, languages). If the brief does not say, pick the most likely
-   reading and write it as an assumption.
+   reading and write it as an assumption. These three lines go right under
+   the status line of the delivery.
+6. **The skill's Output block wins** over the headings of any Core template
+   it borrows from.
 
 ## 2. Evidence rules (break one and the work fails QA)
 
@@ -169,7 +172,7 @@ Pick by what the client works in; say which you picked.
 |---|---|
 | Figma frames | Figma MCP (`use_figma`, after loading the `figma-use` skill) in the client's file and with their library. Never edit a client's master file: work in a copy or a new page and say where. |
 | Clickable or hi-fi screens without Figma | One HTML file per screen set, real text, CSS variables for the client's tokens, rendered with Playwright to PNG at 390 and 1440 px. |
-| A review, spec or plan | Markdown that follows the skill's template, and a client page made with `notes/design/visual-pages.md` when the client reads pages. |
+| A review, spec or plan | Markdown that follows the skill's template, and a client page made with `notes/design/visual-pages.md` when the client reads pages. The page may embed the cropped screenshots it needs as base64 `data:` images (under ~200 KB each) and stays one file. |
 | Comments on a Figma file or ticket | Only where the client asked for comments there; never post publicly. |
 
 Screenshots in a delivery are cropped to the element they prove and named

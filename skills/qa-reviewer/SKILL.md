@@ -46,7 +46,10 @@ the client would, not as the agent that made it.
    - **Specific**: every item names the exact screen, element, step or case.
    - **Fits the client**: their audience, words, rules and limits.
    **Great** = QA PASS and every score 4 or 5 with an average of at least
-   4.5. Only great work goes to a client review or a skill's test flight
+   4.5. Rate **Complete** against what could be done with the inputs that
+   were reachable: a missing client input, correctly flagged as Draft with
+   what it blocks, does not lower the score; filling the gap with guesses
+   does. Only great work goes to a client review or a skill's test flight
    sign-off.
 
 ## Output
