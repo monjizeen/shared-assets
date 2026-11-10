@@ -3,11 +3,11 @@ name: org-environment
 description: >
   Set up, run and cut off a client org's Environment: the account and env
   values (NAME = value) our AI agents use for that org, kept on its
-  app.monjizeen.com org page, plus the guide its master agent follows and its
-  monjizeen-agent repo. Use when onboarding a
+  app.monjizeen.com org page, and connecting the org's own agent to our MCP
+  (setup prompts for us and for their agent). Use when onboarding a
   new org, adding or rotating its env values, writing its agent's instructions,
   splitting global, per-org and the org's own skills, or when someone says "new org",
-  "set up environment", "connect Jira", "agent repo", "org agent setup".
+  "set up environment", "connect Jira", "connect their agent", "org agent setup".
 ---
 
 # Org environment
@@ -18,11 +18,14 @@ Monjizeen app has an **Environment** card (admins only): the org's values,
 like a .env file (`NAME = value`), plus "Action needed" when one is expired or
 refused.
 
-Read with this skill: `AGENT-GUIDE.md` (what the org's agent gets) and
-`STATUS-TEMPLATE.md` (the file the agent keeps). App side:
+Read with this skill: `OUR-SETUP-PROMPT.md` (the prompt we use to set up
+an org) and `ORG-AGENT-PROMPT.md` (what the org's own agent gets). App side:
 `monjizeen-app/docs/CLIENT_ENVIRONMENT.md`.
 
-## Two hard rules
+The app is the live status of every org's work. There is no STATUS.md for
+the org's agent any more: their agent works through our MCP instead.
+
+## Hard rules
 
 1. **No org learns about another.** Everything an org receives (its agent
    guide, its repo, its skills, Jira comments) names only that org. Never
@@ -45,47 +48,40 @@ Read with this skill: `AGENT-GUIDE.md` (what the org's agent gets) and
 
 ## New org: what we do
 
-Collect everything you'll need from the org in a single ask (step 1), not
-one item at a time.
+Follow `OUR-SETUP-PROMPT.md`. In short:
 
-1. **Ask the org for, all at once:**
-   - An account for Monjizeen on their side (like `monjizeen@company.com`), with
-     access to their ticket tool (Jira or other), GitHub and agents. Only the
-     access our work needs.
-   - A private repo named `monjizeen-agent`, owned by that account (or in their
-     GitHub org with that account as the only outside collaborator).
-   - A Jira API token for that account (id.atlassian.com → Security → API
-     tokens), with an expiry date.
-   - A fine-grained GitHub key for that account: only the `monjizeen-agent`
-     repo, Contents read-only (read and write only if our agents must push
-     there), expiry ≤ 90 days. Classic `ghp_` keys are refused by the app.
-   - Any other keys our agents need (Figma, GitLab, …), each with an expiry.
-   - Written OK from whoever owns their data rules, if the org has any (for an
-     employer of ours, always ask first).
-2. **Add the values in the app:** org page → Environment → Add, one
-   `NAME = value` per line of a .env file. Each value is locked straight away
-   and never shown again (only its last 4 characters). The app uses these
-   names itself:
+1. **Ask the org once, for everything:** an account for us on their side
+   (like `monjizeen@company.com`), a key for each tool our work needs (made
+   from that account, each with an expiry), whether they have their own AI
+   agent, and their data rules.
+2. **Add the keys** on the org page → Environment → Add, one `NAME = value`
+   each, like a .env file. A value is locked straight away and never shown
+   again. The app uses these names itself:
 
    | Name | Value |
    |---|---|
    | `JIRA_URL` | `https://<name>.atlassian.net` |
    | `JIRA_EMAIL` | The Jira account's email |
    | `JIRA_TOKEN` | The Jira API token |
-   | `AGENT_REPO` | `owner/monjizeen-agent` |
-   | `GITHUB_TOKEN` | The fine-grained GitHub key |
+   | `AGENT_REPO` | `owner/repo` of their agent's repo (optional: lists its skills) |
+   | `GITHUB_TOKEN` | A fine-grained, read-only GitHub key for that repo |
 
    Any other name (`FIGMA_TOKEN`, `GITLAB_TOKEN`, …) is kept for our agents.
-   Set access (read-only or read and write) and the expiry the org gave.
-3. **Hand the agent its guide:** copy `AGENT-GUIDE.md`, fill in only this org's
-   values, and add it to the org's master agent instructions (CLAUDE.md,
-   project instructions, or Torus system prompt). Add `STATUS-TEMPLATE.md` to
-   the repo as `STATUS.md`.
-4. **Check it works:** press Refresh on the Environment card. Anything wrong
-   shows under "Action needed". The agent's status shows in Context → Agent
-   status, and the org's skills in the Org skills card.
-5. **Never put values** in chat, notes, issues, STATUS files or this repo. The
-   only place a client value lives is the app's Environment card.
+   Don't type access: the app tests each key (Jira: may it move tickets and
+   comment?) and reads GitHub keys' expiry. Type an expiry only when the
+   service shows one the app can't read. Some, all or none of the tools is
+   fine: with none, we just work in Monjizeen with our own agents.
+3. **Their own agent (if they have one):** Environment → Their agent →
+   **Connect agent**. It gets a Monjizeen key that only reaches this org
+   (shown once: send it privately) and connects through our MCP. Send it
+   `ORG-AGENT-PROMPT.md` (**Copy setup prompt** fills it in). It reads
+   priorities, works on tickets, comments, adds private artifact links and
+   moves tickets to review. It never sets Done. If it goes quiet for 3 days,
+   the card shows "agent silent" and we take over.
+4. **Check it works:** Refresh on the card. Anything wrong shows under
+   "Action needed".
+5. **Never put values** in chat, notes, issues or this repo. The only place a
+   client value lives is the app's Environment card.
 
 ## Running
 
@@ -108,7 +104,8 @@ one item at a time.
 1. Environment → Remove each value. That deletes them at once.
 2. Ask the org to switch off the Monjizeen account on their side. That cuts
    every key and repo access in one step.
-3. Delete any local copies of their files. Keep our folder of skills we
+3. Environment → Their agent → Disconnect (its Monjizeen key stops at once).
+4. Delete any local copies of their files. Keep our folder of skills we
    wrote for them (we own it) and tell them they will lose those skills.
 
 ## Skills: global, ours per org, and theirs
@@ -120,8 +117,8 @@ one item at a time.
   skill folders they need, never this whole repo.
 - **Skills we write for one org** live in our GitHub, in
   `shared-assets/clients/<client>/skills/<name>/SKILL.md` (next to that
-  client's STATUS.md). They are ours; the org's agent gets only that org's
-  folder, never the whole repo.
+  client's internal STATUS.md). They are ours; the org's agent gets only
+  that org's folder, never the whole repo.
 - **The org's own skills** (ones they had before us) stay on their side. Our
   account reads them there. The org page's "Org skills" card lists what is in
   their agent repo.
