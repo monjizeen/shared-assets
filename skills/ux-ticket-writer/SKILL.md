@@ -21,14 +21,19 @@ Read [../ux-common/UX-STANDARDS.md](../ux-common/UX-STANDARDS.md) first.
 1. **Match the client's ticket format.** Read 3 recent tickets of the same
    type in their tracker and copy their headings, title prefixes
    (`[Component][Mobile]`, `Research:`), labels and language. Their format
-   beats ours.
+   beats ours. When their tickets are free prose with no headings, keep
+   their title style, language and tone, and put our parts as short bold
+   labels inside the prose (see the Arabic labels below).
 2. Collect the inputs the work needs: Figma nodes, related tickets, the
-   decision or meeting the work comes from, API or backend notes.
+   decision or meeting the work comes from, API or backend notes. When an
+   input does not exist yet, write `link needed: <what>` in the ticket and
+   carry on; it goes in the open questions. A related ticket you only
+   inferred is marked "(related? to confirm)".
 
 ## How to do it
 
-1. **Title**: `<prefix> <thing> — <platform>` in the client's pattern; says
-   what is made, not "work on X".
+1. **Title**: in the client's pattern (their prefix and platform suffix, or
+   none if they use none); says what is made, not "work on X".
 2. **Problem** (2–4 sentences): what the user or team cannot do today and
    what that costs. Facts only, with links.
 3. **Why now**: the decision, deadline or dependency.
@@ -41,18 +46,37 @@ Read [../ux-common/UX-STANDARDS.md](../ux-common/UX-STANDARDS.md) first.
 8. **Open questions**, each with who answers.
 9. **Size**: one ticket is one deliverable a person can finish in 1–3 days.
    Split bigger work into an epic with child tickets in build order, and
-   say which can run in parallel.
+   say which can run in parallel. When the size can't be known (the list of
+   templates or components doesn't exist yet), make the first child ticket
+   the inventory, and label any split you guessed as an assumption.
+   Every child ticket names its parent epic.
 10. **Reviewing someone else's ticket**: check it against steps 1–9 and
     return the missing parts as suggested text, not just "unclear".
 
+## Arabic section labels
+
+For Arabic tickets use: **المشكلة**، **لماذا الآن**، **النطاق** (يشمل /
+لا يشمل)، **المدخلات**، **المخرج المطلوب**، **معايير الإنجاز**،
+**أسئلة مفتوحة**، **المهمة الأم**، **تعتمد على**.
+
 ## Output
 
-The ticket text, ready to paste in the client's format. For an epic: the
-epic, then the child tickets in order, then a one-line dependency map.
+Two parts, kept apart:
+
+1. **Notes for us** (not pasted): status and inputs line, the job restated,
+   assumptions, open questions at epic level.
+2. **Paste-ready tickets**: each ticket's text exactly as it will go into
+   the tracker. For an epic: the child tickets in order, then the
+   dependency map as a list: `T2 ← T1` (T2 needs T1), and
+   `T3 ∥ T4` (can run in parallel).
+
+Before handing over, check every cross-reference ("see T3", "uses the list
+from T4") points to a ticket that exists and agrees with the dependency map.
 
 ## Quality checks
 
-The shared checks in UX-STANDARDS plus:
+The shared checks in UX-STANDARDS (ux-states, ux-rtl and ux-a11y apply only
+as definition-of-done lines for screen work) plus:
 
 - CHECK [tkt-format]: Title prefix, headings and language follow the client's
   existing tickets.
@@ -62,4 +86,7 @@ The shared checks in UX-STANDARDS plus:
 - CHECK [tkt-dod]: Every definition-of-done line can be ticked yes or no.
 - CHECK [tkt-size]: Each ticket is one deliverable of 1–3 days; bigger work
   is split.
-- CHECK [tkt-inputs]: Every input is linked with a one-line description.
+- CHECK [tkt-inputs]: Every input is linked with a one-line description, or
+  marked `link needed`.
+- CHECK [tkt-deps]: Every cross-reference exists and the dependency map
+  matches what each ticket says it needs.

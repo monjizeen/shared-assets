@@ -20,22 +20,35 @@ Read [../ux-common/UX-STANDARDS.md](../ux-common/UX-STANDARDS.md) first.
 
 1. Get the product's voice and glossary (the words it already uses for its
    things). If there is no glossary, build a short one from the live
-   product and use it.
+   product; if that is not reachable, from the brief's own words, and mark
+   the voice "unverified". Note any rule on **where a word may appear**
+   ("only the modal names the supplier") and follow it.
 2. Get each string's **place and limit**: the component (button, banner,
-   alert title), the max characters or lines, and the languages.
+   alert title), the max characters or lines, and the languages the product
+   ships (the table's language columns come from here). With no limits
+   given, use these and label them assumed: button 24, title 50, banner
+   body 140, alert body 200 characters in English.
 3. Get the **facts** behind each message (dates, fees, what happens next,
-   what the user can do). Never invent a date, fee, deadline or policy.
+   what the user can do). Never invent a date, fee, deadline or policy:
+   facts you don't have become `{placeholders}` and go in "Facts to
+   confirm". Wording is different: you may propose wording, marked
+   *proposed*.
+4. **Existing strings**: strings the product already has, or the client
+   already validated, are marked *reuse* and kept word for word; suggest a
+   change only as an alternative.
 
 ## How to do it
 
 1. **One table, one row per string**: key, where it shows, when it shows,
-   the job, English, Arabic (and other languages shipped), character count
-   per language.
+   the job, one column per shipped language, character count per language,
+   and reuse or proposed.
 2. **Write for the action**: what happened, why it matters to the user,
    what to do now. Front-load the key word. One idea per sentence.
 3. **Buttons** say the action ("Order a new card", "اطلب بطاقة جديدة"),
    never "OK", "Submit" or "Yes" when the action can be named. The same
-   action has the same word everywhere.
+   action has the same word everywhere. When the client's ticket names a
+   button differently, the client's word goes in the table and your better
+   label goes in Alternatives.
 4. **Errors**: say what went wrong in plain words and how to fix it; no
    codes, no blame, no "Oops".
 5. **Empty states**: what this place is for and the first action.
@@ -45,16 +58,19 @@ Read [../ux-common/UX-STANDARDS.md](../ux-common/UX-STANDARDS.md) first.
    the product's register, neutral gender (UX-STANDARDS §5), the product's
    digits and date format. Check that the Arabic fits the same component.
 8. **Fit test**: put the longest version in the real component (Figma or
-   HTML) at phone width. Note any string that needs the design to change.
+   HTML) at phone width. With no component to open, mock the component in
+   HTML at its known width, or list the strings most at risk. Note any
+   string that needs the design to change.
 9. **Variants**: for a key message, give one alternative and say how it
    differs, so the client can choose.
 
 ## Output
 
 ```
+Status: … / Inputs used: … / Not opened: …
 # Texts: <feature>
 ## Voice and glossary used
-## Strings (| Key | Where / when | Job | EN | AR | Chars EN/AR | Note |)
+## Strings (| Key | Where / when | Job | <each shipped language> | Chars | Reuse / proposed | Note |)
 ## Alternatives for key messages
 ## Fit issues (strings that need a design change)
 ## Facts to confirm
@@ -62,7 +78,8 @@ Read [../ux-common/UX-STANDARDS.md](../ux-common/UX-STANDARDS.md) first.
 
 ## Quality checks
 
-The shared checks in UX-STANDARDS plus:
+The shared checks in UX-STANDARDS (ux-states means every state has its
+text; ux-a11y means button and link texts make sense out of context) plus:
 
 - CHECK [ux-copy-facts]: Every date, fee, deadline and consequence comes from
   the brief; none is invented.
@@ -73,4 +90,7 @@ The shared checks in UX-STANDARDS plus:
 - CHECK [ux-copy-fit]: Every string fits its component limit in every
   language, or is listed as a fit issue.
 - CHECK [ux-copy-arabic]: The Arabic reads as written by a native writer,
-  neutral in gender, in the product's register and digits.
+  neutral in gender, in the product's register and digits (N/A when the
+  product has no Arabic).
+- CHECK [ux-copy-where]: Every rule on where a word may appear is followed.
+- CHECK [ux-copy-status]: Every string is marked reuse or proposed.

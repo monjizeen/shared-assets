@@ -23,7 +23,11 @@ Template parts come from monjizeen-core `notes/ux/templates/flow.md` and
 ## Before you start
 
 1. Read the request, the product context and every linked ticket, mock-up
-   and API note. **Write down what the data source gives and does not give**
+   and API note. Open the frames of the screens being extended and map each
+   term in the ticket to the exact frame (UX-STANDARDS §1.4). If the
+   starting input (a designer's proposal, a prototype) cannot be opened,
+   say so in the status line and keep anything that depends on it as a
+   proposal. **Write down what the data source gives and does not give**
    (fields, when they are missing, limits). Most edge cases come from there.
 2. Find the **existing pattern** the feature should follow in the product
    (a similar drawer, list, block). Reuse beats invent; name it.
@@ -48,20 +52,33 @@ Template parts come from monjizeen-core `notes/ux/templates/flow.md` and
 6. **States matrix.** Rows = the cases that change the screen (data present,
    partial, missing; roles; statuses; limits reached; long values); columns
    = what each block shows. Use UX-STANDARDS §4 as the minimum.
-7. **Rules.** Numbered, testable, one sentence each ("R3: A limit with
-   nothing left shows 'Used up', even when used is above the limit").
+7. **Rules.** Numbered, testable, one sentence each, each with its source
+   and its status: *settled* (quoted from the ticket or a doc) or
+   *proposal* (your decision, with why). Example shape only: "R3: When the
+   backend sends no end date, the End date row is hidden. Source: ticket §2,
+   settled."
 8. **Texts.** Every visible string (titles, labels, empty and error texts,
-   buttons) in each language the product ships, or marked "copy needed"
-   with a `ux-writing` hand-off.
+   buttons). Columns are the languages the product ships (from the brief),
+   not a fixed English/Arabic pair. Each string is *existing* (today's
+   string, reused), *proposed* (your draft, to be confirmed) or *copy needed*
+   (hand off to `ux-writing`). Never present a proposed string as the
+   client's.
 9. **Design and build notes.** Components to reuse (by library name), what
    is new, accessibility notes, analytics events if the brief asks.
 10. **Definition of done.** A checklist the designer ticks: every state
     drawn, every platform, every role, texts final.
-11. **Open questions**, each with who should answer.
+11. **Open questions**, each with who should answer, blocking ones first
+    ("Blocks drawing: …").
+12. **Consistency pass.** Read the flow, the states matrix and the rules
+    side by side. Any step that contradicts a rule, or a case in the brief
+    with no row, is fixed before handing over.
 
 ## Output
 
+Follow this block, not the headings of the Core templates it borrows from.
+
 ```
+Status: … / Inputs used: … / Not opened: …
 # <Feature>: UX spec
 ## Problem and job
 ## Scope (in / out, platforms, roles, languages)
@@ -69,14 +86,17 @@ Template parts come from monjizeen-core `notes/ux/templates/flow.md` and
 ## Flow (steps + Mermaid diagram)
 ## Content model (| Block / row | Data | Format | Shows when |)
 ## States matrix
-## Rules (R1, R2, …)
-## Texts (| Key | English | Arabic / other |)
+## Rules (| # | Rule | Source | Settled or proposal |)
+## Texts (| Key | <each shipped language> | Existing / proposed / copy needed |)
 ## Design and build notes
 ## Definition of done (checklist)
-## Assumptions and open questions (who answers)
+## Assumptions and open questions (who answers; blocking first)
 ```
 
 ## Standards for MENA work
+
+(When the product has no Arabic, write one line "Arabic/RTL: N/A" and check
+the longest shipped language and each currency instead.)
 
 - Define how amounts, dates (Gregorian or Hijri), digits and masked numbers
   look in each language, and that they keep left-to-right order in RTL.
@@ -92,8 +112,13 @@ The shared checks in UX-STANDARDS plus:
   give, and every block has a "shows when" rule that covers missing data.
 - CHECK [spec-states]: The states matrix covers every role, status and
   data case named in the brief, plus empty, error and long content.
-- CHECK [spec-flow]: The flow has a diagram, every decision has both
-  branches, and every branch has a way back or out.
+- CHECK [spec-flow]: The flow has a diagram with at least one error branch,
+  every decision has both branches, and every end point in the diagram has
+  a way back or out drawn.
+- CHECK [spec-sources]: Every rule has a source and is marked settled or
+  proposal; no proposal is worded as the client's decision.
+- CHECK [spec-consistent]: The flow, states matrix and rules do not
+  contradict each other.
 - CHECK [spec-rules]: Rules are numbered and each one can be tested with a
   yes or no.
 - CHECK [spec-reuse]: The spec names the existing product pattern or

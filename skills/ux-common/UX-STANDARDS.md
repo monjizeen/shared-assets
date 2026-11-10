@@ -14,9 +14,11 @@ are repeated here so a skill works without them.
 
 1. **Read the brief and the client context.** The task brief from
    `client-context-brief` (or `monjizeen brief --ticket <id> --tags ux`) and,
-   for agent requests, `get_request` and `get_org_context`. Client rules
-   (design system, product words, who reviews) come from there, never from
-   memory.
+   for agent requests, `get_request` and `get_org_context`. When you were
+   handed brief files instead (a test flight, a pasted ticket), those files
+   are the brief and the context; do not go looking for the tools. Client
+   rules (design system, product words, languages, who reviews) come from
+   there, never from memory.
 2. **Open every input before writing a word.** Figma links (Figma MCP:
    `get_design_context`, `get_screenshot`, `get_metadata`), live or staging
    pages (Playwright, phone width 390 px and desktop 1440 px, in each language
@@ -25,7 +27,15 @@ are repeated here so a skill works without them.
    access to Figma file X, a staging login, the Jira comment on Y." Do not
    start half-blind and do not ask one question at a time. If the work can
    still start on what you have, start, and mark what is pending.
-4. **Restate the job in three lines** before you start: who the user is, what
+   **Missing inputs change the status, not the effort**: deliver what you
+   can, label the delivery `Draft: waiting on <inputs>` at the top, and mark
+   every item that rests on an unseen input as a proposal. Never fill the
+   gap from imagination.
+4. **Match the client's words to the real thing.** When the brief names a
+   screen, block or term ("the period screen", "the ring"), find the exact
+   frame, node or page it means. If you cannot tell, write your reading as
+   an assumption and a question that **blocks** the work until answered.
+5. **Restate the job in three lines** before you start: who the user is, what
    they are trying to do, and what the deliverable is (format, scope,
    platforms, languages). If the brief does not say, pick the most likely
    reading and write it as an assumption.
@@ -44,6 +54,18 @@ are repeated here so a skill works without them.
   of scope, not reviewed from imagination.
 - **Name the exact place.** "Search results page, filter chip row, 390 px",
   not "the filters".
+- **Cite sources the same way every time**: a URL (with the width and
+  language), a Figma file name + node id (`444:11774`) + a screenshot, or a
+  ticket line quoted in "…". A rule, finding or decision with no source is
+  either removed or marked "Proposal".
+- **Proposal vs settled.** Anything the client already decided (in the
+  ticket, a doc, a Figma note) is *settled* and quoted. Anything you decide
+  is a *proposal* and labelled so, with one line of why. Never present your
+  own wording, rule or number as the client's.
+- **Measure, don't eyeball.** Colours, sizes, spacing and letter spacing are
+  read from the build (`getComputedStyle` in Playwright) or from Figma
+  (`get_design_context`), and contrast is computed with the WCAG formula
+  (relative luminance), not guessed from a screenshot.
 
 ## 3. Lenses (cite one only to explain a problem)
 
@@ -81,6 +103,14 @@ each that applies:
 | Success | Confirmation and where the user goes next |
 | Edge | Zero, one, the maximum; past and future dates |
 
+When a feature extends a screen that already exists, still fill each state:
+say what the screen does today in that state (seen, with a source) and
+whether the new part changes it. "As today" alone is not an answer.
+
+When one element sums up several values (a ring over four limits, a badge
+over many items), write which value it shows, the rule for choosing it, and
+what it shows when only some values are present.
+
 ## 5. Arabic, RTL and MENA
 
 Most generic UX advice forgets these. They apply to every UX skill.
@@ -98,6 +128,10 @@ Most generic UX advice forgets these. They apply to every UX skill.
 - **Type.** No letter spacing on Arabic; more line height (about 1.6–1.8 for
   body); Arabic usually needs a slightly bigger size than Latin to read the
   same; thin weights lose the dots on phones.
+- **When the product has no Arabic**, skip this section and say "Arabic/RTL:
+  N/A, the product ships <languages>". Still check the longest language the
+  product ships (German, Lithuanian and Russian often run 30–40 % longer than
+  English) and each currency's format.
 - **Length.** Arabic labels are often shorter in letters but taller; English
   and some European languages run much longer. Design for the longest
   language the product ships.
@@ -112,7 +146,21 @@ Most generic UX advice forgets these. They apply to every UX skill.
 - **Trust in money products.** Amounts, fees and the final total are always
   visible before the user confirms; irreversible actions say so.
 
-## 6. Ways to deliver
+## 6. Working with big Figma files (read only)
+
+1. `create_session`, then `get_screenshot` of the linked node first to see
+   what is there.
+2. `get_metadata` only on the node you need. When it is large, save it to a
+   file in your scratch folder and search it by layer name instead of
+   reading it all.
+3. Drill into the child nodes you will cite; take a cropped screenshot of
+   each one you cite.
+4. Real instances of a component are found by searching the metadata for its
+   name on the pages that hold shipped screens, not on the master page.
+5. Never edit, comment on or move anything in a client file unless the brief
+   asks, and then only on a copy or a new page.
+
+## 7. Ways to deliver
 
 Pick by what the client works in; say which you picked.
 
@@ -124,9 +172,24 @@ Pick by what the client works in; say which you picked.
 | Comments on a Figma file or ticket | Only where the client asked for comments there; never post publicly. |
 
 Screenshots in a delivery are cropped to the element they prove and named
-`<n>-<where>-<state>.png`.
+`<n>-<where>-<state>.png`, where `<n>` is the number of the finding or row
+they prove. One overview image per screen is fine when it helps orient.
+Side by side images (build vs design) are composed in a small HTML page and
+captured with Playwright.
 
-## 7. Before you hand over (all UX skills)
+**Client copy is clean.** The delivery never shows our internals: no
+Monjizeen ticket numbers, skill names, CHECK keys, "UX-STANDARDS §3", agent
+or model names. Use the client's own ticket keys (e.g. `UIUX-750`) only.
+Our QA notes go in a separate file, not in the delivery.
+
+**Every delivery opens with a status line and inputs**:
+
+```
+Status: Ready for review | Draft: waiting on <inputs>
+Inputs used: <list with links>    Not opened: <list, and what it blocks>
+```
+
+## 8. Before you hand over (all UX skills)
 
 - [ ] Followed the skill's template; nothing invented.
 - [ ] Every item names its exact place and its source.
@@ -135,11 +198,18 @@ Screenshots in a delivery are cropped to the element they prove and named
 - [ ] Assumptions and open questions listed at the end, short.
 - [ ] Smallest change that solves the problem; no redesign nobody asked for.
 - [ ] No marketing words ("seamless", "delightful"); no filler intro.
-- [ ] Ran `qa-reviewer` and fixed every FAIL.
+- [ ] Cross-references inside the delivery all exist (no "see T3" when there
+      is no T3) and the flow, rules and tables do not contradict each other.
+- [ ] Ran the QA reviewer: read `../qa-reviewer/SKILL.md` and do it as a
+      separate, fresh pass on your own delivery (it is a file to follow, not
+      a tool), save it as `qa-self-check.md` next to the delivery, and fix
+      every FAIL before handing over.
 
 ## Shared quality checks
 
-Every UX skill runs these with its own:
+Every UX skill runs these with its own. A check that cannot apply (no
+interface shown, no Arabic in the product) is reported as `N/A: <reason>`,
+which is not a FAIL. Each skill lists any shared check it never uses.
 
 - CHECK [ux-evidence]: Every finding, rule or number points to a source the
   client can open (screenshot, URL, Figma node, ticket line, standard); no
@@ -154,7 +224,11 @@ Every UX skill runs these with its own:
   scope.
 - CHECK [ux-a11y]: Contrast, target size, labels, focus and non-colour cues
   are addressed wherever an interface is shown.
-- CHECK [ux-ranked]: Items are ranked by user impact (and effort where it
-  helps), most important first.
+- CHECK [ux-ranked]: Items are ranked so the reader knows what comes first:
+  findings by severity, specs and tickets by what blocks the work, open
+  questions with the blocking ones first.
 - CHECK [ux-assumptions]: Every guess is in the assumptions list with its
-  reason; open questions for the client are listed.
+  reason; open questions for the client are listed, each with who answers
+  and whether it blocks the work.
+- CHECK [ux-clean]: The delivery opens with its status and inputs line and
+  shows none of our internals (our ticket numbers, skill names, CHECK keys).

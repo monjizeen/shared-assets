@@ -23,7 +23,11 @@ Read [../ux-common/UX-STANDARDS.md](../ux-common/UX-STANDARDS.md) first.
 - The **build**: staging or live URL, app build, or screen recordings, plus a
   test account for each role.
 - The **source of truth**: the approved Figma frames (node links) and the
-  design system or component library.
+  design system or component library. Confirm it is the right one (name,
+  version) before comparing; if names disagree, say so.
+  When there are no screen frames, only a component gallery or library,
+  compare component by component and token by token, and say the screens
+  themselves had no design to check against.
 - The **earlier comments** if this is a follow-up round: Figma comments,
   ticket comments or the last QA report, with their numbers.
 
@@ -35,8 +39,10 @@ Read [../ux-common/UX-STANDARDS.md](../ux-common/UX-STANDARDS.md) first.
    - the design system basics for those screens (type scale, spacing, colour
      tokens, components, icons).
 2. **Compare side by side**, same data, same width (390 and 1440 px, plus the
-   breakpoint the design has), same language. Screenshot the build next to
-   the Figma frame for each mismatch.
+   breakpoint the design has), same language. Read the build's real values
+   with Playwright `getComputedStyle` (colour, font, size, spacing,
+   letter-spacing on Arabic) and the design's from Figma or the library.
+   Compose the side-by-side image (UX-STANDARDS §7).
 3. **Check what designs often leave out**: states (UX-STANDARDS §4), hover
    and focus, long text, RTL mirroring, Arabic fonts and digits, keyboard,
    real data, and the dark theme if the product has one.
@@ -45,10 +51,14 @@ Read [../ux-common/UX-STANDARDS.md](../ux-common/UX-STANDARDS.md) first.
    - **Wrong**: built but differs; say how, with both screenshots and the
      expected value (spacing 16 not 24, token `primary-600`, text "...").
    - **Missing**: not built.
-   - **Changed on purpose?**: differs in a way that may be a decision; ask.
-   - **Can't check**: no access or the state can't be reached; say why.
-5. **Rank the Wrong and Missing rows**: blocks use or breaks the flow
-   (High), visible to most users (Medium), polish (Low).
+   - **Changed on purpose?**: differs consistently across the product in a
+     way that looks like a decision (a brand colour, a font); group these
+     into one question for the owner rather than one per row.
+   - **Can't check**: no access, the state can't be reached, or the design
+     has no value for it (never call something Wrong without an expected
+     value).
+5. **Rank the Wrong and Missing rows** with severity 1–4 (UX-STANDARDS §3).
+   Changed on purpose? and Can't check rows get no severity.
 6. **Write each fix for a developer**: the element, the expected value from
    the design, and where it is defined (Figma node, token, component name).
 7. **New ideas** that are not in the design go in "Suggestions (not in the
@@ -57,14 +67,20 @@ Read [../ux-common/UX-STANDARDS.md](../ux-common/UX-STANDARDS.md) first.
 ## Output
 
 ```
+Status: … / Inputs used: … / Not opened: …
 # Design QA: <product>, round <n>, <date>
-## Summary        x done, y wrong, z missing, w can't check; the 3 that matter most
+## Summary        the counts table (| Done | Wrong | Missing | Changed on purpose? | Can't check |), then the 3 that matter most
 ## Scope          build version/URL, frames compared, widths, languages, roles
 ## Earlier comments   | # | Comment | Status | Evidence | Fix |
 ## Screens and states | Screen/state | Status | Evidence (build vs design) | Fix | Priority |
 ## Suggestions (not in the design)
 ## Can't check, and what is needed
+## Questions for the owner (Changed on purpose? grouped)
+## Assumptions
 ```
+
+Count the rows by status after writing the tables, and copy those counts into
+the summary last.
 
 When the client works in Figma comments or tickets, post one comment per
 Wrong or Missing row in that place (only where the client asked) and keep the

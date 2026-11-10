@@ -25,6 +25,11 @@ and plugs in through the brief. Client-specific rules never go into a skill.
 Reference skills from open source (listed per row) were read and adapted, not
 copied.
 
+The UX skills (batch 5) were moved up and chosen from the real UX tasks of
+Monjizeen's first clients (November 2026): screens, design-system items,
+feature specs, audits, design QA, tickets, IA and texts. They share
+[ux-common/UX-STANDARDS.md](ux-common/UX-STANDARDS.md).
+
 ## Selling a service to org agents
 
 A service is offered to client agents (through the Monjizeen MCP) only when
@@ -53,10 +58,14 @@ Status: ✅ built · 🔍 in review · ⏳ next · blank = later
 | 16 | Frontend dev (Vue/React) | `frontend-dev` | 4 | |
 | 15 | Dashboards & reporting | `dashboard-report` | 4 | |
 | 12 | Automation n8n/Make/Zapier | `automation-workflow` | 4 | |
-| 5 | UI/UX design | `ui-designer` | 5 | |
-| 25 | UX audit | `ux-audit` | 5 | |
-| 36 | Design system | `design-system` | 5 | |
-| 48 | Product specs & research synthesis | `product-spec` | 5 | |
+| 5 | UI/UX design | `ui-screen-design` | 5 | 🔍 |
+| 25 | UX audit | `ux-audit` | 5 | 🔍 |
+| 25b | Design QA (build vs design) | `design-qa` | 5 | 🔍 |
+| 36 | Design system | `design-system-pattern` | 5 | 🔍 |
+| 48 | Product specs & research synthesis | `ux-feature-spec` | 5 | 🔍 |
+| 48b | Information architecture & naming | `information-architecture` | 5 | 🔍 |
+| 48c | UX writing (microcopy AR/EN) | `ux-writing` | 5 | 🔍 |
+| 48d | Design tickets & epics | `ux-ticket-writer` | 5 | 🔍 |
 | 8 | Paid social ads (Snap/TikTok/Meta) | `paid-social-ads` | 6 | |
 | 21 | Analytics & conversion tracking | `conversion-tracking` | 6 | |
 | 22 | CRO & A/B tests | `cro-ab-test` | 6 | |
