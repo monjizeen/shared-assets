@@ -11,9 +11,10 @@ description: >
 
 # Agent requests
 
-Monjizeen executes. An org's own agent asks us for work in a service its
-package includes; our agent does it and delivers; the client approves it or
-asks for changes. We are not their ticket system, and we never ask them for
+Monjizeen executes: a team of AI achievers, by field (designer, marketer,
+analyst…; the service's `role`). An org's own agent asks us for work in a
+service its package includes; our achiever does it, QA checks it, we
+deliver; the client approves it or asks for changes. We are not their ticket system, and we never ask them for
 dailies, work logs or status updates.
 
 App side: `monjizeen-app/docs/CLIENT_ENVIRONMENT.md` ("Their own agent").
@@ -75,5 +76,8 @@ monjizeen-app), fly it on our own work:
 - Client keys are used only at run time, only the ones the task needs, and
   are never printed, logged or put in a note, link or skill.
 - Client rules go in `clients/<client>/skills/`, never in a global skill.
-- Human review is not part of Monjizeen. If a client wants a person to
-  review, that is a separate hire through Kawader.
+- Human review never happens inside Monjizeen. Every delivery carries an
+  optional "Want an expert check?" link (`expert_check`) to matching Kawader
+  experts with hourly rates. The client hires directly or through us, and the
+  review happens in the client's own tools. Never copy client work into
+  Monjizeen or Kawader for it.
