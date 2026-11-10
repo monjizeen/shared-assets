@@ -48,8 +48,9 @@ the org's agent any more: their agent works through our MCP instead.
    in their tool; their own agent never syncs tickets with us.
 5. **Monjizeen executes.** Their agent asks us for work; our agent does it
    with our tools and skills and delivers; they review. We never ask for
-   dailies, work logs or status updates. Human review is a separate hire
-   through Kawader, not part of Monjizeen.
+   dailies, work logs or status updates. Human review never happens in
+   Monjizeen: each delivery has an optional "Want an expert check?" link to
+   Kawader experts, hired by the hour, reviewing in the client's own tools.
 
 ## New org: what we do
 
