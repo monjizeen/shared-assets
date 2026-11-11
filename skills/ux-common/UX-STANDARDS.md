@@ -70,6 +70,9 @@ are repeated here so a skill works without them.
   (`get_design_context`), and contrast is computed with the WCAG formula
   (relative luminance), not guessed from a screenshot. [measure.js](measure.js) does both:
   `node ux-common/measure.js <url> "<selector>" 390`.
+  When the background cannot be read (a system blur, an image), measure
+  against the darkest and lightest likely background, give the range, and
+  say so; never call a word "estimated" without the numbers behind it.
 
 ## 3. Lenses (cite one only to explain a problem)
 
@@ -225,7 +228,8 @@ Inputs used: <list with links>    Not opened: <list, and what it blocks>
       a tool), save it as `qa-self-check.md` next to the delivery, and fix
       every FAIL before handing over. A delivery without `qa-self-check.md`
       fails QA. The self-check re-opens every frame, page and source it
-      cites, and proves each "not available" or "not readable" claim before
+      cites (with many nodes, one batched read-only script per file is
+      fine), and proves each "not available" or "not readable" claim before
       it can pass, and lists each node, page and source it re-opened. Missing
       client inputs, flagged as Draft, do not lower the rating; guesses do.
 

@@ -26,6 +26,11 @@ Read [../ux-common/UX-STANDARDS.md](../ux-common/UX-STANDARDS.md) first.
 | Partial sheet | Part-height sheet over the screen | Drag down, X, tap outside |
 | Alert dialog | Small centred box, 1–2 actions | One of its buttons |
 | Action sheet | List of actions from the bottom | Cancel or tap outside |
+| Anchored menu | Pull-down list attached to the control that opened it | Tap an item or outside |
+
+Map these to the client's own archetype names in the names table; when one
+client name covers two forms ("Bottom Sheet Screen" for partial and full
+height), say so.
 
 ## Levels
 
@@ -54,14 +59,18 @@ Use the client's own level names if they have them. Otherwise:
    copy after approval".
 5. A pattern rests on real cases: collect at least 5 real instances from the
    product (screens, Figma nodes) before writing a rule. Search the pages
-   that hold shipped screens, not the master page (UX-STANDARDS §6). Master
+   that hold shipped screens, not the master page (UX-STANDARDS §6). A
+   catalogue of finished screens kept in a components or WIP file counts
+   as shipped screens; say so in the coverage line. Master
    components with placeholder text are not instances, and a master's
    layout counts (5 demo actions) are not limits. Every instance-matrix row
    carries its node id and a screenshot. A page you name as likely to hold
    instances is opened before delivery; "not opened" is only for pages you
    cannot access. Any client input that an acceptance criterion depends on
-   and that you did not open makes the status Draft.
-4. **When you can't find enough real cases** (no access to the product
+   and that you did not open makes the status "Ready for review except
+   <input>" (e.g. the readiness checklist on an intranet), and that
+   criterion stays open.
+6. **When you can't find enough real cases** (no access to the product
    files, or the master is all placeholders), still deliver: label the doc
    `Draft: waiting on instances`, mark every row *settled* (the client
    decided it; quote where) or *proposal* (your rule, with why), and list
@@ -70,16 +79,22 @@ Use the client's own level names if they have them. Otherwise:
    searched the pages most likely to hold it (handoff and shipped-screen
    pages of the main product areas); write the coverage ("8 of 60 Cards
    pages, chosen because …"). Nested instances are captured by rendering
-   their parent frame and cropping.
-6. **When real screens disagree with a rule** (the generator says "a
+   their parent frame and cropping: the crop offsets are the child's x/y
+   inside the parent (from `get_metadata`), since screenshot tools refuse
+   `I…;…` ids.
+7. **When real screens disagree with a rule** (the generator says "a
    screen", the shipped design uses a sheet; one question drawn two ways),
    the instance matrix flags it and an open question asks which wins; never
    silently pick one. Real cases the brief's catalogue misses are added as
    rows marked "new case, to approve".
-7. **Names that disagree** (the ticket says "alert-modal", the master says
+8. **Names that disagree** (the ticket says "alert-modal", the master says
    "Alert - Dialog", a doc says "modal"): use the name of the level's
    registry or the ticket, list every alias once in a names table, and ask
    which is canonical.
+9. **Settled, proposal or unproven**: *settled* means the client decided
+   it (an approved doc, a ticket line). A rule that rests only on an
+   unapproved generator rule or a master, with no real instance, is
+   *proposal (no instance)*.
 
 ## How to do it
 
