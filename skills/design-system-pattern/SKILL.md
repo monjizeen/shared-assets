@@ -140,7 +140,10 @@ Use the client's own level names if they have them. Otherwise:
     row so no row is unreachable; "first match wins" is not enough. After
     narrowing any row, re-test that row's instances and its generator rule,
     and check that no instance or obvious case now matches no row (a last
-    catch-all row, or a question, covers what is left).
+    catch-all row, or a question, covers what is left). Find those cases
+    by dropping each qualifier from a row's condition ("long reading"
+    without "before a choice") and by testing the sibling screens drawn on
+    the same flow board as each instance.
 14. **Applies-to depth**: an archetype in "Applies to" that nothing in the
     catalogue opens still gets one line: what may open over it and how it
     is left. A form named only in an open question is not covered.
