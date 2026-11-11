@@ -45,8 +45,15 @@ Read [../ux-common/UX-STANDARDS.md](../ux-common/UX-STANDARDS.md) first.
 5. **States you can't reach** (behind a quota, a login or a send): read the
    strings from the product's public front-end files or translation files
    when they are there, mark them "seen in code, not rendered", and say so
-   in the status line. Assumed limits only flag a fit *risk*, never a bug,
-   for strings that already render on the live product.
+   in the status line. When strings are compiled into bundles rather than
+   kept in translation files, search the bundles for known strings (grep
+   for a visible phrase, then read around it); don't parse whole files.
+   Spend at most a fifth of the run on this and list what was not found.
+   A state may be rendered by mocking the server's response in your own
+   browser only (nothing sent to the product); mark it "rendered with a
+   mocked response". Assumed limits only flag a fit *risk*, never a bug,
+   for strings that already render on the live product; the measured fit
+   test decides.
 
 ## How to do it
 
@@ -59,14 +66,18 @@ Read [../ux-common/UX-STANDARDS.md](../ux-common/UX-STANDARDS.md) first.
    never "OK", "Submit" or "Yes" when the action can be named. The same
    action has the same word everywhere. When the client's ticket names a
    button differently, the client's word goes in the table and your better
-   label goes in Alternatives.
+   label goes in Alternatives. The same holds for a live label that
+   already works ("Next"): keep it as *reuse* and put the named action in
+   Alternatives, with why.
 4. **Errors**: say what went wrong in plain words and how to fix it; no
    codes, no blame, no "Oops".
 5. **Empty states**: what this place is for and the first action.
 6. **Alerts and notices**: the title carries the message alone; the body
    adds the date, the consequence and the choice.
 7. **Arabic is written, not translated**: natural Modern Standard Arabic,
-   the product's register, neutral gender (UX-STANDARDS §5), the product's
+   the product's register, neutral gender (UX-STANDARDS §5; when the screen
+   mixes singular and plural about evenly, or its singular is gendered,
+   use the neutral plural and list it under Facts to confirm), the product's
    digits and date format. Check that the Arabic fits the same component.
 8. **Fit test**: put the longest version in the real component (Figma or
    HTML) at phone width. With no component to open, mock the component in
@@ -90,7 +101,8 @@ Read [../ux-common/UX-STANDARDS.md](../ux-common/UX-STANDARDS.md) first.
 Status: … / Inputs used: … / Not opened: …
 # Texts: <feature>
 ## Voice and glossary used
-## Strings (| Key | Where / when | Source (URL, file or key) | <each shipped language> | Original if changed | Chars | Reuse / proposed | Note |)
+## Read first        (up to 7 changes that matter most, ranked)
+## Strings (grouped by screen or state; | Key | Where / when | Source (URL, file or key) | <each shipped language> | Original if changed | Chars | Reuse / proposed | Note |)
 ## Alternatives for key messages
 ## Fit issues (strings that need a design change)
 ## Facts to confirm
