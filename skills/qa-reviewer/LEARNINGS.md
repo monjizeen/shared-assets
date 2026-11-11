@@ -14,3 +14,5 @@ last.
 | all | Measurements cite the page and the method, never our tool names | Tool names leaked into client copy |
 | ux-writing | Re-derive "new" or "not shown today" claims from the component code, not from string greps | A self-check passed a false "new" claim |
 | all | Spot-check a sample of cited claims yourself, not only that a source is cited | Claims citing a source can still be wrong |
+| design-system-pattern | Test each instance against every earlier row in first-match order | An instance passed its row but belonged to an earlier one |
+| design-system-pattern | Each generator rule carries its decision row's status (pending Qn) | A dropped "pending" turned an open question into a hard rule |

@@ -50,7 +50,8 @@ the client would, not as the agent that made it.
    were reachable: a missing client input, correctly flagged as Draft with
    what it blocks, does not lower the score; filling the gap with guesses
    does. Only great work goes to a client review or a skill's test flight
-   sign-off.
+   sign-off. An achiever's own self-check cannot award great: great comes
+   only from a separate reviewer's pass.
 
 ## Output
 

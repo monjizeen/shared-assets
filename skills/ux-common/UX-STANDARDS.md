@@ -267,7 +267,11 @@ which is not a FAIL. Each skill lists any shared check it never uses.
   are addressed wherever an interface is shown.
 - CHECK [ux-ranked]: Items are ranked so the reader knows what comes first:
   findings by severity, specs and tickets by what blocks the work, open
-  questions with the blocking ones first.
+  questions with the blocking ones first. A question blocks when its answer
+  would change a rule, a decision row or a generator rule; say which.
+  A proposal's "Why" gives a reason other than the instances it was shaped
+  to fit. The self-check recounts quoted counts (sentences, actions, items)
+  rather than copying them.
 - CHECK [ux-assumptions]: Every guess is in the assumptions list with its
   reason; open questions for the client are listed, each with who answers
   and whether it blocks the work.

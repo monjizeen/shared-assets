@@ -113,7 +113,8 @@ Use the client's own level names if they have them. Otherwise:
    and every part it prescribes: ✕, illustration, action count and order),
    not only its form. "Follows" means every part matches; anything less is
    "partly: <what is missing>". An instance that fails the row's condition
-   belongs to another row. Instances drawn before a rule was settled (the
+   belongs to another row. With a first-match table, test each instance
+   against every earlier row too: it belongs to the first row it matches. Instances drawn before a rule was settled (the
    client's to-do still open) are "known migration", listed once, with the
    to-do's node.
 7. **Do and don't**: 2–4 pairs, each from a real case.
@@ -126,7 +127,9 @@ Use the client's own level names if they have them. Otherwise:
 11. **Related items** and the line between them ("a bottom sheet, not an
     alert, when the user must choose from more than two options").
 12. **For AI generators** (when the client uses one): the rule written as
-    short, testable lines the generator can follow.
+    short, testable lines the generator can follow. Each generator rule
+    carries its decision row's status (settled, proposal, or "pending Qn");
+    a rule never decides an open question.
 13. **Consistency pass**: read the anatomy, decision table, generator rules
     and settled client rules side by side. A number (actions, steps) stated
     twice must be the same; no row may break a settled rule (a sheet over
@@ -180,4 +183,5 @@ The shared checks in UX-STANDARDS plus:
 - CHECK [ds-instance-fit]: Every "follows" instance meets its row's whole
   test and Use cell; partial ones say what is missing.
 - CHECK [ds-consistent]: Anatomy, decision table, generator rules and settled
-  client rules do not contradict each other.
+  client rules do not contradict each other, and every generator rule
+  carries its row's status.
