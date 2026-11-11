@@ -37,7 +37,7 @@ Template parts come from monjizeen-core `notes/ux/templates/flow.md` and
    section; a question the file already answers is a failure. Today's
    behaviour you have no frame for is written "not seen", never guessed
    (no "Retry button as today" without a frame).
-3. If a rule depends on a fact the brief does not have (a regulation, an API
+4. If a rule depends on a fact the brief does not have (a regulation, an API
    field), list it as an open question; do not decide it yourself.
 
 ## How to do it
