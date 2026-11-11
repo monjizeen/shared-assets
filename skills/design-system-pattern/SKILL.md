@@ -129,11 +129,15 @@ Use the client's own level names if they have them. Otherwise:
 12. **For AI generators** (when the client uses one): the rule written as
     short, testable lines the generator can follow. Each generator rule
     carries its decision row's status (settled, proposal, or "pending Qn");
-    a rule never decides an open question.
+    a rule never decides an open question. The label names the status of
+    the instruction itself, not only of the settled premise behind it.
 13. **Consistency pass**: read the anatomy, decision table, generator rules
     and settled client rules side by side. A number (actions, steps) stated
     twice must be the same; no row may break a settled rule (a sheet over
     a sheet); fix or raise a question before handing over.
+    **Overlap pass** over the condition column: for each pair of rows, try
+    to write a case that matches both. If one exists, narrow the earlier
+    row so no row is unreachable; "first match wins" is not enough.
 14. **Applies-to depth**: an archetype in "Applies to" that nothing in the
     catalogue opens still gets one line: what may open over it and how it
     is left. A form named only in an open question is not covered.
