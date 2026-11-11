@@ -41,7 +41,10 @@ are repeated here so a skill works without them.
    reading and write it as an assumption. These three lines go right under
    the status line of the delivery.
 6. **The skill's Output block wins** over the headings of any Core template
-   it borrows from.
+   it borrows from. **The client's own format wins over the skill's Output
+   block** when the client already has documents of this kind: use their
+   sections and order, and fit the skill's required content into them
+   (say in a line where each skill section went).
 
 ## 2. Evidence rules (break one and the work fails QA)
 

@@ -108,7 +108,14 @@ Use the client's own level names if they have them. Otherwise:
    rows = the closed list of cases, columns = what to use, why, the
    instance or source behind it, and settled or proposal.
 6. **Instance matrix**: the real uses found, each mapped to the rule, with
-   the ones that break it flagged as fixes for the product.
+   the ones that break it flagged as fixes for the product. Test each
+   instance against its row's **whole** test and Use cell (the condition,
+   and every part it prescribes: ✕, illustration, action count and order),
+   not only its form. "Follows" means every part matches; anything less is
+   "partly: <what is missing>". An instance that fails the row's condition
+   belongs to another row. Instances drawn before a rule was settled (the
+   client's to-do still open) are "known migration", listed once, with the
+   to-do's node.
 7. **Do and don't**: 2–4 pairs, each from a real case.
 8. **Content rules**: label length, casing, truncation, numbers, icons.
 9. **Accessibility**: roles, focus order, target size, screen reader text,
@@ -120,6 +127,13 @@ Use the client's own level names if they have them. Otherwise:
     alert, when the user must choose from more than two options").
 12. **For AI generators** (when the client uses one): the rule written as
     short, testable lines the generator can follow.
+13. **Consistency pass**: read the anatomy, decision table, generator rules
+    and settled client rules side by side. A number (actions, steps) stated
+    twice must be the same; no row may break a settled rule (a sheet over
+    a sheet); fix or raise a question before handing over.
+14. **Applies-to depth**: an archetype in "Applies to" that nothing in the
+    catalogue opens still gets one line: what may open over it and how it
+    is left. A form named only in an open question is not covered.
 
 ## Output
 
@@ -163,3 +177,7 @@ The shared checks in UX-STANDARDS plus:
 - CHECK [ds-applies-to]: Every item in the brief's "Applies to" list and
   every overlay form involved has its rule.
 - CHECK [ds-criteria]: Every acceptance criterion of the brief has a status.
+- CHECK [ds-instance-fit]: Every "follows" instance meets its row's whole
+  test and Use cell; partial ones say what is missing.
+- CHECK [ds-consistent]: Anatomy, decision table, generator rules and settled
+  client rules do not contradict each other.
