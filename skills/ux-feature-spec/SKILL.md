@@ -22,6 +22,9 @@ Template parts come from monjizeen-core `notes/ux/templates/flow.md` and
 
 ## Before you start
 
+0. Check the ticket's definition of done. When it asks for designs, this
+   spec is step one: say so in the status line, and the delivery is not
+   done until ui-screen-design draws the screens from it.
 1. Read the request, the product context and every linked ticket, mock-up
    and API note. Open the frames of the screens being extended and map each
    term in the ticket to the exact frame (UX-STANDARDS §1.4). If the

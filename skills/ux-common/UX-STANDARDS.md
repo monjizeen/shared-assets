@@ -40,6 +40,12 @@ are repeated here so a skill works without them.
    platforms, languages). If the brief does not say, pick the most likely
    reading and write it as an assumption. These three lines go right under
    the status line of the delivery.
+5b. **Deliver what the ticket's definition of done asks for.** Read the
+   ticket's DoD (Success metrics, Acceptance criteria) before choosing the
+   output. When it asks for designs (Figma for iOS and Android) and this
+   skill makes only part of it (a spec), say so in the status line and hand
+   on to the skill that makes the rest (ux-feature-spec → ui-screen-design).
+   A "Research:" title does not lower a DoD that asks for screens.
 6. **The skill's Output block wins** over the headings of any Core template
    it borrows from. **The client's own format wins over the skill's Output
    block** when the client already has documents of this kind: use their
