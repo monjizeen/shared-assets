@@ -32,6 +32,14 @@ plugs in through `client-context-brief`. Plan and status: [SERVICES.md](SERVICES
 | `qa-reviewer` | Check every delivery against the brief, context, CHECKs and our learnings before the client sees it |
 | `feedback-auditor` | Sort client feedback into client-specific, global or disagree; we review before any skill changes |
 | `org-environment` | Onboard, run and cut off a client org's Environment (the NAME = value keys our agents use), with setup prompts for us and for the org's own agent (Monjizeen MCP) |
+| `ux-audit` | Usability review of a live product or prototype: ranked findings with concrete fixes |
+| `design-qa` | Check a build against the approved design and earlier comments: done, wrong, missing |
+| `ux-feature-spec` | Feature or "Research" task to a UX spec: flow, states, rules, texts, definition of done |
+| `ui-screen-design` | Screens and dashboards in Figma or hi-fi HTML, every state, both languages |
+| `design-system-pattern` | One design-system component, pattern or template: usage rules and decision table |
+| `information-architecture` | Content, navigation, labels and what to lead with per audience |
+| `ux-writing` | Interface texts (buttons, errors, notices) in Arabic and English |
+| `ux-ticket-writer` | Design tickets and epics in the client's format, with a checkable definition of done |
 
 ## Install
 
