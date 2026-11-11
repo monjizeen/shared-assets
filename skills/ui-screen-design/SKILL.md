@@ -41,6 +41,10 @@ For a feature that has no spec yet, run `ux-feature-spec` (short form) first.
    carry over that flow's rules, branding, limits and wording (quotas,
    excluded topics, opening hours, the account's name) and list them.
    Note the product's form of address (formal plural, neutral) and keep it.
+   Diff the header and nav of each language item by item; items that exist
+   in only one language are kept there. States that change with time (quota
+   windows, opening hours) are recorded with when you saw them, never as
+   "the live site shows only X".
 3. **Confirm the deliverable** in one line: screens, platforms and widths,
    languages, states, Figma or HTML, editable source or not.
 
@@ -69,12 +73,18 @@ For a feature that has no spec yet, run `ux-feature-spec` (short form) first.
    made up as if real**: no invented fatwas, verses, hadith, rulings or
    reference numbers. **Prefer real published items from the client's own
    product** (real titles, numbers and links, copied exactly); only when
-   none fit, mark sample text clearly on the screen (a `[نص تجريبي]` / `[Sample]` tag and
+   none fit, mark sample text clearly on the screen. A sample query shows
+   the real results for that query, or results tagged as samples, never real
+   items that did not come from it (a `[نص تجريبي]` / `[Sample]` tag and
    numbers like `00000`). Legal texts the brief asks for (a disclaimer)
    are drafted as proposals for the client's legal or religious board.
 6. **Every state** the screen can be in (UX-STANDARDS §4), drawn, not
    described. Forms: each field's default, focus, filled, error, disabled
-   (one states sheet for fields and buttons is enough).
+   (one states sheet for fields and buttons is enough). An error message
+   sits directly under its field, and the sheet's error state shows the
+   message. The primary action named in the note is the most prominent
+   button on the screen; when a hand-off copies several live filled
+   buttons, say which is primary and why.
    **How much to draw**: every screen and state in the lead language at both
    widths; the second language at both widths for the key screens (entry,
    main result, main error) and at phone width for the rest.
@@ -105,7 +115,7 @@ For a feature that has no spec yet, run `ux-feature-spec` (short form) first.
   ## States drawn (| Screen | States |)
   ## Components (library ones used; new ones needed)
   ## Proposals for the client (token changes, drafted legal text)
-  ## Assumptions and open questions (who answers; blocking first)
+  ## Assumptions and open questions (each: who answers, blocks or not; blocking first)
   ```
 
 ## Standards for MENA work
