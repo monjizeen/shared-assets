@@ -137,7 +137,10 @@ Use the client's own level names if they have them. Otherwise:
     a sheet); fix or raise a question before handing over.
     **Overlap pass** over the condition column: for each pair of rows, try
     to write a case that matches both. If one exists, narrow the earlier
-    row so no row is unreachable; "first match wins" is not enough.
+    row so no row is unreachable; "first match wins" is not enough. After
+    narrowing any row, re-test that row's instances and its generator rule,
+    and check that no instance or obvious case now matches no row (a last
+    catch-all row, or a question, covers what is left).
 14. **Applies-to depth**: an archetype in "Applies to" that nothing in the
     catalogue opens still gets one line: what may open over it and how it
     is left. A form named only in an open question is not covered.
