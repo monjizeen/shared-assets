@@ -36,7 +36,9 @@ For a feature that has no spec yet, run `ux-feature-spec` (short form) first.
    language it ships** (draw each language's header, nav and words from that
    language's live version, never by translating the other): header, nav,
    patterns already used for lists, drawers, forms. The new screen must look
-   like it belongs there.
+   like it belongs there. In the client's Figma, open the screens being
+   extended layer by layer, hidden and draft layers included: a hidden
+   block may already be the design for this feature.
    When the new screens hand off to an existing flow (sign-in, ask, pay),
    carry over that flow's rules, branding, limits and wording (quotas,
    excluded topics, opening hours, the account's name) and list them.
@@ -64,8 +66,9 @@ For a feature that has no spec yet, run `ux-feature-spec` (short form) first.
      or a copy, use library components and variables, auto layout, real
      text.
    - HTML route: one file, CSS variables for tokens, real text in each
-     language, rendered with Playwright at 390 and 1440 px (and the
-     product's own breakpoints).
+     language, rendered with Playwright at the product's own widths (a
+     phone app: its frame width, e.g. 375, plus 320 for long content; a
+     website: 390 and 1440).
 5. **Real content**: real-looking text in each shipped language, long
    names, big numbers, many and zero items. No lorem ipsum, no placeholder
    avatars of real people. Sample text reads like real content, never like
@@ -91,7 +94,11 @@ For a feature that has no spec yet, run `ux-feature-spec` (short form) first.
    ("the options below") must have that thing on the same screen.
    **How much to draw**: every screen and state in the lead language at both
    widths; the second language at both widths for the key screens (entry,
-   main result, main error) and at phone width for the rest.
+   main result, main error) and at phone width for the rest. With no copy
+   in a language yet, don't translate: draw the longest language you have,
+   and ask for the copy as a question. A state whose today's version is not
+   in the file is "not seen; draw after Qn", never imagined. Sample values
+   (money, names) are captioned once on the index page, not on every frame.
 7. **RTL**: a mirrored Arabic frame for every screen when the product ships
    Arabic, checked against §5, not just flipped.
 8. **Accessibility pass**: contrast on real colours, 44 px touch targets on
@@ -101,7 +108,8 @@ For a feature that has no spec yet, run `ux-feature-spec` (short form) first.
    Figma, a notes frame beside the screens; in HTML, an annotated copy of
    the key screens with numbered pins and a legend.
 10. **Hand-off check**: frames named `<Screen> / <State> / <Lang> / <Width>`
-    (HTML and PNG files: `NN-screen__state__lang__width.png`; one responsive
+    (HTML and PNG files: `NN-screen__state__lang__width.png`, with
+    `__platform-theme` added for apps, e.g. `__ios-dark`; one responsive
     HTML file per screen and state, the width only in the PNG name), organised in
     one place with an index page, and the design note listing them.
 11. **Fonts in HTML**: use the client's web font when it can be loaded;
