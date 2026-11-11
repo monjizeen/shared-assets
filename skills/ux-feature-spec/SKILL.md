@@ -31,8 +31,10 @@ Template parts come from monjizeen-core `notes/ux/templates/flow.md` and
    (fields, when they are missing, limits). Most edge cases come from there.
 2. Find the **existing pattern** the feature should follow in the product
    (a similar drawer, list, block). Reuse beats invent; name it. Read
-   component and instance names from Figma `get_metadata` /
-   `get_design_context`, not from screenshots.
+   component and instance names from Figma `get_metadata` (layer names);
+   read visible text from screenshots or `get_design_context`. When a
+   frame's layer name and what it shows differ, cite the node id and what
+   it shows.
 3. **Look in the file before you ask.** Open every case frame in the linked
    section; a question the file already answers is a failure. Today's
    behaviour you have no frame for is written "not seen", never guessed
