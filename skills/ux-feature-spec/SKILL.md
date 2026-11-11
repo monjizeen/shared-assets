@@ -142,7 +142,9 @@ The shared checks in UX-STANDARDS plus:
 - CHECK [spec-consistent]: The flow, states matrix, rules and assumptions do
   not contradict each other.
 - CHECK [spec-not-seen]: Nothing marked "not seen" is described, drawn or
-  given an action anywhere (text, tables, diagram).
+  given an action anywhere (text, tables, diagram). A screen still to be
+  drawn with no current frame reads "not seen; draw after Q<n>", and any
+  expectation about it lives only in that question.
 - CHECK [spec-rules]: Rules are numbered and each one can be tested with a
   yes or no.
 - CHECK [spec-reuse]: The spec names the existing product pattern or
