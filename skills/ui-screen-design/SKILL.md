@@ -97,7 +97,13 @@ For a feature that has no spec yet, run `ux-feature-spec` (short form) first.
    main result, main error) and at phone width for the rest. With no copy
    in a language yet, don't translate: draw the longest language you have,
    and ask for the copy as a question. A state whose today's version is not
-   in the file is "not seen; draw after Qn", never imagined. Sample values
+   in the file is "not seen; draw after Qn", never imagined; the same for a
+   screen of another type that is not in the file (draw it only as a
+   marked proposal). When the input spec has a definition of done, tick
+   each of its lines against a drawn file and list any line not drawn.
+   A caption that says where values come from names every value that
+   doesn't ("€ 300.00 lowered limit: sample"). Rows left as today next to
+   rows with a new slot keep their text aligned. Sample values
    (money, names) are captioned once on the index page, not on every frame.
 7. **RTL**: a mirrored Arabic frame for every screen when the product ships
    Arabic, checked against §5, not just flipped.
@@ -144,12 +150,15 @@ For a feature that has no spec yet, run `ux-feature-spec` (short form) first.
 The shared checks in UX-STANDARDS plus:
 
 - CHECK [ui-system]: Only the client's components, tokens and type scale are
-  used; anything new is listed as new.
+  used (each text style matches a named library style: size, weight and
+  line height); anything new is listed as new. A token mapped from a raw
+  value cites the variable node it was read from.
 - CHECK [ui-fit]: The screen matches the product's existing header, nav and
   patterns.
 - CHECK [ui-primary]: Each screen has one clear primary action and a
   hierarchy that reads in 5 seconds.
-- CHECK [ui-states-drawn]: Every state is drawn, not just described.
+- CHECK [ui-states-drawn]: Every state is drawn, not just described, and
+  every definition-of-done line of the input spec is ticked against a file.
 - CHECK [ui-real-content]: Real-looking content in each language, including
   long and empty cases; no lorem ipsum.
 - CHECK [ui-rtl-frames]: A checked Arabic frame exists for every screen when
