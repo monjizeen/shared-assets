@@ -91,6 +91,11 @@ are repeated here so a skill works without them.
   parts); targets at least 24×24 px (WCAG 2.5.8); everything works by
   keyboard with a visible focus; visible labels, not placeholder only; errors
   in text, not colour only; nothing by colour alone; reduced motion honoured.
+- **Navigation reach** (wherever a live interface is reviewed): every nav
+  item and main action is a real link or button reachable by Tab, focus is
+  visible, and focus order follows the visual order (mirrored in Arabic).
+  A missing focus ring is proved with the computed style (`outline: none`)
+  next to the screenshot, or a focused vs unfocused pair.
 - **Mobile target guideline** (not WCAG): 44×44 pt (iOS HIG) or 48×48 dp
   (Material). Cite it by those names; a target can pass 2.5.8 and still
   miss this guideline.

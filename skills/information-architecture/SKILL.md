@@ -67,7 +67,8 @@ Template in monjizeen-core: `notes/ux/templates/ia.md`.
    place and directness is 70 % or more; open card sort with 15 people,
    success when the proposed top-level groups match how at least 60 % of
    people group the cards. Tree-test tasks describe the goal without the
-   tested label's words; an always-visible button outside the tree is
+   words of any node on the path to the answer, the destination's title
+   included; an always-visible button outside the tree is
    tested with a first-click test on the page instead.
    For a small brochure site the nav rules can be short; write "N/A: <why>"
    for a rule that cannot apply.
