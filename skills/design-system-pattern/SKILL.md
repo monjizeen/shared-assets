@@ -98,6 +98,10 @@ Use the client's own level names if they have them. Otherwise:
 
 ## How to do it
 
+0. **The rule in short** (patterns): at the top of the doc, the decision
+   table as a numbered list of at most 15 one-line rules, "case → what to
+   use", in the order to ask, each marked proposal where it is ours. This is
+   what the reader came for; the rest of the doc supports it.
 1. **Purpose**: one sentence, what problem this item solves.
 2. **Anatomy**: the parts, named, required or optional.
 3. **Variants and sizes**: each with when to use it.
