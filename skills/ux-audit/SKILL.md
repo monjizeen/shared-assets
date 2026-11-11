@@ -144,10 +144,12 @@ The shared checks in UX-STANDARDS plus:
   measured value.
 - CHECK [audit-page]: The client page (when made) is one file with its
   screenshots embedded, and opens with the status line. Every Arabic phrase
-  in an English page (and English in an Arabic page) sits in an element with
-  its own `dir` and `lang`, alt texts carry their own `lang`, and mapping
+  in an English page (and English in an Arabic page) sits in one element
+  per whole quoted string (numbers and punctuation inside, quote marks
+  outside) with its own `dir` and `lang`, alt texts carry their own `lang`, and mapping
   rules across scripts (ة → ه) are a small table, not inline arrows. Render
-  it at 390 px and read the mixed lines before handing over.
+  it at 390 px at 2× and read every mixed line before handing over; counting
+  spans is not a check.
 - CHECK [audit-fix]: Every finding has a concrete fix that names the element
   and the change; no "improve the UX".
 - CHECK [audit-limits]: Every fix fits the limits in the brief (no feature or
