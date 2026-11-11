@@ -143,7 +143,11 @@ The shared checks in UX-STANDARDS plus:
 - CHECK [audit-self-consistent]: Every Issue matches its own screenshot or
   measured value.
 - CHECK [audit-page]: The client page (when made) is one file with its
-  screenshots embedded, and opens with the status line.
+  screenshots embedded, and opens with the status line. Every Arabic phrase
+  in an English page (and English in an Arabic page) sits in an element with
+  its own `dir` and `lang`, alt texts carry their own `lang`, and mapping
+  rules across scripts (ة → ه) are a small table, not inline arrows. Render
+  it at 390 px and read the mixed lines before handing over.
 - CHECK [audit-fix]: Every finding has a concrete fix that names the element
   and the change; no "improve the UX".
 - CHECK [audit-limits]: Every fix fits the limits in the brief (no feature or
@@ -151,9 +155,11 @@ The shared checks in UX-STANDARDS plus:
 - CHECK [audit-screens]: Each finding of severity 2 or more has a screenshot
   or a Figma node link.
 - CHECK [audit-quick-wins]: Quick wins and strengths to keep are listed.
-- CHECK [audit-no-submit]: No submit was pressed on production; any attempt,
-  even a refused one, is stated in the Status line.
+- CHECK [audit-no-submit]: No submit reached production. A press that
+  reached the site fails; a press the environment blocked before anything
+  was sent passes only when it is stated in the Status line.
 - CHECK [audit-varies]: Every changing value (counts, ranking, dates) matches
-  its screenshot and is marked "varies; seen <date>".
+  its screenshot and is marked "varies; seen <date>"; a crop that also shows
+  an older uncited value says its capture date in the caption.
 - CHECK [audit-religious]: For religious products, the delivery says whether
   honorifics and verses render intact, with a screenshot (N/A otherwise).
