@@ -73,6 +73,8 @@ are repeated here so a skill works without them.
   When the background cannot be read (a system blur, an image), measure
   against the darkest and lightest likely background, give the range, and
   say so; never call a word "estimated" without the numbers behind it.
+  In the delivery, cite the page and the method ("computed styles, WCAG
+  formula"), never our tool or script names.
 
 ## 3. Lenses (cite one only to explain a problem)
 
