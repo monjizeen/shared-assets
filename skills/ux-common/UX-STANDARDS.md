@@ -205,7 +205,10 @@ captured with Playwright.
 
 **Client pages** (made with `visual-pages.md`) show only what the delivery
 says: no new priorities, badges or numbers. Arabic inside an English page
-sits in its own element with `dir="rtl" lang="ar"` (and the reverse). Trees,
+sits in its own element with `dir="rtl" lang="ar"` (and the reverse), and
+`[lang="ar"]` gets its own font stack that has ﷺ and ﴿﴾, loaded from
+Google Fonts so it works without an installed Arabic font:
+`"Noto Naskh Arabic","Noto Sans Arabic","Geeza Pro","Segoe UI",serif`. Trees,
 tables and charts stay readable at 390 px (stack or scroll inside their
 box). Before a screenshot of an animated or video page, wait until the text
 you cite is visible.
