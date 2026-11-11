@@ -18,8 +18,9 @@ Read [../ux-common/UX-STANDARDS.md](../ux-common/UX-STANDARDS.md) first.
 
 ## Before you start
 
-1. **Match the client's ticket format.** Read 3 recent tickets of the same
-   type in their tracker and copy their headings, title prefixes
+1. **Match the client's ticket format.** Read up to 3 recent tickets of the
+   same type (the brief's examples count; say when they are of another type,
+   e.g. design tickets used for developer work) in their tracker and copy their headings, title prefixes
    (`[Component][Mobile]`, `Research:`), labels and language. Their format
    beats ours. When their tickets are free prose with no headings, keep
    their title style, language and tone, and put our parts as short bold
@@ -45,6 +46,9 @@ Read [../ux-common/UX-STANDARDS.md](../ux-common/UX-STANDARDS.md) first.
    reviewers). Each can be ticked yes or no.
 8. **Open questions**, each with who answers.
 9. **Size**: one ticket is one deliverable a person can finish in 1–3 days.
+   Fixes much smaller than that may stay one per ticket when the brief asks
+   for it or the team ships them separately; otherwise group small fixes to
+   the same screen or file into one ticket with a checklist.
    Split bigger work into an epic with child tickets in build order, and
    say which can run in parallel. When the size can't be known (the list of
    templates or components doesn't exist yet), make the first child ticket
@@ -57,7 +61,14 @@ Read [../ux-common/UX-STANDARDS.md](../ux-common/UX-STANDARDS.md) first.
 
 For Arabic tickets use: **المشكلة**، **لماذا الآن**، **النطاق** (يشمل /
 لا يشمل)، **المدخلات**، **المخرج المطلوب**، **معايير الإنجاز**،
-**أسئلة مفتوحة**، **المهمة الأم**، **تعتمد على**.
+**أسئلة مفتوحة**، **المهمة الأم**، **تعتمد على**، **الجهد** (size).
+
+**Definition of done** in a small fix ticket lists only the states and
+languages the change touches (e.g. "Arabic and English at 390 px, focus
+state"), not the whole states table.
+
+**Validation tickets** (tests, analytics checks): a baseline measure comes
+before the fixes it measures; a user test of a fix comes after it.
 
 ## Output
 
@@ -68,7 +79,8 @@ Two parts, kept apart:
 2. **Paste-ready tickets**: each ticket's text exactly as it will go into
    the tracker. For an epic: the child tickets in order, then the
    dependency map as a list: `T2 ← T1` (T2 needs T1), and
-   `T3 ∥ T4` (can run in parallel).
+   `T3 ∥ T4` (can run in parallel). T-numbers are working ids: add one line
+   telling the client to replace them with tracker keys after creation.
 
 Before handing over, check every cross-reference ("see T3", "uses the list
 from T4") points to a ticket that exists and agrees with the dependency map.
