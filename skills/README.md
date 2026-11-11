@@ -17,6 +17,7 @@ All custom skills live here — versioned on GitHub. **Do not edit copies** unde
 | `init-project` | Alias for `new-project` |
 | `pre-mvp-audit` | Pre-launch codebase audit tied to core user loop |
 | `security-check` | Weekly security sweep of all repos and live sites; fixes safe issues, reports risky ones |
+| `align-project-docs` | Keep a project's description, brief in the app and README in line; create projects through the Monjizeen MCP |
 | `refresh` | Sync **active workspace** repo — pull, deps, migrate, restart dev server |
 
 ### Service skills
