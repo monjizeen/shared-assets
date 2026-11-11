@@ -38,7 +38,9 @@ Template in monjizeen-core: `notes/ux/templates/audit.md` (repeated below).
 2. **Break it on purpose**: try empty and wrong inputs (client-side
    validation only), go back mid-flow, reload, open a deep link logged
    out, try keyboard only, zoom to 200 %. **On a live production site never
-   send a form** that creates data or contacts people (questions, sign-ups,
+   press a submit button at all** (an empty or invalid submit still counts):
+   check validation only by what the page shows while typing or on blur.
+   Never send a form that creates data or contacts people (questions, sign-ups,
    emails, payments); on staging with a test account you may. When a
    journey is blocked (a quota, a login wall, a step that would send
    data), go as far as is safe, record where and why it stopped, and list
@@ -66,7 +68,9 @@ Template in monjizeen-core: `notes/ux/templates/audit.md` (repeated below).
    allows code-level advice, give the CSS or HTML change.
 6. **Rank**: severity first, then how many users and how often, then effort.
    Number the findings after ranking, then name the screenshots by those
-   numbers. When a blocker has a workaround, rate it 3 and say why. Pick up
+   numbers. Severity is about effect, not about workarounds alone: 3 when
+   the problem is frequent or hard to notice and costs the user the task or
+   real effort, 2 when it is easy to get round. Pick up
    to five quick wins (high impact, S effort).
 6b. **Check each finding against its own evidence**: re-read the Issue
    sentence next to its screenshot or measured value. If the screenshot
@@ -78,6 +82,11 @@ Template in monjizeen-core: `notes/ux/templates/audit.md` (repeated below).
    analytics check on step Y. Never present your walk as user research.
 
 ## Output
+
+Write the delivery and the client page in the client's working language
+(the brief's language, or the product's lead language), once; don't write
+every finding twice. A finding with no visual (an aria-label) gets a small
+evidence image of the DOM readout.
 
 Cite lenses by their own names (Nielsen #4, WCAG 1.4.3), never our standards
 file. Pick the screenshots for the client page: every severity 3–4 finding,
