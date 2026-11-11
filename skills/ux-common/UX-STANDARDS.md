@@ -182,7 +182,7 @@ Pick by what the client works in; say which you picked.
 
 Screenshots in a delivery are cropped to the element they prove and named
 `<n>-<where>-<state>.png`, where `<n>` is the number of the finding or row
-they prove. One overview image per screen is fine when it helps orient.
+they prove. A crop contains every value it is cited for. One overview image per screen is fine when it helps orient.
 Side by side images (build vs design) are composed in a small HTML page and
 captured with Playwright.
 

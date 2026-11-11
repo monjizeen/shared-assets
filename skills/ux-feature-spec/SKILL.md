@@ -52,7 +52,9 @@ Template parts come from monjizeen-core `notes/ux/templates/flow.md` and
    notification, search), and what the page shows when opened directly.
 4. **Flow.** The happy path as numbered steps (screen → action → system
    response), then a Mermaid `flowchart TD` with decisions and error
-   branches. Every branch has a way back.
+   branches. Every branch has a way back, and returns where the user came
+   from. A state you have not seen gets no invented action in the diagram
+   either (label it "not seen, Q<n>").
 5. **Content model.** Each block and row: its label, the data behind it, the
    format (dates, amounts, masked numbers), and **the rule for when it
    shows** ("only when the backend sends `consent_date`; otherwise the row is
@@ -79,14 +81,18 @@ Template parts come from monjizeen-core `notes/ux/templates/flow.md` and
     drawn, every platform, every role, texts final.
 11. **Open questions**, each with who should answer, blocking ones first
     ("Blocks drawing: …").
-12. **Consistency pass.** Read the flow, the states matrix and the rules
-    side by side. Any step that contradicts a rule, or a case in the brief
-    with no row, is fixed before handing over.
+12. **Consistency pass.** Read the flow, the states matrix, the rules and
+    the assumptions side by side. Any step that contradicts a rule, an
+    assumption that restates a settled rule, or a case in the brief with no
+    row, is fixed before handing over. Contradictions between the client's
+    own frames (one value on the list, another on the detail) become
+    non-blocking questions.
 
 ## Output
 
 Start with a **Ticket terms → frames** table (| Ticket term | Frame / node |
-Sure? |). A term you could not map gets an assumption and a blocking
+Sure? |), where Sure? is *yes* (the frame shows exactly this), *partly* (say
+what is missing) or *no*. A term you could not map gets an assumption and a blocking
 question.
 
 Follow this block, not the headings of the Core templates it borrows from.
@@ -133,13 +139,15 @@ The shared checks in UX-STANDARDS plus:
   a way back or out drawn.
 - CHECK [spec-sources]: Every rule has a source and is marked settled or
   proposal; no proposal is worded as the client's decision.
-- CHECK [spec-consistent]: The flow, states matrix and rules do not
-  contradict each other.
+- CHECK [spec-consistent]: The flow, states matrix, rules and assumptions do
+  not contradict each other.
+- CHECK [spec-not-seen]: Nothing marked "not seen" is described, drawn or
+  given an action anywhere (text, tables, diagram).
 - CHECK [spec-rules]: Rules are numbered and each one can be tested with a
   yes or no.
 - CHECK [spec-reuse]: The spec names the existing product pattern or
   component it follows, or says why a new one is needed.
-- CHECK [spec-dod]: The definition of done lists every platform, role and
-  state to be drawn.
+- CHECK [spec-dod]: The definition of done lists every platform and role,
+  and every states-matrix row as "draw" or "no new drawing, because …".
 - CHECK [spec-texts]: Every visible string is written or marked "copy
   needed".
