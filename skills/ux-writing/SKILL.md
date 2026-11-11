@@ -41,7 +41,13 @@ Read [../ux-common/UX-STANDARDS.md](../ux-common/UX-STANDARDS.md) first.
 4. **Existing strings**: strings the product already has, or the client
    already validated, are marked *reuse* and kept word for word; suggest a
    change only as an alternative. A plain spelling or grammar fix to an
-   existing string is *proposed (fix)*, shown with the original.
+   existing string is *proposed (fix)*, shown with the original. Any change
+   of wording, address form or meaning makes it *proposed*, not a fix.
+   Label each language separately when only one changes; an unchanged
+   string that breaks the glossary is listed as a remaining inconsistency.
+   Before calling a string or element *new* ("no counter today"), check
+   the component code for it (counters, limits, loading labels), not only
+   the visible text.
 5. **States you can't reach** (behind a quota, a login or a send): read the
    strings from the product's public front-end files or translation files
    when they are there, mark them "seen in code, not rendered", and say so
@@ -53,7 +59,8 @@ Read [../ux-common/UX-STANDARDS.md](../ux-common/UX-STANDARDS.md) first.
    browser only (nothing sent to the product); mark it "rendered with a
    mocked response". Assumed limits only flag a fit *risk*, never a bug,
    for strings that already render on the live product; the measured fit
-   test decides.
+   test decides. **Coverage**: every string in the flow's front-end files is
+   either in the table or listed as out of scope, with why.
 
 ## How to do it
 
@@ -72,6 +79,10 @@ Read [../ux-common/UX-STANDARDS.md](../ux-common/UX-STANDARDS.md) first.
 4. **Errors**: say what went wrong in plain words and how to fix it; no
    codes, no blame, no "Oops".
 5. **Empty states**: what this place is for and the first action.
+5b. **Every step's states**: loading on each intermediate button ("Sending
+   code…"), a network or server error on every send, and each word of the
+   brief mapped to a real screen or marked "no such screen" (UX-STANDARDS
+   §1.4).
 6. **Alerts and notices**: the title carries the message alone; the body
    adds the date, the consequence and the choice.
 7. **Arabic is written, not translated**: natural Modern Standard Arabic,
@@ -86,7 +97,9 @@ Read [../ux-common/UX-STANDARDS.md](../ux-common/UX-STANDARDS.md) first.
 9. **Variants**: for a key message, give one alternative and say how it
    differs, so the client can choose. An alternative keeps the original's
    facts, order and conditions ("first… then…" stays a sequence; "send one
-   of them" stays one).
+   of them" stays one), and its strength and voice ("we recommend" stays a
+   recommendation, not a pledge the user signs; "may" stays "may"). A cell
+   holds one string; split cells that hold several labels.
 10. **Every language before proposing**: look for each shipped language of
     a string (live page, front-end and translation files) before calling it
     missing or writing a new one.
@@ -128,4 +141,8 @@ text; ux-a11y means button and link texts make sense out of context) plus:
 - CHECK [ux-copy-status]: Every string is marked reuse or proposed, with its
   source, and changed strings show their original.
 - CHECK [ux-copy-meaning]: Every rewrite and alternative keeps the original's
-  facts, order and conditions.
+  facts, order, conditions, strength and voice, and the languages say the
+  same thing.
+- CHECK [ux-copy-coverage]: Every string of the flow in the front-end files is
+  in the table or listed as out of scope; nothing is called new that the
+  code already has.
