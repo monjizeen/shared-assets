@@ -60,7 +60,12 @@ Read [../ux-common/UX-STANDARDS.md](../ux-common/UX-STANDARDS.md) first.
    mocked response". Assumed limits only flag a fit *risk*, never a bug,
    for strings that already render on the live product; the measured fit
    test decides. **Coverage**: every string in the flow's front-end files is
-   either in the table or listed as out of scope, with why.
+   either in the table or listed as out of scope, with why, and a string
+   shown in several places lists every place. A reuse string built from
+   code parts (text + link) is written exactly as it renders: spacing at
+   the joins and punctuation as on screen, nothing added. Text that is
+   never visible (accessible names) is counted with placeholders at their
+   longest value, or marked "not visible, not counted".
 
 ## How to do it
 
@@ -99,7 +104,9 @@ Read [../ux-common/UX-STANDARDS.md](../ux-common/UX-STANDARDS.md) first.
    facts, order and conditions ("first… then…" stays a sequence; "send one
    of them" stays one), and its strength and voice ("we recommend" stays a
    recommendation, not a pledge the user signs; "may" stays "may"). A cell
-   holds one string; split cells that hold several labels.
+   holds one string; split cells that hold several labels. For every row,
+   read the languages side by side (back-translate the second one); any
+   difference in meaning is a fail.
 10. **Every language before proposing**: look for each shipped language of
     a string (live page, front-end and translation files) before calling it
     missing or writing a new one.
