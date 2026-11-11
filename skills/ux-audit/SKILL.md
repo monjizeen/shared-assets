@@ -46,7 +46,8 @@ Template in monjizeen-core: `notes/ux/templates/audit.md` (repeated below).
    data), go as far as is safe, record where and why it stopped, and list
    the rest as not reviewed.
    Write down the date, time and time zone of the walk; quotas, content and
-   banners change.
+   banners change. If any submit was pressed or tried, even by mistake or
+   refused by the environment, say so in the Status line.
 3. **Sweep the lenses** after the walk (UX-STANDARDS §3): heuristics,
    WCAG essentials, Arabic/RTL (§5), states (§4). Measure contrast and the
    tap target sizes of the main actions at 390 px with `ux-common/measure.js`
@@ -56,6 +57,8 @@ Template in monjizeen-core: `notes/ux/templates/audit.md` (repeated below).
    width, language), what happens, why it matters (the user's goal, a
    heuristic or a WCAG criterion), the fix, severity 1–4, effort S/M/L, and
    confidence (*seen*: reproduced; *signal*: likely, needs data to prove).
+   When one finding mixes a seen part and a signal part, give each part
+   its own confidence ("seen at 390 px; signal on Google search").
    Merge duplicates; split a finding that hides two problems. One cause in
    several places (the same colour failing on buttons and titles) is one
    finding with every place listed, unless the places need different
@@ -74,7 +77,9 @@ Template in monjizeen-core: `notes/ux/templates/audit.md` (repeated below).
    to five quick wins (high impact, S effort).
 6b. **Check each finding against its own evidence**: re-read the Issue
    sentence next to its screenshot or measured value. If the screenshot
-   shows something else, fix the finding. A *signal* finding's fix is the
+   shows something else, fix the finding. Values that change between loads
+   or days (result counts, ranking, dates, Hijri dates, quotas) are quoted
+   exactly as the screenshot shows them, with "(varies; seen <date>)". A *signal* finding's fix is the
    validation step that would prove it (or it moves to Next steps).
    Each fix must work at every width named in Where.
 7. **Keep what works**: two to four strengths the fix list must not break.
@@ -83,9 +88,16 @@ Template in monjizeen-core: `notes/ux/templates/audit.md` (repeated below).
 
 ## Output
 
-Write the delivery and the client page in the client's working language
-(the brief's language, or the product's lead language), once; don't write
-every finding twice. A finding with no visual (an aria-label) gets a small
+Write the delivery and the client page in the client's working language:
+the language the client writes the brief or tickets in. Only when the
+brief says the page is for the product's own users or team in another
+language, use that one. Write each finding once, in that language; don't
+write every finding twice. Image alt texts follow the page's language.
+
+The client page shows only what the delivery has: no new badges, scores
+or labels (no "confidence: medium" badge). Severity words in Arabic:
+4 حرج، 3 كبير، 2 صغير، 1 شكلي; in English: Critical, Major, Minor,
+Cosmetic. A finding with no visual (an aria-label) gets a small
 evidence image of the DOM readout.
 
 Cite lenses by their own names (Nielsen #4, WCAG 1.4.3), never our standards
@@ -139,3 +151,9 @@ The shared checks in UX-STANDARDS plus:
 - CHECK [audit-screens]: Each finding of severity 2 or more has a screenshot
   or a Figma node link.
 - CHECK [audit-quick-wins]: Quick wins and strengths to keep are listed.
+- CHECK [audit-no-submit]: No submit was pressed on production; any attempt,
+  even a refused one, is stated in the Status line.
+- CHECK [audit-varies]: Every changing value (counts, ranking, dates) matches
+  its screenshot and is marked "varies; seen <date>".
+- CHECK [audit-religious]: For religious products, the delivery says whether
+  honorifics and verses render intact, with a screenshot (N/A otherwise).

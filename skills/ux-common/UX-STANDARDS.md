@@ -80,9 +80,12 @@ are repeated here so a skill works without them.
   data), 3 Major (frequent errors or heavy friction), 2 Minor (workaround
   exists), 1 Cosmetic.
 - **WCAG 2.2 AA essentials**: text contrast 4.5:1 (3:1 large text and UI
-  parts); targets at least 24×24 px (44–48 px on mobile); everything works by
+  parts); targets at least 24×24 px (WCAG 2.5.8); everything works by
   keyboard with a visible focus; visible labels, not placeholder only; errors
   in text, not colour only; nothing by colour alone; reduced motion honoured.
+- **Mobile target guideline** (not WCAG): 44×44 pt (iOS HIG) or 48×48 dp
+  (Material). Cite it by those names; a target can pass 2.5.8 and still
+  miss this guideline.
 - **Laws of UX** when they explain something: Hick (fewer choices, faster
   decisions), Fitts (big, close targets), Jakob (work like the apps people
   know), Miller (chunk), Tesler (someone carries the complexity), peak-end,

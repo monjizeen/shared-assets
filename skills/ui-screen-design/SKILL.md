@@ -84,7 +84,11 @@ For a feature that has no spec yet, run `ux-feature-spec` (short form) first.
    sits directly under its field, and the sheet's error state shows the
    message. The primary action named in the note is the most prominent
    button on the screen; when a hand-off copies several live filled
-   buttons, say which is primary and why.
+   buttons, say which is primary and why. When a note rule ("the ask band
+   is secondary when results exist") meets a state that needs the opposite
+   (weak matches), write the exception into the rule itself, and draw
+   every screen to the rule as written. Any hint that points somewhere
+   ("the options below") must have that thing on the same screen.
    **How much to draw**: every screen and state in the lead language at both
    widths; the second language at both widths for the key screens (entry,
    main result, main error) and at phone width for the rest.
