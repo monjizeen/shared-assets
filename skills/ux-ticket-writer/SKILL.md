@@ -61,14 +61,32 @@ Read [../ux-common/UX-STANDARDS.md](../ux-common/UX-STANDARDS.md) first.
 
 For Arabic tickets use: **المشكلة**، **لماذا الآن**، **النطاق** (يشمل /
 لا يشمل)، **المدخلات**، **المخرج المطلوب**، **معايير الإنجاز**،
-**أسئلة مفتوحة**، **المهمة الأم**، **تعتمد على**، **الجهد** (size).
+**أسئلة مفتوحة**، **المهمة الأم**، **تعتمد على**، **الجهد** (size, in
+the client's unit, else days; one unit throughout). In Arabic tickets write
+the placeholder as «رابط مطلوب: <ما هو>» and refer to source findings with a
+term that doesn't clash with the product's own words (e.g. «البند 3 من
+المراجعة», not «الملاحظة 3» when the product has «ملاحظات»).
 
 **Definition of done** in a small fix ticket lists only the states and
 languages the change touches (e.g. "Arabic and English at 390 px, focus
 state"), not the whole states table.
 
 **Validation tickets** (tests, analytics checks): a baseline measure comes
-before the fixes it measures; a user test of a fix comes after it.
+before the fixes it measures; a user test of a fix comes after it. A
+baseline from past analytics is tied to a measurement period that ends
+before the fixes' release, not to a place in the build order.
+
+**Blocking questions**: every question marked blocking also appears in that
+ticket's «تعتمد على» line and in the dependency map, as "← answer to Qn".
+A ticket partly blocked says which part.
+
+**The epic** cites its sources like any ticket: each fact in its problem
+names the finding it comes from.
+
+**Paste mechanics**: say what goes in Summary and what goes in Description;
+no HTML or Markdown wrappers the tracker would paste as literal text.
+Tickets that touch the same code but stay separate say so in one line
+("same file as T4; ship together").
 
 ## Output
 
