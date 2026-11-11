@@ -85,8 +85,14 @@ names the finding it comes from.
 
 **Paste mechanics**: say what goes in Summary and what goes in Description;
 no HTML or Markdown wrappers the tracker would paste as literal text.
-Tickets that touch the same code but stay separate say so in one line
-("same file as T4; ship together").
+Labels must read correctly as plain text too, since the tracker may not
+convert Markdown; check the first paste. Tickets that touch the same code
+but stay separate say so on their own line «يُشحن مع: T4» (not inside
+«تعتمد على», which is for real dependencies), and the map shows them as
+`T3 + T4`.
+
+**Arabic titles** follow the client's pattern; with none, start with a
+verbal noun (مراجعة، منع، توحيد), all titles the same way.
 
 ## Output
 
