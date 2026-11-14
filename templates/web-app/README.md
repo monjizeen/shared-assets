@@ -2,13 +2,13 @@
 
 Org scaffold for `/init-project` — **not** kawader.
 
-Depends on **`@enjaz/design-system`** (`../../../enjaz/packages/design-system`). Legacy UI files under `resources/js/components/ui/` are duplicated for offline template builds; prefer the package in new apps.
+Depends on **`@asaas/design-system`** (`../../../asaas/packages/design-system`). Legacy UI files under `resources/js/components/ui/` are duplicated for offline template builds; prefer the package in new apps.
 
 ## Stack
 
 - Laravel 13 + Inertia + Vue 3 + Vite
 - Tailwind CSS v4
-- **@enjaz/design-system** (shadcn-vue primitives + org tokens)
+- **@asaas/design-system** (shadcn-vue primitives + org tokens)
 - **Lucide** (`lucide-vue-next`)
 - Google OAuth shell (home, login, dashboard)
 
@@ -32,9 +32,9 @@ See `shared-assets/skills/new-project/SKILL.md` → Gate 3.
 
 ## Agent: new pages
 
-1. `enjaz/packages/design-system/docs/NEW-PAGE.md`
+1. `asaas/packages/design-system/docs/NEW-PAGE.md`
 2. https://enjaz.mnjz.in (live gallery)
-3. Pattern slugs: `enjaz/packages/design-system/docs/INDEX.md`
+3. Pattern slugs: `asaas/packages/design-system/docs/INDEX.md`
 
 ## Rebuild (maintainers)
 

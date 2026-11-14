@@ -57,7 +57,7 @@ and tell each thread which ones apply:
 | Is this worth doing, scope, pricing | `ceo` |
 | New repo or app for the client | `new-project` |
 | Before a launch | `pre-mvp-audit` |
-| Restyling an app in the Enjaz look | `apply-enjaz-skin` |
+| Restyling an app in the Asaas look | `apply-asaas-skin` |
 
 For quality, every task also gets Monjizeen Core's rules and checks
 (`monjizeen/monjizeen-core`: `rules/safeguards.md`, `rules/quality-baseline.md`,

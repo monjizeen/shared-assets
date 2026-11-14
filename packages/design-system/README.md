@@ -1,17 +1,17 @@
-# Design system moved to Enjaz
+# Design system moved to Asaas
 
-The org design system now lives in the **`enjaz`** repo:
+The org design system now lives in the **`asaas`** repo:
 
-- Package: `@enjaz/design-system` → `github.com/monjizeen/enjaz` (`packages/design-system/`)
+- Package: `@asaas/design-system` → `github.com/monjizeen/asaas` (`packages/design-system/`)
 - Live gallery: https://enjaz.mnjz.in
 
 ## Install in mono root apps
 
 ```json
-"@enjaz/design-system": "file:../enjaz/packages/design-system"
+"@asaas/design-system": "file:../asaas/packages/design-system"
 ```
 
 ## Docs
 
-- [enjaz/packages/design-system/docs/INDEX.md](https://github.com/monjizeen/enjaz/blob/main/packages/design-system/docs/INDEX.md)
-- [enjaz/packages/design-system/docs/PATTERNS.md](https://github.com/monjizeen/enjaz/blob/main/packages/design-system/docs/PATTERNS.md)
+- [asaas/packages/design-system/docs/INDEX.md](https://github.com/monjizeen/asaas/blob/main/packages/design-system/docs/INDEX.md)
+- [asaas/packages/design-system/docs/PATTERNS.md](https://github.com/monjizeen/asaas/blob/main/packages/design-system/docs/PATTERNS.md)

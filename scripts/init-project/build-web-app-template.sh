@@ -376,7 +376,7 @@ const pkg = JSON.parse(fs.readFileSync(path, 'utf8'));
 pkg.name = 'web-app-template';
 pkg.description = 'monjizeen web app template';
 const deps = {
-  '@enjaz/design-system': 'file:../../../enjaz/packages/design-system',
+  '@asaas/design-system': 'file:../../../asaas/packages/design-system',
   'class-variance-authority': '^0.7.1',
   'clsx': '^2.1.1',
   'lucide-vue-next': '^0.575.0',

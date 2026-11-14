@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Gate 7 for static SPA sites (e.g. Enjaz gallery). Production only by default.
+# Gate 7 for static SPA sites (e.g. Asaas gallery). Production only by default.
 # Usage: gate7-static.sh <project> [fqdn]
 # Example: gate7-static.sh enjaz enjaz.mnjz.in
 

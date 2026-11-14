@@ -25,7 +25,7 @@ skills.
 
 ```
 packages/
-  design-system/     # redirect — canonical package in github.com/monjizeen/enjaz
+  design-system/     # redirect — canonical package in github.com/monjizeen/asaas
 actions/
   setup-flutter/     # Install Flutter SDK + pub get
   setup-laravel/     # Install PHP + Composer + prepare .env
@@ -107,8 +107,8 @@ jobs:
 
 ## Design system
 
-**`@enjaz/design-system`** lives in the [**enjaz**](https://github.com/monjizeen/enjaz) repo. Live gallery: https://enjaz.mnjz.in
+**`@asaas/design-system`** lives in the [**enjaz**](https://github.com/monjizeen/asaas) repo. Live gallery: https://enjaz.mnjz.in
 
-Pattern docs: [enjaz/packages/design-system/docs/INDEX.md](https://github.com/monjizeen/enjaz/blob/main/packages/design-system/docs/INDEX.md)
+Pattern docs: [asaas/packages/design-system/docs/INDEX.md](https://github.com/monjizeen/asaas/blob/main/packages/design-system/docs/INDEX.md)
 
-Sync from monjizeen: `cd enjaz/packages/design-system && npm run sync`
+Sync from monjizeen: `cd asaas/packages/design-system && npm run sync`
