@@ -19,7 +19,7 @@ it). Org skills live in `shared-assets/skills/`.
 | `monjizeen-core` | Rules, QA checks and brief builder handed to AI tools per ticket | none |
 | `shared-assets` | Org skills, shared GitHub Actions, deploy standard, client status files | none |
 | `radar` | Radar: internal market exploration (team and doers only). MENA startup sites captured and analysed; users save their own finds to lists | VPS runner, radar.mnjz.in |
-| `asaas` | Asaas (was Enjaz): design system (shadcn-vue base) our apps are built with, and its gallery | gallery at enjaz.mnjz.in |
+| `asaas` | Asaas (was Asaas): design system (shadcn-vue base) our apps are built with, and its gallery | gallery at enjaz.mnjz.in |
 | `kawader` | Talent directory; new plan is scraped, internally rated doers | — |
 
 ## Products without a repo yet

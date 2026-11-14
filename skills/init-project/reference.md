@@ -84,32 +84,32 @@ shared-assets/scripts/init-project/build-web-app-template.sh
 
 ## Design system (web)
 
-Org standard: **`@enjaz/design-system`** in the **`enjaz`** repo (`packages/design-system/`).
+Org standard: **`@asaas/design-system`** in the **`asaas`** repo (`packages/design-system/`).
 
 | Piece | Package path |
 |-------|----------------|
-| Primitives | `@enjaz/design-system/ui/*` (shadcn-vue) |
-| Patterns | `@enjaz/design-system/patterns/*` |
+| Primitives | `@asaas/design-system/ui/*` (shadcn-vue) |
+| Patterns | `@asaas/design-system/patterns/*` |
 | Icons | **Lucide** — `lucide-vue-next` (app peer dep) |
-| Styling | `@enjaz/design-system/styles` + Tailwind v4 in app |
-| Utils | `@enjaz/design-system/lib/utils` |
+| Styling | `@asaas/design-system/styles` + Tailwind v4 in app |
+| Utils | `@asaas/design-system/lib/utils` |
 | Live gallery | https://enjaz.mnjz.in |
 
-**Install in app:** `"@enjaz/design-system": "file:../enjaz/packages/design-system"` (mono root).
+**Install in app:** `"@asaas/design-system": "file:../asaas/packages/design-system"` (mono root).
 
-**External / GitHub:** `"@enjaz/design-system": "github:monjizeen/enjaz#main:packages/design-system"`
+**External / GitHub:** `"@asaas/design-system": "github:monjizeen/asaas#main:packages/design-system"`
 
 **Maintainer sync** from monjizeen reference:
 
 ```bash
-cd enjaz/packages/design-system && npm run sync
+cd asaas/packages/design-system && npm run sync
 ```
 
 **Rules for agents**
 
 - Import icons from `lucide-vue-next` only.
-- Use `@enjaz/design-system` primitives/patterns before bespoke UI.
-- Pattern slugs: **`enjaz/packages/design-system/docs/INDEX.md`** and **`PATTERNS.md`**. Gallery: https://enjaz.mnjz.in
+- Use `@asaas/design-system` primitives/patterns before bespoke UI.
+- Pattern slugs: **`asaas/packages/design-system/docs/INDEX.md`** and **`PATTERNS.md`**. Gallery: https://enjaz.mnjz.in
 
 ### Sport theme packs (Gate 1 + Gate 3)
 
@@ -149,7 +149,7 @@ Empty OAuth shell alone = incomplete Gate 3. Slapdash “labels stacked in cards
 
 **Scaffold `components.json`:** keep template defaults (`baseColor` may say zinc) — Gate 3 **overwrites** colours via sport `tokens.css` merge into `app-theme.css`, not via `shadcn-vue add` theme URLs.
 
-**Light/dark toggle (required):** template ships `ThemeToggle` in `AppLayout` + login, `store/theme.js`, and an early `app.blade.php` script (`localStorage` key `app-theme`). Prefer Enjaz `ThemeToggle` when `@enjaz/design-system` is wired. Gate 3 incomplete without a working toggle in both modes. Sport `tokens.css` must keep coherent `:root` + `.dark`.
+**Light/dark toggle (required):** template ships `ThemeToggle` in `AppLayout` + login, `store/theme.js`, and an early `app.blade.php` script (`localStorage` key `app-theme`). Prefer Asaas `ThemeToggle` when `@asaas/design-system` is wired. Gate 3 incomplete without a working toggle in both modes. Sport `tokens.css` must keep coherent `:root` + `.dark`.
 
 Record `THEME_SLUG` / `THEME_ID` / `THEME_CATEGORY=sport` in README, agent `MEMORY.md`, and Gate 9 handoff.
 
@@ -490,7 +490,7 @@ jobs:
           title: "Production Deploy Failed"
 ```
 
-If the app uses `@enjaz/design-system`, prefer vendoring at `packages/design-system` (`file:./packages/design-system`) so CI does not need cross-repo checkout of private `enjaz`. Optional: `enjaz-design-system: true` on the test job when org Actions can read `monjizeen/enjaz`.
+If the app uses `@asaas/design-system`, prefer vendoring at `packages/design-system` (`file:./packages/design-system`) so CI does not need cross-repo checkout of the private `asaas` repo. Optional: `asaas-design-system: true` on the test job when org Actions can read `monjizeen/asaas`.
 
 ### Secrets every deploying repo needs
 

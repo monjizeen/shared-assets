@@ -1,18 +1,18 @@
 ---
-name: apply-enjaz-skin
+name: apply-asaas-skin
 description: >
-  Apply a presented app design (HTML/CSS, mocks, redesign) as a theme skin on Enjaz.
-  Always install @enjaz/design-system first, analyze tokens/components, then paint via
+  Apply a presented app design (HTML/CSS, mocks, redesign) as a theme skin on Asaas.
+  Always install @asaas/design-system first, analyze tokens/components, then paint via
   CSS variables + Tailwind — never invent a parallel UI kit. Use when Omar says present
   design, apply design, redesign, new skin/theme, or drops HTML/CSS look for a Vue app.
 ---
 
-# Apply Enjaz skin
+# Apply Asaas skin
 
 Org skill for monjizeen-domain **Laravel + Inertia + Vue** apps.
 
-**Contract:** `enjaz/packages/design-system/docs/THEMES.md`  
-**Steps detail:** `enjaz/packages/design-system/docs/APPLY-SKIN.md`  
+**Contract:** `asaas/packages/design-system/docs/THEMES.md`  
+**Steps detail:** `asaas/packages/design-system/docs/APPLY-SKIN.md`  
 **Gallery:** https://enjaz.mnjz.in
 
 ## When to use
@@ -24,7 +24,7 @@ Org skill for monjizeen-domain **Laravel + Inertia + Vue** apps.
 ## Do not use
 
 - Pure backend / API work
-- Adding one missing shadcn primitive with no new product look (use Enjaz agent only)
+- Adding one missing shadcn primitive with no new product look (use Asaas agent only)
 - Employer / `tier: job` domains
 
 ## Pipeline (mandatory order)
@@ -34,19 +34,19 @@ Org skill for monjizeen-domain **Laravel + Inertia + Vue** apps.
 1. Confirm **target app repo** (ask if unclear).
 2. Confirm design source paths (HTML/CSS/mocks).
 
-### Phase 1 — Install Enjaz
+### Phase 1 — Install Asaas
 
 In the **target app**:
 
 1. Add dependency if missing:
-   - Mono: `"@enjaz/design-system": "file:../enjaz/packages/design-system"`
-   - Or GitHub dep per Enjaz README
+   - Mono: `"@asaas/design-system": "file:../asaas/packages/design-system"`
+   - Or GitHub dep per Asaas README
 2. `npm install`
-3. Vite alias → package `src` (see Enjaz README)
-4. CSS: `@import '@enjaz/design-system/styles';` **before** app skin; Tailwind `@source` includes package
+3. Vite alias → package `src` (see Asaas README)
+4. CSS: `@import '@asaas/design-system/styles';` **before** app skin; Tailwind `@source` includes package
 5. Install AI rules:
    ```bash
-   bash ../enjaz/packages/design-system/scripts/install-cursor-rules.sh "$(pwd)"
+   bash ../asaas/packages/design-system/scripts/install-cursor-rules.sh "$(pwd)"
    ```
 6. Prove import works (dev build or smoke page). **Do not paint until this passes.**
 
@@ -60,18 +60,18 @@ From the presented HTML/CSS:
 | Fonts | `--font-heading*`, `--font-body*` |
 | Radius / border / ring | `--radius`, `--border`, `--ring` |
 | Light + dark | `:root` and `.dark` |
-| UI pieces | Existing `@enjaz/design-system/ui/*` + patterns |
-| Missing pieces | List → implement in **enjaz** first |
+| UI pieces | Existing `@asaas/design-system/ui/*` + patterns |
+| Missing pieces | List → implement in **asaas** first |
 
 Output a short **skin brief** (tokens table + component map + gaps). Show Omar TLDR before big page ports if look is ambiguous.
 
 ### Phase 3 — Apply skin
 
-1. Create/update app skin file (e.g. `resources/css/app-theme-skin.css`) implementing the Enjaz token contract.
-2. Import skin **after** Enjaz styles in `app.css`.
+1. Create/update app skin file (e.g. `resources/css/app-theme-skin.css`) implementing the Asaas token contract.
+2. Import skin **after** Asaas styles in `app.css`.
 3. Wire fonts (link or `@font-face`) per design.
-4. Port screens using **Enjaz components only** + Tailwind for layout/spacing/state.
-5. Gaps: add primitive/pattern + gallery demo in `enjaz`, then import in app.
+4. Port screens using **Asaas components only** + Tailwind for layout/spacing/state.
+5. Gaps: add primitive/pattern + gallery demo in `asaas`, then import in app.
 6. Do **not** keep a second Button/Input system in the app.
 
 ### Phase 4 — Verify
@@ -83,13 +83,13 @@ Output a short **skin brief** (tokens table + component map + gaps). Show Omar T
 
 ## Success criteria
 
-- [ ] App depends on `@enjaz/design-system`
-- [ ] Skin is CSS variables on Enjaz, not a new component library
-- [ ] Pages import from `@enjaz/design-system/...`
-- [ ] Gaps landed in Enjaz (if any)
+- [ ] App depends on `@asaas/design-system`
+- [ ] Skin is CSS variables on Asaas, not a new component library
+- [ ] Pages import from `@asaas/design-system/...`
+- [ ] Gaps landed in Asaas (if any)
 - [ ] Omar can see look in the running app
 
 ## Related
 
-- Enjaz agent: package/gallery ownership
+- Asaas agent: package/gallery ownership
 - App agent: page wiring in product repo

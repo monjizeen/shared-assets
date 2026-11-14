@@ -243,7 +243,7 @@ Gate 3 UI is a **product preview**, not a scaffold dump. Meet all of these befor
 3. **Typography** — load a purposeful font pair (not default Inter / Roboto / Arial / system-only). Use size/weight to separate title vs meta vs body.
 4. **Atmosphere** — subtle background treatment (soft gradient or light pattern) — not a flat white void. Stay on brand tokens; avoid purple-on-white AI defaults, glow, and pill spam.
 5. **Composition** — prefer sections + rows over a grid of identical cards. Cards only when they wrap a real interaction. Status/priority as quiet badges, not uppercase noise.
-6. **Enjaz first** — use `@enjaz/design-system` primitives/patterns and Lucide only. Follow `enjaz/.../docs/NEW-PAGE.md` + gallery https://enjaz.mnjz.in. Record pattern slug in `BRIEF.md`.
+6. **Asaas first** — use `@asaas/design-system` primitives/patterns and Lucide only. Follow `enjaz/.../docs/NEW-PAGE.md` + gallery https://enjaz.mnjz.in. Record pattern slug in `BRIEF.md`.
 7. **Taste check** — if Omar would say “looks like text slapped together,” redesign before push. When visual direction is unclear or Omar wants a redesign, route **frontend studio** (Lane B/C suggest) instead of shipping a bland shell.
 
 #### App shell nav (required — every web project)
@@ -268,7 +268,7 @@ Every web scaffold must ship a **working light/dark toggle** before first push. 
 1. **Toggle in chrome** — sun/moon control in `AppLayout` header (logged in **and** out). Also on standalone auth screens (e.g. `LoginPage`) that skip `AppLayout`.
 2. **Persist** — save preference (`light` / `dark` / `system`) in `localStorage`; apply `.dark` on `<html>`.
 3. **Init early** — call `theme.init()` on app boot; add a tiny inline script in `app.blade.php` so the first paint matches the saved preference (no flash).
-4. **Prefer Enjaz** — when `@enjaz/design-system` is wired, use its `ThemeToggle` + `store/theme.js`. Otherwise keep the template-local twin (`resources/js/components/ThemeToggle.vue` + `resources/js/store/theme.js`) shipped by `templates/web-app`.
+4. **Prefer Asaas** — when `@asaas/design-system` is wired, use its `ThemeToggle` + `store/theme.js`. Otherwise keep the template-local twin (`resources/js/components/ThemeToggle.vue` + `resources/js/store/theme.js`) shipped by `templates/web-app`.
 5. **Tokens** — UI must look correct in both modes via `app-theme.css` (`:root` + `.dark`). Blank or broken dark = Gate 3 incomplete.
 
 ### Expo
@@ -418,7 +418,7 @@ php artisan test
 - **Secrets** — never commit `.env`; never print client secrets.
 - **No kawader scaffold** — use `templates/web-app` only.
 - **No empty scaffold** — Gate 3 must include purpose-shaped mock data + UI that shows it before first push.
-- **No slapdash UI** — Gate 3 must meet the Design quality bar (hierarchy, type, spacing, atmosphere, Enjaz-first).
+- **No slapdash UI** — Gate 3 must meet the Design quality bar (hierarchy, type, spacing, atmosphere, Asaas-first).
 - **Shell nav** — logged out: Theme toggle + Login; logged in: logo → dashboard, Theme toggle + Sign out only (no Dashboard link); brand = project name not `App`.
 - **Light/dark toggle** — every web project ships a working theme toggle (header + auth screens); persist preference; no FOUC.
 - **Pauses** — Gate 5 waits for Omar only for a Google client (internal tools use Monjizeen sign-in, no wait); Gate 7 optional per Gate 1.

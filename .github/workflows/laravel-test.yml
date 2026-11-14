@@ -15,8 +15,12 @@ on:
         description: Node.js version (if node-required is true)
         type: string
         default: "20"
+      asaas-design-system:
+        description: "Deprecated — prefer vendoring file:./packages/design-system. Checkout monjizeen/asaas into ./asaas when true."
+        type: boolean
+        default: false
       enjaz-design-system:
-        description: "Deprecated — prefer vendoring file:./packages/design-system. Checkout monjizeen/enjaz when true."
+        description: "Old name of asaas-design-system (the design system was called Enjaz until Nov 2026). Kept so older callers keep working; checks out into ./enjaz."
         type: boolean
         default: false
     secrets:
@@ -32,12 +36,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4.2.2
 
-      - name: Checkout enjaz design system
-        if: ${{ inputs.enjaz-design-system }}
+      - name: Checkout Asaas design system
+        if: ${{ inputs.asaas-design-system || inputs.enjaz-design-system }}
         uses: actions/checkout@v4.2.2
         with:
-          repository: monjizeen/enjaz
-          path: enjaz
+          repository: monjizeen/asaas
+          path: ${{ inputs.enjaz-design-system && 'enjaz' || 'asaas' }}
 
       - name: Setup Laravel
         uses: monjizeen/shared-assets/actions/setup-laravel@main
